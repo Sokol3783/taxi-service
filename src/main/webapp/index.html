@@ -8,23 +8,45 @@
        <link rel="stylesheet" href="./styles/style.css">
        <title> Taxi </title>
     </head>
-    <body class="container">
+    <body class="container .vh-100">
+          <nav class="navbar navbar-expand-sm navbar-light bg-primary max-height">
+              <div class="container-fluid">
+                  <a class="navbar-brand" href="#">primary</a>
+                  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarID"
+                      aria-controls="navbarID" aria-expanded="false" aria-label="Toggle navigation">
+                      <span class="navbar-toggler-icon"></span>
+                  </button>
+                  <div class="collapse navbar-collapse" id="navbarID">
+                      <div class="navbar-nav">
+                          <a class="nav-link active" aria-current="page" href="#">Home</a>
+                          
+                      </div>
+                  </div>
+              </div>
+          </nav>
       <form>
         <div class="text-center"> <img src="./images/icon.jpg" class=".img-thumbnail img-thumbnail-height" alt="logo"> </div>
         <div class="mb-3">
-          <label for="exampleInputEmail1" class="form-label">Email address</label>
-          <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
-          <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
+          <label for="login" class="form-label">Your mobile number or login</label>
+          <input type="text" class="form-control" id="login">
+          <div id="emailHelp" class="form-text">We'll never share your contacts with anyone else.</div>
         </div>
         <div class="mb-3">
-          <label for="exampleInputPassword1" class="form-label">Password</label>
-          <input type="password" class="form-control" id="exampleInputPassword1">
+          <label for="inputPassword" class="form-label">Password</label>
+          <input type="password" class="form-control" id="inputPassword">
         </div>
         <div class="mb-3 form-check">
           <input type="checkbox" class="form-check-input" id="exampleCheck1">
           <label class="form-check-label" for="exampleCheck1">Check me out</label>
         </div>
-        <button type="submit" class="btn btn-primary">Submit</button>
+        <div class="row container-xl justify-content-between">
+          <div class="col"> 
+            <button type="submit" class="btn btn-primary">Submit</button>
+          </div>
+          <div class="col text-end">
+            <a  href="#" class="fa fa-registered" aria-hidden="true">Create new account</a> 
+          </div>      
+        </div>
       </form>
       <script src="./js/bootstrap.bundle.js"></script>
     </body>
