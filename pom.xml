@@ -11,7 +11,7 @@
   <packaging>war</packaging>
 
   <name>Taxi Maven Webapp</name>
-  <url>http://localhost:8080/taxi</url>
+  <url>http://www.example.com</url>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -88,10 +88,8 @@
     </dependency>
   </dependencies>
 
-
-
   <build>
-    <finalName>TaxiService</finalName>
+    <finalName>Taxi Service</finalName>
     <pluginManagement>
       <plugins>
         <plugin>
