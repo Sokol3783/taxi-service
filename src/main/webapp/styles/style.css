@@ -1,3 +1,8 @@
+:root{
+    --color1: rgb(245, 149, 71);
+    --color2: rgba(255,168,76);
+}
+
 .img-thumbnail-height{
     margin: 20px;
     max-height: 260px;
@@ -5,4 +10,37 @@
 
 .navbar-size{
     max-height: 5vh;
+}
+
+.background{
+    /* Permalink - use to edit and share this gradient: https://colorzilla.com/gradient-editor/#ff7b0d+0,ffa84c+100 */
+    background: var(--color1); /* Old browsers */
+    background: -moz-linear-gradient(-45deg,  var(--color1) 0%, var(--color2) 20%); /* FF3.6-15 */
+    background: -webkit-linear-gradient(-45deg,  var(--color1) 0%,var(--color2) 20%); /* Chrome10-25,Safari5.1-6 */
+    background: linear-gradient(135deg,  var(--color1) 0%,var(--color2) 20%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ff7b0d', endColorstr='#ffa84c',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
+}
+
+.background-orange{
+    background-color: rgb(253, 130, 29);
+}
+
+.background-orange-button{
+    background-color: rgb(248, 102, 18);
+}
+
+a.text-color:link{
+    color: rgb(248, 64, 18);
+}
+
+a.text-color:visited {
+    color: green;
+  }
+  
+a.text-color:hover {
+    color: hotpink;
+}
+
+a.text-color:active {
+    color: blue;
 }
