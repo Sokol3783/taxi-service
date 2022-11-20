@@ -13,13 +13,27 @@
 }
 
 .background{
-    /* Permalink - use to edit and share this gradient: https://colorzilla.com/gradient-editor/#ff7b0d+0,ffa84c+100 */
     background: var(--color1); /* Old browsers */
     background: -moz-linear-gradient(-45deg,  var(--color1) 0%, var(--color2) 20%); /* FF3.6-15 */
     background: -webkit-linear-gradient(-45deg,  var(--color1) 0%,var(--color2) 20%); /* Chrome10-25,Safari5.1-6 */
     background: linear-gradient(135deg,  var(--color1) 0%,var(--color2) 20%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ff7b0d', endColorstr='#ffa84c',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
 }
+
+.dropdown-menu-orange {
+    --bs-dropdown-color: #c72339;
+    --bs-dropdown-bg: rgb(219, 192, 37);
+    --bs-dropdown-border-color: var(--bs-border-color-translucent);
+    --bs-dropdown-box-shadow: ;
+    --bs-dropdown-link-color: rgb(0, 0, 0);
+    --bs-dropdown-link-hover-color: rgb(202, 24, 24);
+    --bs-dropdown-divider-bg: var(--bs-border-color-translucent);
+    --bs-dropdown-link-hover-bg: rgba(245, 229, 7, 0.336);
+    --bs-dropdown-link-active-color: rgb(202, 55, 55);
+    --bs-dropdown-link-active-bg: #be1e26;
+    --bs-dropdown-link-disabled-color: #76397e;
+    --bs-dropdown-header-color: #b84b0c;
+  }
 
 .background-orange{
     background-color: rgb(253, 130, 29);
