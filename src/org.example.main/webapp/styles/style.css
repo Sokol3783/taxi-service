@@ -58,3 +58,13 @@ a.text-color:hover {
 a.text-color:active {
     color: blue;
 }
+
+.register-container{
+    margin: 5% 13%;
+}
+
+.black-text{
+    --bs-btn-color: #212529;
+    max-width: 400px;
+    text-align: center;
+}
