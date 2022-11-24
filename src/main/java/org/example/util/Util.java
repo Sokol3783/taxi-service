@@ -13,15 +13,13 @@ import java.util.List;
 import java.util.Properties;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import org.example.Constants;
 
 public class Util {
-
-  public static void createDB() throws SQLException {
+  public static void runSQLScript(String path) {
     Connection connection  = null;
     try (Statement statement = connection.createStatement()) {
       List<String> queriesList = Stream
-          .of(FileReader.readFile(Constants.SCHEMA).collect(Collectors.joining()).split(";"))
+          .of(FileReader.readFile(path).collect(Collectors.joining()).split(";"))
           .collect(Collectors.toList());
       queriesList.forEach(sqlQuery -> {
         try {
@@ -30,6 +28,8 @@ public class Util {
           e.getMessage();
         }
       });
+    } catch (SQLException e) {
+      throw new RuntimeException(e);
     }
   }
 
