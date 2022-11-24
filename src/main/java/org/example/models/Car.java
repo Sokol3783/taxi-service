@@ -1,7 +1,7 @@
 package models;
 
 import lombok.Builder;
-import modelsenum.CarCategory;
+import models.enum_model.CarCategory;
 
 @Builder
 public class Car {

@@ -1,4 +1,4 @@
-package modelsenum;
+package models.enum_model;
 
 public enum CarCategory {
   ECONOMY,
