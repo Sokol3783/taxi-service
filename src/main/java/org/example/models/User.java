@@ -1,4 +1,4 @@
-package models;
+package org.example.models;
 
 import java.util.Date;
 import javax.management.relation.Role;

@@ -1,7 +1,7 @@
-package models;
+package org.example.models;
 
 import lombok.Builder;
-import models.enum_model.CarCategory;
+import org.example.models.taxienum.CarCategory;
 
 @Builder
 public class Car {

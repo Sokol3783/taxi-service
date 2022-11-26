@@ -1,4 +1,4 @@
-package models.enum_model;
+package org.example.models.taxienum;
 
 public enum CarCategory {
   ECONOMY,

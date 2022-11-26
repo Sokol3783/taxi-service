@@ -11,7 +11,7 @@ import org.example.Constants;
 import org.example.util.Util;
 
 @WebListener
-public class contextListener implements ServletContextListener, HttpSessionListener,
+public class ContextListener implements ServletContextListener, HttpSessionListener,
     HttpSessionAttributeListener {
 
     @Override
