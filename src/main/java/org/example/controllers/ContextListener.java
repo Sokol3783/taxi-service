@@ -7,8 +7,6 @@ import javax.servlet.http.HttpSessionAttributeListener;
 import javax.servlet.http.HttpSessionBindingEvent;
 import javax.servlet.http.HttpSessionEvent;
 import javax.servlet.http.HttpSessionListener;
-import org.example.Constants;
-import org.example.util.Util;
 
 @WebListener
 public class ContextListener implements ServletContextListener, HttpSessionListener,
@@ -17,7 +15,7 @@ public class ContextListener implements ServletContextListener, HttpSessionListe
     @Override
     public void contextInitialized(ServletContextEvent sce) {
       /* This method is called when the servlet context is initialized(when the Web application is deployed). */
-      Util.runSQLScript(Constants.PATH_SCRIPT);
+      //Util.runSQLScript(Constants.PATH_SCRIPT);
     }
 
     @Override
