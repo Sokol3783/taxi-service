@@ -15,8 +15,11 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class Util {
-  public static void runSQLScript(String path) {
-    Connection connection  = null;
+
+  public static Properties mainProperties;
+
+  public static void runSQLScript(String path, Connection connection) {
+
     try (Statement statement = connection.createStatement()) {
       List<String> queriesList = Stream
           .of(FileReader.readFile(path).collect(Collectors.joining()).split(";"))
@@ -49,7 +52,7 @@ public class Util {
     }
   }
 
-  public static Properties readPropertiesFile(String propertiesFile) {
+  public synchronized static Properties readPropertiesFile(String propertiesFile) {
     Properties prop = new Properties();
     try (InputStream input = new FileInputStream(propertiesFile)) {
       prop.load(input);
@@ -58,4 +61,5 @@ public class Util {
     }
     return prop;
   }
+
 }
