@@ -3,20 +3,16 @@ package org.example.util;
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
-import java.util.Properties;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class Util {
-
-  public static Properties mainProperties;
 
   public static void runSQLScript(String path, Connection connection) {
 
@@ -50,16 +46,6 @@ public class Util {
       }
       return null;
     }
-  }
-
-  public synchronized static Properties readPropertiesFile(String propertiesFile) {
-    Properties prop = new Properties();
-    try (InputStream input = new FileInputStream(propertiesFile)) {
-      prop.load(input);
-    } catch (IOException e) {
-      e.getMessage();
-    }
-    return prop;
   }
 
 }

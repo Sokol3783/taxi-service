@@ -20,7 +20,7 @@ public class BasicConnectionPool implements SimpleConnectionPool {
     if (instance == null) {
      PoolProperties properties = new PoolProperties();
       properties.setDriverClassName(PropertiesManager.getStringFromProperties("Driver"));
-      properties.setUrl(PropertiesManager.getStringFromProperties("URL"));
+      properties.setUrl(PropertiesManager.getStringFromProperties("DB_URL"));
       properties.setUsername(PropertiesManager.getStringFromProperties("USER"));
       properties.setPassword(PropertiesManager.getStringFromProperties("PASSWORD"));
       dataSource.setPoolProperties(properties);
