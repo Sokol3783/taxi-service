@@ -5,7 +5,15 @@ public enum UserRole {
   USER,
   DRIVER;
 
-  public static UserRole getRoleByLoginPassword(String login, String password) {
-
+  public static UserRole getRole(String role) {
+    switch (role) {
+      case "ADMIN":
+        return ADMIN;
+      case "USER":
+        return USER;
+      case "DRIVER":
+        return DRIVER;
+    }
+    return null;
   }
 }

@@ -3,22 +3,21 @@ package org.example.controllers;
 import static java.util.Objects.nonNull;
 import static org.example.models.taxienum.UserRole.ADMIN;
 
-import java.io.IOException;
-import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import org.example.QueryManager;
+import org.example.models.User;
 import org.example.models.taxienum.UserRole;
 
 @WebServlet("/login")
 public class LoginServlet extends HttpServlet {
 
   @Override
-  protected void doPost(HttpServletRequest request, HttpServletResponse response)
-      throws ServletException, IOException {
+  protected void doPost(HttpServletRequest request, HttpServletResponse response) {
 
     final HttpServletRequest req = request;
     final HttpServletResponse res = response;
@@ -40,17 +39,26 @@ public class LoginServlet extends HttpServlet {
 
     } else if (isExistUser(req)) {
 
-      final UserRole role = UserRole.getRoleByLoginPassword(login, password);
+      final User user = QueryManager.getUser(login, password);
+      if (nonNull(user)) {
 
-      req.getSession().setAttribute("PASSWORD", password);
-      req.getSession().setAttribute("LOGIN", login);
-      req.getSession().setAttribute("", role);
+        req.getSession().setAttribute("TOKEN", password);
+        req.getSession().setAttribute("LOGIN", login);
+        req.getSession().setAttribute("ROLE", user);
 
-      moveToMenu(req, res, role);
+        moveToMenu(req, res, role);
+      }
+
+      moveToMenu(req, res, null);
 
     } else {
       moveToMenu(req, res, null);
     }
+  }
+
+  @Override
+  protected void doGet(HttpServletRequest request, HttpServletResponse response) {
+
   }
 
   /**
@@ -68,7 +76,7 @@ public class LoginServlet extends HttpServlet {
         forward(USER, req, res);
         break;
       case DRIVER:
-        forward(NURSE, req, res);
+        forward(DRIVER, req, res);
         break;
       default:
         forward(INDEX, req, res);

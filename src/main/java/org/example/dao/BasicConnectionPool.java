@@ -7,11 +7,14 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.apache.tomcat.jdbc.pool.DataSource;
 import org.apache.tomcat.jdbc.pool.PoolProperties;
 import org.example.PropertiesManager;
+import org.example.models.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,6 +23,8 @@ public class BasicConnectionPool implements SimpleConnectionPool {
   private static final Logger log = LoggerFactory.getLogger(BasicConnectionPool.class);
 
   private static BasicConnectionPool instance;
+
+  private static Map<User, String> tokens = new ConcurrentHashMap<User, String>();
   private final static DataSource dataSource = new DataSource();
 
   public static BasicConnectionPool getInstance() {
