@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
   <head>
        <meta charset="utf-8">
@@ -20,7 +20,7 @@
                     <li><a class="dropdown-item" href="#">en</a></li>
                   </ul>
           </nav>
-      <form>
+      <form action="login" method="post">
         <div class="text-center"> <img src="./images/icon.jpg" class=".img-thumbnail img-thumbnail-height" alt="logo"> </div>
         <div class="mb-3">
           <label for="login" class="form-label">Your mobile number or login</label>

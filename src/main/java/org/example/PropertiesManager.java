@@ -1,11 +1,14 @@
 package org.example;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Properties;
 
 public class PropertiesManager {
+
   private static final String PATH_PROPERTIES = "/WEB-INF/app.properties";
 
-  private static final String PATH_SCRIPT ="/WEB-INF/db-create.sql";
+  private static final String PATH_SCRIPT = "/WEB-INF/initialdb.sql";
   public static Properties properties;
 
   public static String getStringFromProperties(String key) {
@@ -21,11 +24,21 @@ public class PropertiesManager {
     return Boolean.valueOf(getProperties().getProperty(key));
   }
 
-  public  static Properties getProperties() {
+  public static Properties getProperties() {
     if (properties == null) {
       properties = new Properties();
     }
     return properties;
+  }
+
+  public static void setProperties(InputStream stream) {
+    Properties prop = new Properties();
+    try {
+      prop.load(stream);
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
+    properties = prop;
   }
 
   public static String getPathProperties() {
