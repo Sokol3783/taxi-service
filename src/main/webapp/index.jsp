@@ -40,7 +40,7 @@
             <button type="submit" class="btn btn-primary background-orange-button">Submit</button>
           </div>
           <div class="col text-end">
-            <a  href="#" class="fa fa-registered text-color" aria-hidden="true">Create new account</a>
+            <a href="login" class="fa fa-registered text-color" aria-hidden="true">Create new account</a>
           </div>
         </div>
       </form>
