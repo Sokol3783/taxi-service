@@ -1,5 +1,6 @@
-package org.example.controllers;
+package org.example.controllers.servlets;
 
+import java.io.IOException;
 import java.sql.Connection;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
@@ -8,8 +9,10 @@ import javax.servlet.http.HttpSessionAttributeListener;
 import javax.servlet.http.HttpSessionBindingEvent;
 import javax.servlet.http.HttpSessionEvent;
 import javax.servlet.http.HttpSessionListener;
-import org.example.PropertiesManager;
+import org.example.controllers.managers.PropertiesManager;
 import org.example.dao.BasicConnectionPool;
+import org.example.dao.DAOUtil;
+import org.example.exception.DAOException;
 import org.example.util.FileReader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,20 +26,29 @@ public class ContextListener implements ServletContextListener, HttpSessionListe
   @Override
   public synchronized void contextInitialized(ServletContextEvent sce) {
     if (PropertiesManager.properties == null) {
-      if (setPropertiesFromFile(sce)) {
-        Connection con = BasicConnectionPool.getInstance().getSAConnection();
-        if (con == null) {
-          log.error("SA login or password invalid");
-          throw new RuntimeException("Invalid login or password");
+      try {
+        if (setPropertiesFromFile(sce)) {
+          Connection con = BasicConnectionPool.getInstance().getConnection();
+          if (con == null) {
+            log.error("SA login or password invalid");
+            throw new RuntimeException("Invalid login or password");
+          }
+          try {
+            BasicConnectionPool.runSQLScript(FileReader.readStreamFromWeb(sce,
+                    PropertiesManager.getPathScript())
+                , con);
+          } finally {
+            DAOUtil.connectionClose(con);
+          }
         }
-        BasicConnectionPool.runSQLScript(FileReader.readStreamFromWeb(sce,
-                PropertiesManager.getPathScript())
-            , con);
+      } catch (IOException e) {
+        log.error("Startup properties was broken!", e);
+        throw new DAOException(e);
       }
     }
   }
 
-  private boolean setPropertiesFromFile(ServletContextEvent sce) {
+  private boolean setPropertiesFromFile(ServletContextEvent sce) throws IOException {
     PropertiesManager.setProperties(
         FileReader.readStreamFromWeb(sce, PropertiesManager.getPathProperties()));
     return PropertiesManager.properties.size() > 0;

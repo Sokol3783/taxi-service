@@ -7,14 +7,12 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.apache.tomcat.jdbc.pool.DataSource;
 import org.apache.tomcat.jdbc.pool.PoolProperties;
-import org.example.PropertiesManager;
-import org.example.models.User;
+import org.example.controllers.managers.PropertiesManager;
+import org.example.exception.DAOException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,21 +20,22 @@ public class BasicConnectionPool implements SimpleConnectionPool {
 
   private static final Logger log = LoggerFactory.getLogger(BasicConnectionPool.class);
 
-  private static BasicConnectionPool instance;
+  private static SimpleConnectionPool instance;
 
-  private static Map<User, String> tokens = new ConcurrentHashMap<User, String>();
   private final static DataSource dataSource = new DataSource();
 
-  public static BasicConnectionPool getInstance() {
-    if (instance == null) {
-      PoolProperties properties = new PoolProperties();
-      properties.setDriverClassName(PropertiesManager.getStringFromProperties("Driver"));
-      properties.setUrl(PropertiesManager.getStringFromProperties("DB_URL"));
-      properties.setUsername(PropertiesManager.getStringFromProperties("USER"));
-      properties.setPassword(PropertiesManager.getStringFromProperties("PASSWORD"));
-      properties.setAlternateUsernameAllowed(true);
-      dataSource.setPoolProperties(properties);
-      instance = new BasicConnectionPool();
+  public static synchronized SimpleConnectionPool getInstance() {
+    synchronized (BasicConnectionPool.class) {
+      if (instance == null) {
+        PoolProperties properties = new PoolProperties();
+        properties.setDriverClassName(PropertiesManager.getStringFromProperties("Driver"));
+        properties.setUrl(PropertiesManager.getStringFromProperties("DB_URL"));
+        properties.setUsername(PropertiesManager.getStringFromProperties("USER"));
+        properties.setPassword(PropertiesManager.getStringFromProperties("PASSWORD"));
+        properties.setDefaultAutoCommit(PropertiesManager.getBooleanFromProperties("AUTO_COMMIT"));
+        dataSource.setPoolProperties(properties);
+        instance = new BasicConnectionPool();
+      }
     }
     return instance;
   }
@@ -46,25 +45,7 @@ public class BasicConnectionPool implements SimpleConnectionPool {
       return dataSource.getConnection();
     } catch (SQLException e) {
       log.error("Connection error");
-      try {
-        throw new SQLException(e);
-      } catch (SQLException ex) {
-        throw new RuntimeException(ex);
-      }
-    }
-  }
-
-  @Override
-  public Connection getSAConnection() {
-
-    try {
-      return dataSource.getConnection(
-          PropertiesManager.getStringFromProperties("SALogin"),
-          PropertiesManager.getStringFromProperties("SAPassword")
-      );
-    } catch (SQLException e) {
-      log.error("SA login or password incorrect!", e);
-      throw new RuntimeException(e);
+      throw new DAOException();
     }
   }
 
@@ -73,10 +54,6 @@ public class BasicConnectionPool implements SimpleConnectionPool {
     return null;
   }
 
-  @Override
-  public String getUser() {
-    return null;
-  }
 
   public static void runSQLScript(InputStream input, Connection connection) {
     if (input != null) {

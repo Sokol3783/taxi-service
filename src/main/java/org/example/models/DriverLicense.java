@@ -5,7 +5,9 @@ import lombok.Builder;
 
 @Builder
 public class DriverLicense {
-  private String number;
-  private String Category;
-  private Date dateIssue;
+
+  private final User driver;
+  private final String number;
+  private final String Category;
+  private final Date dateIssue;
 }

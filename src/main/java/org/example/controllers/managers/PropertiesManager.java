@@ -1,4 +1,4 @@
-package org.example;
+package org.example.controllers.managers;
 
 import java.io.IOException;
 import java.io.InputStream;

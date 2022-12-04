@@ -1,4 +1,4 @@
-package org.example;
+package org.example.controllers.managers;
 
 import static org.example.models.taxienum.UserRole.getRole;
 

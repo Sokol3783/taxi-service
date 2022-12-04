@@ -29,13 +29,15 @@ public class FileReader {
     return null;
   }
 
-  public static InputStream readStreamFromWeb(ServletContextEvent sce, String path) {
+  public static InputStream readStreamFromWeb(ServletContextEvent sce, String path)
+      throws IOException {
     try (InputStream input = sce.getServletContext().getResourceAsStream(path)) {
       return input;
     } catch (IOException e) {
-      log.error("Add app.properties to web-inf", e);
+      String message = "Data to stream not found";
+      log.error(message, e);
+      throw new IOException(message);
     }
-    return null;
   }
 
 }

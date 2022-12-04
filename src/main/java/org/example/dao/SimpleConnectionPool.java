@@ -6,10 +6,6 @@ public interface SimpleConnectionPool {
 
   Connection getConnection();
 
-  Connection getSAConnection();
-
   String getUrl();
-
-  String getUser();
 
 }

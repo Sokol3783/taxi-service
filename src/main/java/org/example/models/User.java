@@ -1,17 +1,44 @@
 package org.example.models;
 
+import java.io.Serializable;
 import java.util.Date;
-import javax.management.relation.Role;
 import lombok.Builder;
+import org.example.models.taxienum.UserRole;
 
 @Builder
-public class User {
+public class User implements Serializable {
+
   private final String password;
-  private final Role role;
+  private final UserRole role;
   private final String firstName;
   private final String secondName;
   private final Date birthDate;
-  private final DriverLicense license;
   private final String phone;
   private final String email;
+  
+
+  public UserRole getRole() {
+    return role;
+  }
+
+  public String getFirstName() {
+    return firstName;
+  }
+
+  public String getSecondName() {
+    return secondName;
+  }
+
+  public Date getBirthDate() {
+    return birthDate;
+  }
+
+  public String getPhone() {
+    return phone;
+  }
+
+  public String getEmail() {
+    return email;
+  }
+
 }
