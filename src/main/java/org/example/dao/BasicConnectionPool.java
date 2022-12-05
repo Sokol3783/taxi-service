@@ -12,7 +12,7 @@ import java.util.stream.Stream;
 import org.apache.tomcat.jdbc.pool.DataSource;
 import org.apache.tomcat.jdbc.pool.PoolProperties;
 import org.example.controllers.managers.PropertiesManager;
-import org.example.exception.DAOException;
+import org.example.exceptions.DAOException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -12,7 +12,7 @@ import javax.servlet.http.HttpSessionListener;
 import org.example.controllers.managers.PropertiesManager;
 import org.example.dao.BasicConnectionPool;
 import org.example.dao.DAOUtil;
-import org.example.exception.DAOException;
+import org.example.exceptions.DAOException;
 import org.example.util.FileReader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,7 +38,7 @@ public class ContextListener implements ServletContextListener, HttpSessionListe
                     PropertiesManager.getPathScript())
                 , con);
           } finally {
-            DAOUtil.connectionClose(con);
+            DAOUtil.connectionClose(con, log);
           }
         }
       } catch (IOException e) {

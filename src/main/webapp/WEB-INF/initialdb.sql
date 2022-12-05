@@ -1,11 +1,9 @@
 --Focused on POSTGRE SQL
 
-
 DROP TABLE IF EXISTS "driverlicenses";
 DROP TABLE IF EXISTS "cars";
 DROP TABLE IF EXISTS "orders";
 DROP TABLE IF EXISTS "users" cascade;
-
 
 SELECT 'create DATABASE TAXI
       ENCODING UTF8'
@@ -22,7 +20,7 @@ create TABLE users (
 	first_name varchar(50),
 	last_name varchar(50),
 	phone varchar(13) unique,
-  birthDate varchar(50),
+  birthday varchar(50),
 	email varchar(50),
 	role varchar(15)
 );
@@ -81,4 +79,3 @@ INSERT INTO cars(driver, car_number, car_name,category, capacity)
 
 INSERT INTO cars(driver, car_number, car_name,category, capacity)
 VALUES(3, 'AX807A1','BMW m3', 'Premium', 2);
-

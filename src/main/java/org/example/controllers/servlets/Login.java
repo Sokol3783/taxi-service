@@ -9,7 +9,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import org.example.AppUrl;
-import org.example.controllers.managers.QueryManager;
 import org.example.controllers.managers.UserManager;
 import org.example.models.User;
 
@@ -34,7 +33,7 @@ public class Login extends HttpServlet {
       }
 
     } else {
-      final User user = QueryManager.getUser(login, password);
+      final User user = findUser(login, password);
       if (nonNull(user)) {
         request.getSession().setAttribute("TOKEN", "");
         request.getSession().setAttribute("USER", user);
@@ -44,6 +43,11 @@ public class Login extends HttpServlet {
 
     moveToMenu(null, request, response);
 
+  }
+
+  private User findUser(String login, String password) {
+    UserManager manager = new UserManager();
+    return manager.findUserLoginPassword(login, password);
   }
 
   @Override

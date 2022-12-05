@@ -1,6 +1,10 @@
-package org.example.exception;
+package org.example.exceptions;
 
 public class DAOException extends RuntimeException {
+
+  public static String USER_NOT_CREATE = "User hasn't been created.";
+  public static String USER_NOT_FOUND = "User hasn't been found";
+  public static String ROLLBACK_FAIL = "Rollback failed";
 
   public DAOException() {
     super();

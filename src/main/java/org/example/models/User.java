@@ -1,7 +1,7 @@
 package org.example.models;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDate;
 import lombok.Builder;
 import org.example.models.taxienum.UserRole;
 
@@ -12,10 +12,10 @@ public class User implements Serializable {
   private final UserRole role;
   private final String firstName;
   private final String secondName;
-  private final Date birthDate;
+  private final LocalDate birthDate;
   private final String phone;
   private final String email;
-  
+
 
   public UserRole getRole() {
     return role;
@@ -29,7 +29,7 @@ public class User implements Serializable {
     return secondName;
   }
 
-  public Date getBirthDate() {
+  public LocalDate getBirthDate() {
     return birthDate;
   }
 
