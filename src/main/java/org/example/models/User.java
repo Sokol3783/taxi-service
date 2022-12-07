@@ -41,4 +41,12 @@ public class User implements Serializable {
     return email;
   }
 
+  public boolean isEmpty() {
+    if (role == null) {
+      return true;
+    }
+    return firstName.isEmpty() && secondName.isEmpty()
+        && phone.isEmpty() && email.isEmpty();
+  }
+
 }

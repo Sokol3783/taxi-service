@@ -10,4 +10,21 @@ public class DriverLicense {
   private final String number;
   private final String Category;
   private final Date dateIssue;
+
+  public User getDriver() {
+    return driver;
+  }
+
+  public String getNumber() {
+    return number;
+  }
+
+  public String getCategory() {
+    return Category;
+  }
+
+  public Date getDateIssue() {
+    return dateIssue;
+  }
+
 }

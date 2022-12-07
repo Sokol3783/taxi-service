@@ -1,7 +1,6 @@
 package org.example.controllers.managers;
 
 
-import java.sql.ResultSet;
 import java.util.List;
 import org.example.AppUrl;
 import org.example.dao.BasicConnectionPool;
@@ -22,25 +21,22 @@ public class UserManager implements Manager<User> {
 
   public static String getRoleURL(User user) {
     UserRole role = user.getRole();
-    switch (role) {
-      case ADMIN:
-        return AppUrl.ADMIN;
-      case USER:
-        return AppUrl.USER;
-      case DRIVER:
-        return AppUrl.DRIVER;
-      default:
-        return AppUrl.INDEX;
-    }
+    return switch (role) {
+      case ADMIN -> AppUrl.ADMIN;
+      case USER -> AppUrl.USER;
+      case DRIVER -> AppUrl.DRIVER;
+      default -> AppUrl.INDEX;
+    };
   }
 
   public User findUserLoginPassword(String login, String password) {
-    return userDAO.findUserPhoneMailAndPassword(login, password, pool.getConnection());
+    return userDAO.findUserPhoneMailAndPassword(login, password,
+        pool.getConnection());
   }
 
   @Override
-  public User create(User subject) {
-    return null;
+  public User create(User model) {
+    return userDAO.create(model, pool.getConnection());
   }
 
   @Override
@@ -62,18 +58,4 @@ public class UserManager implements Manager<User> {
   public List<User> findAll() {
     return null;
   }
-
-  private static User buildDriver(ResultSet resultSet) {
-    return null;
-  }
-
-  private static User buildAdmin(ResultSet resultSet) {
-    User o = null;
-    return null;
-  }
-
-  private static User buildUser(ResultSet resultSet) {
-    return null;
-  }
-
 }
