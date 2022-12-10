@@ -12,7 +12,7 @@ import org.example.AppUrl;
 import org.example.controllers.managers.UserManager;
 import org.example.models.User;
 
-@WebServlet("/login")
+@WebServlet(name = "login", urlPatterns = "/login")
 public class Login extends HttpServlet {
 
   @Override
@@ -48,13 +48,6 @@ public class Login extends HttpServlet {
   private User findUser(String login, String password) {
     UserManager manager = new UserManager();
     return manager.findUserLoginPassword(login, password);
-  }
-
-  @Override
-  protected void doGet(HttpServletRequest request, HttpServletResponse response) {
-    int a = 5;
-    System.out.println(a);
-    forward(AppUrl.REGISTRATION, request, response);
   }
 
   private boolean isValidToken(String token) {

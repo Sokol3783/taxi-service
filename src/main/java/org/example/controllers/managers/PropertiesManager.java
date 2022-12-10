@@ -16,7 +16,6 @@ public class PropertiesManager {
   }
 
   public static Integer getIntegerFromProperties(String key) {
-
     return Integer.valueOf(getProperties().getProperty(key));
   }
 
