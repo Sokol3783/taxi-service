@@ -18,13 +18,14 @@ import org.example.dao.DAOUtil;
 import org.example.exceptions.DAOException;
 import org.example.models.User;
 import org.example.models.taxienum.UserRole;
+import org.example.util.LocalDateConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class UserDAO implements DAO<User> {
 
   private static final Logger log = LoggerFactory.getLogger(UserDAO.class);
-  private static final String CREATE = "INSERT INTO users(first_name,last_name,phone,role,email,birthday,password) VALUES(?, ?, ?, ?, ?, ?)";
+  private static final String CREATE = "INSERT INTO users(first_name,last_name,phone,user_role,email,birthday,password) VALUES(?, ?, ?, ?, ?, ?)";
   private static final String UPDATE = "UPDATE users SET (first_name=?,last_name=?,phone=?,email=?,birthday=?) WHERE user_id=?";
   private static final String UPDATE_PASSWORD = "UPDATE users SET password=? WHERE phone=? AND email=?";
   private static final String DELETE = "DELETE FROM users WHERE id=?";
@@ -160,7 +161,8 @@ public class UserDAO implements DAO<User> {
     }
   }
 
-  public User findUserPhoneMailAndPassword(String login, String password, Connection con) {
+  public User findUserPhoneMailAndPassword(String login, String password, Connection con)
+      throws SQLException {
     try (PreparedStatement statement = con.prepareStatement(SELECT_BY_PHONEMAIL_PASSWORD)) {
       statement.setString(1, login);
       statement.setString(2, login);
@@ -170,19 +172,17 @@ public class UserDAO implements DAO<User> {
         return buildUserByRole(resultSet);
       }
       return null;
-    } catch (SQLException e) {
-      log.error(USER_NOT_FOUND, e);
-      throw new DAOException(USER_NOT_FOUND);
     } finally {
       DAOUtil.connectionClose(con, log);
     }
   }
 
   private User buildUserByRole(ResultSet result) throws SQLException {
-    UserRole role = UserRole.getRole(result.getString("role"));
+    UserRole role = UserRole.getRole(result.getString("user_role"));
     return switch (role) {
-      case USER, ADMIN -> buildUser(result);
+      case USER -> buildUser(result);
       case DRIVER -> buildDriver(result);
+      case ADMIN -> buildAdmin(result);
       default -> throw new DAOException(UNKNOWN_ROLE);
     };
   }
@@ -209,12 +209,23 @@ public class UserDAO implements DAO<User> {
     }
   }
 
-  private User buildDriver(ResultSet resultSet) {
-    return null;
+  private User buildDriver(ResultSet resultSet) throws SQLException {
+
+    return buildUser(resultSet);
   }
-  
-  private User buildUser(ResultSet resultSet) {
-    return null;
+
+  private User buildUser(ResultSet resultSet) throws SQLException {
+    return User.builder().firstName(resultSet.getString("first_name"))
+        .secondName(resultSet.getString("second_name"))
+        .email(resultSet.getString("email"))
+        .phone(resultSet.getString("phone"))
+        .role(UserRole.valueOf(resultSet.getString("user_role")))
+        .birthDate(LocalDateConverter.convertToEntityAttribute(resultSet.getDate("birthday")))
+        .build();
+  }
+
+  private User buildAdmin(ResultSet result) throws SQLException {
+    return buildUser(result);
   }
 
 }

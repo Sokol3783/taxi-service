@@ -24,12 +24,12 @@
         <div class="text-center"> <img src="./images/icon.jpg" class=".img-thumbnail img-thumbnail-height" alt="logo"> </div>
         <div class="mb-3">
           <label for="login" class="form-label">Your mobile number or login</label>
-          <input type="text" class="form-control" id="login">
+          <input type="text" class="form-control" id="login" name="login">
           <div id="emailHelp" class="form-text">We'll never share your contacts with anyone else.</div>
         </div>
         <div class="mb-3">
-          <label for="inputPassword" class="form-label">Password</label>
-          <input type="password" class="form-control" id="inputPassword">
+          <label for="password" class="form-label">Password</label>
+          <input type="password" class="form-control" id="password" name="password">
         </div>
         <div class="mb-3 form-check">
           <input type="checkbox" class="form-check-input" id="exampleCheck1">

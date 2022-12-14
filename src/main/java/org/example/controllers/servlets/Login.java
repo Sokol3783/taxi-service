@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import org.example.AppUrl;
 import org.example.controllers.managers.UserManager;
+import org.example.exceptions.DAOException;
 import org.example.models.User;
 
 @WebServlet(name = "login", urlPatterns = "/login")
@@ -18,8 +19,8 @@ public class Login extends HttpServlet {
   @Override
   protected void doPost(HttpServletRequest request, HttpServletResponse response) {
 
-    final String login = request.getParameter("LOGIN");
-    final String password = request.getParameter("PASSWORD");
+    final String login = request.getParameter("login");
+    final String password = request.getParameter("password");
 
     final HttpSession session = request.getSession();
 
@@ -39,13 +40,11 @@ public class Login extends HttpServlet {
         request.getSession().setAttribute("USER", user);
         moveToMenu(user, request, response);
       }
+      moveToMenu(null, request, response);
     }
-
-    moveToMenu(null, request, response);
-
   }
 
-  private User findUser(String login, String password) {
+  private User findUser(String login, String password) throws DAOException {
     UserManager manager = new UserManager();
     return manager.findUserLoginPassword(login, password);
   }
