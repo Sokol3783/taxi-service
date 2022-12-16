@@ -6,15 +6,12 @@ public enum UserRole {
   DRIVER;
 
   public static UserRole getRole(String role) {
-    switch (role) {
-      case "ADMIN":
-        return ADMIN;
-      case "USER":
-        return USER;
-      case "DRIVER":
-        return DRIVER;
-    }
-    return null;
-  }
+    return switch (role.toUpperCase()) {
+      case "ADMIN" -> ADMIN;
+      case "USER" -> USER;
+      case "DRIVER" -> DRIVER;
+      default -> throw new IllegalStateException("Unexpected value: " + role);
+    };
 
+  }
 }

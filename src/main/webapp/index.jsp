@@ -1,4 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <html>
   <head>
        <meta charset="utf-8">
@@ -24,8 +25,8 @@
         <div class="text-center"> <img src="./images/icon.jpg" class=".img-thumbnail img-thumbnail-height" alt="logo"> </div>
         <div class="mb-3">
           <label for="login" class="form-label">Your mobile number or login</label>
-          <input type="text" class="form-control" id="login" name="login">
-          <div id="emailHelp" class="form-text">We'll never share your contacts with anyone else.</div>
+          <input type="text" class="form-control" id="login" name="login" <c:if test="${empty sessionScope.login">value="${sessionScope.login}"</c:if>>
+          <div class="form-text"> We'll never share your contacts with anyone else. </div>
         </div>
         <div class="mb-3">
           <label for="password" class="form-label">Password</label>

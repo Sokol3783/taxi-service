@@ -39,8 +39,9 @@ public class Login extends HttpServlet {
         request.getSession().setAttribute("TOKEN", "");
         request.getSession().setAttribute("USER", user);
         moveToMenu(user, request, response);
+      } else {
+        moveToMenu(null, request, response);
       }
-      moveToMenu(null, request, response);
     }
   }
 
@@ -60,8 +61,9 @@ public class Login extends HttpServlet {
       final HttpServletResponse response) {
     if (nonNull(user)) {
       forward(UserManager.getRoleURL(user), request, response);
+    } else {
+      forward(AppUrl.INDEX, request, response);
     }
-    forward(AppUrl.INDEX, request, response);
   }
 
 }
