@@ -1,7 +1,9 @@
 --Focused on POSTGRE SQL
 
+DROP TABLE IF EXISTS "discount";
 DROP TABLE IF EXISTS "driverlicenses";
 DROP TABLE IF EXISTS "cars";
+DROP TABLE IF EXISTS "orders";
 DROP TABLE IF EXISTS "orders";
 DROP TABLE IF EXISTS "users" cascade;
 
@@ -36,18 +38,20 @@ create TABLE cars (
 
 create TABLE orders (
 	order_id SERIAL PRIMARY KEY,
-	driver_id int references users(user_id),
+	drivers_id INTEGER[],
+	car_numbers VARCHAR[],
 	client_id int references users(user_id),
-	creationDate date,
-	startTrip date,
-	finishTrip date,
-	startingPoint varchar(50) not null,
-	finishPoint varchar(50) not null,
-	cost int not null,
-	feedback varchar(250) ,
-	serviceQuality int,
-	orderNumber int,
-	status varchar(20)
+  address_departure varchar(250),
+  destination varchar(250),
+  cost INTEGER,
+  discount INTEGER,
+  orderNumber INTEGER
+);
+
+CREATE TABLE discount (
+  user_id references users(user_id),
+  amount_spent INTEGER,
+  discount INTEGER
 );
 
 INSERT INTO users(first_name, last_name, phone, user_role, email, password)
