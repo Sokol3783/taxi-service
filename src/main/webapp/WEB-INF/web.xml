@@ -3,13 +3,4 @@
   "http://java.sun.com/dtd/web-app_2_3.dtd" >
 <web-app>
   <display-name>Web App</display-name>
-
-  <filter>
-    <filter-name>encoding</filter-name>
-    <filter-class>EncodingFilter</filter-class>
-    <init-param>
-      <param-name>encoding</param-name>
-      <param-value>UTF-8</param-value>
-    </init-param>
-  </filter>
 </web-app>

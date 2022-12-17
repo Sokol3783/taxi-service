@@ -49,7 +49,7 @@ create TABLE orders (
 );
 
 CREATE TABLE discount (
-  user_id references users(user_id),
+  user_id int references users(user_id),
   amount_spent INTEGER,
   discount INTEGER
 );
