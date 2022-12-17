@@ -2,14 +2,13 @@ package org.example.controllers.managers;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Properties;
 
-public class PropertiesManager {
+public class Properties {
 
   private static final String PATH_PROPERTIES = "/WEB-INF/app.properties";
 
   private static final String PATH_SCRIPT = "/WEB-INF/initialdb.sql";
-  public static Properties properties;
+  public static java.util.Properties properties;
 
   public static String getStringFromProperties(String key) {
     return String.valueOf(getProperties().getProperty(key));
@@ -23,15 +22,15 @@ public class PropertiesManager {
     return Boolean.valueOf(getProperties().getProperty(key));
   }
 
-  public static Properties getProperties() {
+  public static java.util.Properties getProperties() {
     if (properties == null) {
-      properties = new Properties();
+      properties = new java.util.Properties();
     }
     return properties;
   }
 
   public static void setProperties(InputStream stream) {
-    Properties prop = new Properties();
+    java.util.Properties prop = new java.util.Properties();
     try {
       prop.load(stream);
     } catch (IOException e) {
