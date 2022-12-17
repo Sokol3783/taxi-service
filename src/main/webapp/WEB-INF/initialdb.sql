@@ -4,7 +4,6 @@ DROP TABLE IF EXISTS "discount";
 DROP TABLE IF EXISTS "driverlicenses";
 DROP TABLE IF EXISTS "cars";
 DROP TABLE IF EXISTS "orders";
-DROP TABLE IF EXISTS "orders";
 DROP TABLE IF EXISTS "users" cascade;
 
 SELECT 'create DATABASE TAXI
@@ -51,7 +50,7 @@ create TABLE orders (
 CREATE TABLE discount (
   user_id int references users(user_id),
   amount_spent INTEGER,
-  discount INTEGER
+  procent_discount INTEGER
 );
 
 INSERT INTO users(first_name, last_name, phone, user_role, email, password)
