@@ -31,7 +31,7 @@
         <div class="text-center"> <img src="./images/icon.jpg" class=".img-thumbnail img-thumbnail-height" alt="logo"> </div>
         <div class="mb-3">
           <label for="login" class="form-label">Your mobile number or login</label>
-          <input type="text" class="form-control" id="login" name="login" <c:if test="${empty sessionScope.login">value="${sessionScope.login}"</c:if>>
+          <input type="text" class="form-control" id="login" name="login" <c:if test="${not empty sessionScope.login}">value="${sessionScope.login}"</c:if>>
           <div class="form-text"> We'll never share your contacts with anyone else. </div>
         </div>
         <div class="mb-3">

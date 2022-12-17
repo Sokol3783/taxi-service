@@ -1,5 +1,4 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java"%>
-
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ page isELIgnored="false"%>
@@ -27,8 +26,15 @@
                     <li><fmt:setLocale value="en"/></li>
                   </ul>
           </nav>
-      <form action="order" method="post">
-
+      <form action="user" method="post">
+          <div class="input-group mb-3">
+            <button name="act" value= "findCar" type="submit" class="btn btn-primary background-orange-button">Find car</button>
+          </div>
+      </form>
+      <form action="user" method="post">
+          <div class="input-group mb-3">
+              <button name="act" value= "createOrder" type="submit" class="btn btn-primary background-orange-button">Create order</button>
+          </div>
       </form>
       <script src="./js/bootstrap.bundle.js"></script>
     </body>

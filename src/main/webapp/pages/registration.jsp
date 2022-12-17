@@ -1,4 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<%@ page isELIgnored="false"%>
 <html>
   <head>
        <meta charset="utf-8">
@@ -44,9 +47,9 @@
                 <input type="password" class="form-control" placeholder="Repeat the password" name="password_check" id=="password_check"  aria-label="Username" aria-describedby="basic-addon1">
               </div>
               <div class="input-group btn-group">
-                <input type="radio" class="btn-check" name="options-outlined" id="client" autocomplete="off" checked>
+                <input type="radio" class="btn-check" name="role" id="client" autocomplete="off" value="user" checked>
                 <label class="btn btn-outline-success lbl-taxi" for="client"> Client </label>
-                <input type="radio" class="btn-check" name="options-outlined" id="driver" autocomplete="off">
+                <input type="radio" class="btn-check" name="role" id="driver" value="driver" autocomplete="off">
                 <label class="btn btn-outline-driver lbl-taxi" for="driver"> Driver </label>
               </div>
             </div>
