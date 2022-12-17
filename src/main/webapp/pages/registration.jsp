@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<%@ page contentType="text/html;charset=UTF-8" language="java"%>
 <html>
   <head>
        <meta charset="utf-8">
@@ -20,33 +20,32 @@
                         <li><a class="dropdown-item" href="#">en-EN</a></li>
                       </ul>
               </nav>
-          <form>
-            <div class="register-container m-5 needs-validation">
+          <form class="needs-validation" action="registration" method="post" >
+            <div class="register-container m-5">
               <div class="input-group mb-3">
-                <input type="text" class="form-control" placeholder="First name" aria-label="Username" aria-describedby="basic-addon1">
+                <input type="text" class="form-control" placeholder="First name" name="first_name" aria-label="Username" aria-describedby="basic-addon1">
               </div>
               <div class="input-group mb-3">
-                <input type="text" class="form-control" placeholder="Second name" aria-label="Username" aria-describedby="basic-addon1">
+                <input type="text" class="form-control" placeholder="Last name" name="last_name" aria-label="Username" aria-describedby="basic-addon1">
               </div>
               <div class="input-group mb-3">
-                <input type="e-mail" class="form-control" placeholder="e-mail" aria-label="Username" aria-describedby="basic-addon1">
+                <input type="e-mail" class="form-control" placeholder="e-mail" name="email"  aria-label="Username" aria-describedby="basic-addon1">
               </div>
               <div class="input-group mb-3">
-                <input type="date" class="form-control" placeholder="Birth date" aria-label="Username" aria-describedby="basic-addon1">
+                <input type="date" class="form-control" placeholder="Birthday" name="birthday" aria-label="Username" aria-describedby="basic-addon1">
               </div>
               <div class="input-group mb-3">
-                <input type="text" class="form-control" placeholder="Mobile phone" aria-label="Username" aria-describedby="basic-addon1">
+                <input type="text" class="form-control" placeholder="Mobile phone" name="phone" aria-label="Username" aria-describedby="basic-addon1">
               </div>
               <div class="input-group mb-3">
-                <input type="password" class="form-control" placeholder="Password" aria-label="Username" aria-describedby="basic-addon1">
+                <input type="password" class="form-control" placeholder="Password" name="password" id=="password" aria-label="Username" aria-describedby="basic-addon1">
               </div>
               <div class="input-group mb-3">
-                <input type="password" class="form-control" placeholder="Repeat the password" aria-label="Username" aria-describedby="basic-addon1">
+                <input type="password" class="form-control" placeholder="Repeat the password" name="password_check" id=="password_check"  aria-label="Username" aria-describedby="basic-addon1">
               </div>
               <div class="input-group btn-group">
                 <input type="radio" class="btn-check" name="options-outlined" id="client" autocomplete="off" checked>
                 <label class="btn btn-outline-success lbl-taxi" for="client"> Client </label>
-
                 <input type="radio" class="btn-check" name="options-outlined" id="driver" autocomplete="off">
                 <label class="btn btn-outline-driver lbl-taxi" for="driver"> Driver </label>
               </div>
