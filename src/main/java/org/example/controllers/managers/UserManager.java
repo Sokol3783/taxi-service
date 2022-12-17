@@ -35,7 +35,6 @@ public class UserManager implements Manager<User> {
   }
 
   public User findUserLoginPassword(String login, String password) {
-
     try {
       return userDAO.findUserPhoneMailAndPassword(login, password,
           pool.getConnection());
@@ -43,11 +42,10 @@ public class UserManager implements Manager<User> {
       log.error(DAOException.USER_NOT_FOUND);
       throw new DAOException(e);
     }
-
   }
 
   @Override
-  public User create(User model) {
+  public User create(User model) throws DAOException {
     return userDAO.create(model, pool.getConnection());
   }
 

@@ -34,7 +34,7 @@ public class UserDAO implements DAO<User> {
 
 
   @Override
-  public User create(User model, Connection con) {
+  public User create(User model, Connection con) throws DAOException {
     try {
       con.commit();
       try (PreparedStatement statement = con.prepareStatement(CREATE)) {
@@ -58,7 +58,7 @@ public class UserDAO implements DAO<User> {
     return User.builder().build();
   }
 
-  public User create(User model, String password, Connection con) {
+  public User create(User model, String password, Connection con) throws DAOException {
     try {
       con.commit();
       try (PreparedStatement statement = con.prepareStatement(CREATE)) {
