@@ -9,7 +9,7 @@ import javax.servlet.http.HttpSessionAttributeListener;
 import javax.servlet.http.HttpSessionBindingEvent;
 import javax.servlet.http.HttpSessionEvent;
 import javax.servlet.http.HttpSessionListener;
-import org.example.controllers.managers.PropertiesManager;
+import org.example.controllers.managers.Properties;
 import org.example.dao.BasicConnectionPool;
 import org.example.dao.DAOUtil;
 import org.example.exceptions.DAOException;
@@ -25,7 +25,7 @@ public class ContextListener implements ServletContextListener, HttpSessionListe
 
   @Override
   public synchronized void contextInitialized(ServletContextEvent sce) {
-    if (PropertiesManager.properties == null) {
+    if (Properties.properties == null) {
       try {
         if (setPropertiesFromFile(sce)) {
           Connection con = BasicConnectionPool.getInstance().getConnection();
@@ -35,7 +35,7 @@ public class ContextListener implements ServletContextListener, HttpSessionListe
           }
           try {
             BasicConnectionPool.runSQLScript(FileReader.readStreamFromWeb(sce,
-                    PropertiesManager.getPathScript())
+                    Properties.getPathScript())
                 , con);
           } finally {
             DAOUtil.connectionClose(con, log);
@@ -49,9 +49,9 @@ public class ContextListener implements ServletContextListener, HttpSessionListe
   }
 
   private boolean setPropertiesFromFile(ServletContextEvent sce) throws IOException {
-    PropertiesManager.setProperties(
-        FileReader.readStreamFromWeb(sce, PropertiesManager.getPathProperties()));
-    return PropertiesManager.properties.size() > 0;
+    Properties.setProperties(
+        FileReader.readStreamFromWeb(sce, Properties.getPathProperties()));
+    return Properties.properties.size() > 0;
   }
 
   @Override

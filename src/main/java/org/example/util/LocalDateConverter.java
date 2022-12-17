@@ -17,4 +17,10 @@ public class LocalDateConverter {
         .map(Date::toLocalDate)
         .orElse(null);
   }
+
+  public static LocalDate convertToEntityAttribute(String date) {
+    return Optional.ofNullable(date).map(Date::valueOf)
+        .map(Date::toLocalDate)
+        .orElse(null);
+  }
 }
