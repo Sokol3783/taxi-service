@@ -1,5 +1,6 @@
 package org.example.models;
 
+import java.io.Serializable;
 import java.util.List;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -11,8 +12,9 @@ import org.example.models.taxienum.CarCategory;
 @Getter
 @EqualsAndHashCode
 @ToString
-public class Order {
+public class Order implements Serializable {
 
+  int id;
   String addressDeparture;
   String destination;
   List<User> drivers;

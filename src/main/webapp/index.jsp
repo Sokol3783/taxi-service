@@ -23,8 +23,8 @@
                       English
                   </button>
                   <ul class="dropdown-menu dropdown-menu-orange">
-                    <li><fmt:setLocale value="ru"/></li>
-                    <li><fmt:setLocale value="en"/></li>
+                   <li><fmt:setLocale value="ru"/>ru </li>
+                   <li><fmt:setLocale value="en"/>en</li>
                   </ul>
           </nav>
       <form action="login" method="post">

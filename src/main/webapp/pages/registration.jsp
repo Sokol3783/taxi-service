@@ -19,8 +19,8 @@
                           Language
                       </button>
                       <ul class="dropdown-menu dropdown-menu-orange">
-                        <li><a class="dropdown-item" href="#">ru-RU</a></li>
-                        <li><a class="dropdown-item" href="#">en-EN</a></li>
+                        <li><fmt:setLocale value="ru"/>ru </li>
+                        <li><fmt:setLocale value="en"/>en</li>
                       </ul>
               </nav>
           <form class="needs-validation" action="registration" method="post" >

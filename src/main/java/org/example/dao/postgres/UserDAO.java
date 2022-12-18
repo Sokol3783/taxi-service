@@ -29,7 +29,7 @@ public class UserDAO implements DAO<User> {
   private static final String UPDATE_PASSWORD = "UPDATE users SET password=? WHERE phone=? AND email=?";
   private static final String DELETE = "DELETE FROM users WHERE id=?";
   private static final String SELECT_ALL = "SELECT * FROM users";
-  private static final String SELECT = SELECT_ALL + " WHERE id=?";
+  private static final String SELECT = SELECT_ALL + " WHERE user_id=?";
   private static final String SELECT_BY_PHONEMAIL_PASSWORD = "SELECT * FROM users WHERE (phone=? OR email=?) AND password=?";
 
 
@@ -87,6 +87,7 @@ public class UserDAO implements DAO<User> {
   @Override
   public void update(User model, Connection con) {
     try {
+      con.setAutoCommit(false);
       con.commit();
       try (PreparedStatement statement = con.prepareStatement(UPDATE)) {
         statement.setString(1, model.getFirstName());

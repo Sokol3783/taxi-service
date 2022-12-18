@@ -22,12 +22,19 @@
                       English
                   </button>
                   <ul class="dropdown-menu dropdown-menu-orange">
-                    <li><fmt:setLocale value="ru"/></li>
-                    <li><fmt:setLocale value="en"/></li>
+                    <li><fmt:setLocale value="ru"/>ru </li>
+                    <li><fmt:setLocale value="en"/>en</li>
                   </ul>
           </nav>
       <form action="user" method="post">
           <div class="input-group mb-3">
+             <select class="form-select" aria-label="Default select example">
+               <option selected>Open this select menu</option>
+               <%
+               for (DaysOfWeekEnum day : DaysOfWeekEnum.values()) {
+                   System.out.println(day);
+               }%>
+             </select>
             <button name="act" value= "findCar" type="submit" class="btn btn-primary background-orange-button">Find car</button>
           </div>
       </form>

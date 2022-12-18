@@ -44,7 +44,7 @@ create TABLE orders (
   destination varchar(250),
   cost INTEGER,
   discount INTEGER,
-  orderNumber INTEGER
+  order_number INTEGER
 );
 
 CREATE TABLE discounts (
