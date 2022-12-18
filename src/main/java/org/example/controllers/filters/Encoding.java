@@ -16,7 +16,7 @@ public class Encoding implements Filter {
 
   @Override
   public void init(FilterConfig config) {
-    encoding = config.getInitParameter("encoding");
+    encoding = "UTF-8";
   }
 
   @Override
