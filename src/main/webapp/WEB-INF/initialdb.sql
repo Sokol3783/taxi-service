@@ -1,6 +1,6 @@
 --Focused on POSTGRE SQL
 
-DROP TABLE IF EXISTS "discount";
+DROP TABLE IF EXISTS "discounts";
 DROP TABLE IF EXISTS "driverlicenses";
 DROP TABLE IF EXISTS "cars";
 DROP TABLE IF EXISTS "orders";
@@ -47,8 +47,8 @@ create TABLE orders (
   orderNumber INTEGER
 );
 
-CREATE TABLE discount (
-  user_id int references users(user_id),
+CREATE TABLE discounts (
+  owner_discount int references users(user_id),
   amount_spent INTEGER,
   procent_discount INTEGER
 );
