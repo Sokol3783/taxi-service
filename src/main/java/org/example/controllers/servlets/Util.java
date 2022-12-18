@@ -11,7 +11,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import org.example.AppUrl;
 import org.example.exceptions.ForwardException;
 import org.example.exceptions.RedirectException;
 import org.slf4j.Logger;
@@ -22,7 +21,7 @@ public class Util {
   private static final Logger log = LoggerFactory.getLogger(Util.class);
 
   public static void sendRedirect(HttpServletResponse resp,
-      String url) {
+      String url) throws ServletException {
 
     if (url.length() > 0) {
       try {
@@ -34,11 +33,12 @@ public class Util {
       }
     } else {
       log.error(REDIRECT_EMPTY_URL);
-      sendRedirect(resp, AppUrl.NOT_FOUND);
+      throw new ServletException();
     }
   }
 
-  public static void forward(String url, HttpServletRequest request, HttpServletResponse response) {
+  public static void forward(String url, HttpServletRequest request, HttpServletResponse response)
+      throws ServletException {
     if (url.length() > 0) {
       try {
         request.getRequestDispatcher(url).forward(request, response);
@@ -49,7 +49,7 @@ public class Util {
       }
     } else {
       log.error(REDIRECT_EMPTY_URL);
-      forward(AppUrl.NOT_FOUND, request, response);
+      throw new ServletException();
     }
   }
 

@@ -4,6 +4,7 @@ package org.example.controllers.servlets;
 import static java.util.Objects.nonNull;
 import static org.example.controllers.servlets.Util.forward;
 
+import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -24,12 +25,14 @@ public class Registration extends HttpServlet {
   private static final Logger log = LoggerFactory.getLogger(Registration.class);
 
   @Override
-  protected void doGet(HttpServletRequest request, HttpServletResponse response) {
+  protected void doGet(HttpServletRequest request, HttpServletResponse response)
+      throws ServletException {
     forward(AppUrl.REGISTRATION, request, response);
   }
 
   @Override
-  protected void doPost(HttpServletRequest request, HttpServletResponse response) {
+  protected void doPost(HttpServletRequest request, HttpServletResponse response)
+      throws ServletException {
     User user = createUser(request);
     if (nonNull(user)) {
       UserManager manager = new UserManager();
@@ -50,7 +53,7 @@ public class Registration extends HttpServlet {
           .email(request.getParameter("email"))
           .phone(request.getParameter("phone"))
           .password(request.getParameter("password"))
-          .role(UserRole.getRole(request.getParameter("user_role")))
+          .role(UserRole.getRole(request.getParameter("role")))
           .birthDate(LocalDateConverter.convertToEntityAttribute(
               request.getParameter("birthday")))
           .build();

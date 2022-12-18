@@ -2,13 +2,14 @@ package org.example.controllers.servlets;
 
 import static java.util.Objects.nonNull;
 import static org.example.controllers.servlets.Util.forward;
+import static org.example.controllers.servlets.Util.sendRedirect;
 
+import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import org.example.AppUrl;
 import org.example.controllers.managers.UserManager;
 import org.example.exceptions.DAOException;
 import org.example.models.User;
@@ -17,7 +18,8 @@ import org.example.models.User;
 public class Login extends HttpServlet {
 
   @Override
-  protected void doPost(HttpServletRequest request, HttpServletResponse response) {
+  protected void doPost(HttpServletRequest request, HttpServletResponse response)
+      throws ServletException {
 
     final String login = request.getParameter("login");
     final String password = request.getParameter("password");
@@ -31,6 +33,9 @@ public class Login extends HttpServlet {
 
       if (isValidToken((String) session.getAttribute("TOKEN"))) {
         moveToMenu((User) session.getAttribute("USER"), request, response);
+      } else {
+        session.setAttribute("login", login);
+        moveToMenu(null, request, response);
       }
 
     } else {
@@ -40,6 +45,7 @@ public class Login extends HttpServlet {
         request.getSession().setAttribute("USER", user);
         moveToMenu(user, request, response);
       } else {
+        session.setAttribute("login", login);
         moveToMenu(null, request, response);
       }
     }
@@ -58,11 +64,11 @@ public class Login extends HttpServlet {
    * Move user to menu by his role
    */
   private void moveToMenu(User user, final HttpServletRequest request,
-      final HttpServletResponse response) {
+      final HttpServletResponse response) throws ServletException {
     if (nonNull(user)) {
       forward(UserManager.getRoleURL(user), request, response);
     } else {
-      forward(AppUrl.INDEX, request, response);
+      sendRedirect(response, request.getHeader("referer"));
     }
   }
 
