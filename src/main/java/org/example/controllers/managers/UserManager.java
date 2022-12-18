@@ -29,7 +29,6 @@ public class UserManager implements Manager<User> {
     return switch (role) {
       case ADMIN -> AppUrl.ADMIN;
       case USER -> AppUrl.USER;
-      case DRIVER -> AppUrl.DRIVER;
       default -> AppUrl.INDEX;
     };
   }
