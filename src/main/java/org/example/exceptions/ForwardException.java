@@ -3,7 +3,7 @@ package org.example.exceptions;
 public class ForwardException extends RuntimeException {
 
   public static final String FORWARDING_EXCEPTION = "Some problem with forwarding to url %s";
-  public static String FORWARD_EMPTY_URL = "There no URL in forward";
+  public static String FORWARD_EMPTY_URL = "There are no URL in forward";
 
   public ForwardException() {
     super();

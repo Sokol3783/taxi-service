@@ -13,6 +13,7 @@ import org.example.controllers.managers.Properties;
 import org.example.dao.BasicConnectionPool;
 import org.example.dao.DAOUtil;
 import org.example.exceptions.DAOException;
+import org.example.models.Fleet;
 import org.example.util.FileReader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,6 +38,7 @@ public class ContextListener implements ServletContextListener, HttpSessionListe
             BasicConnectionPool.runSQLScript(FileReader.readStreamFromWeb(sce,
                     Properties.getPathScript())
                 , con);
+            Fleet.getInstance().setCarsAvailableToOrder();
           } finally {
             DAOUtil.connectionClose(con, log);
           }
