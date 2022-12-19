@@ -26,23 +26,60 @@
                     <li><fmt:setLocale value="en"/>en</li>
                   </ul>
           </nav>
-      <form action="user" method="post">
-          <div class="input-group mb-3">
-             <select class="form-select" aria-label="Default select example">
-               <option selected>Open this select menu</option>
-               <%
-               for (DaysOfWeekEnum day : DaysOfWeekEnum.values()) {
-                   System.out.println(day);
-               }%>
-             </select>
-            <button name="act" value= "findCar" type="submit" class="btn btn-primary background-orange-button">Find car</button>
+          <form class="container p-3 mb-3" action="user-action" method="post" >
+            <div class="row">
+                <div class="col-9 mb-3">
+                  <select class="form-select form-select" aria-label=".form-select example" name="car-category" id="car-category">
+                  <option selected>Select prefer taxi category</option>
+                  <option value="ECONOMY">ECONOMY</option>
+                  <option value="STANDARD">STANDARD</option>
+                  <option value="BUSYNESS">BUSYNESS</option>
+                  </select>
+                </div>
+                <div class="col-3 mb-3 ">
+                    <input type="number" class="form-control text-center"  name="passengers" value="1" id="passengers" placeholder="number of passengers" aria-label="number of passengers">
+                </div>
+                <div class="col-12">
+                  <button name="act" value= "findCar" type="submit" class="btn btn-primary background-orange-button">Find car</button>
+                </div>
+            </div>
+          </form>
+          <form class="container p-3 mb-3" action="user-action" method="post">
+            <div class="container g-3 m-3 col-12 row justify-content-between">
+              <div class="container row col-6">
+                  <div class="col-2"> 
+                    <span class="input-group-text">Cost</span>
+                  </div>
+                  <div class="col-4"> 
+                    <input type="number" readonly class="form-control-plaintext input-group-text" id="percentDiscount" value="25">
+                  </div>
+               </div>
+              <div class="container row col-6 justify-content-end"> 
+                  <div class="col-3"> 
+                    <span class="input-group-text">% discount</span>
+                  </div>
+                  <div class="col-3 jus"> 
+                    <input type="number" readonly class="form-control-plaintext input-group-text" id="percentDiscount" value="25">
+                  </div>
+                </div>
+            </div>
+            <div class="container g-3 m-2 row">
+              <div class="mb-3 row">
+                <label for="addressDeparture" class="col-sm-2 col-form-label">address departure</label>
+                <div class="col-10">
+                  <input type="password" class="form-control" id="addressDeparture">
+                </div>
+              </div>
+              <div class="mb-3 row">
+                <label for="destination" class="col-sm-2 col-form-label">destination</label>
+                <div class="col-10">
+                  <input type="password" class="form-control" id="destination">
+                </div>
+              </div>
+              <div class="col-12">
+                    <button name="act" value= "createOrder" type="submit" class="btn btn-primary background-orange-button">Create order</button>
+              </div>
           </div>
-      </form>
-      <form action="user" method="post">
-          <div class="input-group mb-3">
-              <button name="act" value= "createOrder" type="submit" class="btn btn-primary background-orange-button">Create order</button>
-          </div>
-      </form>
       <script src="./js/bootstrap.bundle.js"></script>
     </body>
 </html>

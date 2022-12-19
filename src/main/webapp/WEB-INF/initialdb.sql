@@ -20,7 +20,7 @@ create TABLE users (
 	first_name varchar(50),
 	last_name varchar(50),
 	phone varchar(13) unique,
-  birthday varchar(50),
+  birthday DATE,
 	email varchar(50),
 	user_role varchar(15)
 );
@@ -35,19 +35,27 @@ create TABLE cars (
 
 create TABLE orders (
 	order_id SERIAL PRIMARY KEY,
-	car_orders SERIAL[],
+	car_orders INTEGER[],
 	client_id int references users(user_id),
   address_departure varchar(250),
   destination varchar(250),
   cost INTEGER,
   discount INTEGER,
+  create_date timestamp,
   order_number INTEGER
 );
 
 CREATE TABLE discounts (
+  discount_id SERIAL PRIMARY KEY,
   owner_discount int references users(user_id),
   amount_spent INTEGER,
   procent_discount INTEGER
+);
+
+CREATE TABLE price (
+  price_id SERIAL PRIMARY KEY,
+  car_category VARCHAR(15),
+  current_price INTEGER
 );
 
 INSERT INTO users(first_name, last_name, phone, user_role, email, password)
@@ -69,7 +77,7 @@ INSERT INTO users(first_name, last_name, phone,  user_role, email, password)
        VALUES('Василий', 'Кузнецов', '380963437885', 'User', 'examples6@google.com', 'password1');
 
 INSERT INTO cars(car_number, car_name,category, capacity)
-        VALUES(2, 'AX097A1','Шеврлое Авео', 'Comfort', 4);
+        VALUES('AX097A1','Шеврлое Авео', 'Comfort', 4);
 
 INSERT INTO cars(car_number, car_name,category, capacity)
-VALUES(3, 'AX807A1','BMW m3', 'Premium', 2);
+VALUES('AX807A1','BMW m3', 'Premium', 2);
