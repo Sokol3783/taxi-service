@@ -3,7 +3,7 @@ package org.example.controllers.managers;
 
 import java.sql.SQLException;
 import java.util.List;
-import org.example.AppUrl;
+import org.example.AppURL;
 import org.example.dao.BasicConnectionPool;
 import org.example.dao.SimpleConnectionPool;
 import org.example.dao.postgres.UserDAO;
@@ -27,9 +27,9 @@ public class UserManager implements Manager<User> {
   public static String getRoleURL(User user) {
     UserRole role = user.getRole();
     return switch (role) {
-      case ADMIN -> AppUrl.ADMIN;
-      case USER -> AppUrl.USER;
-      default -> AppUrl.INDEX;
+      case ADMIN -> AppURL.ADMIN_SERVLET;
+      case USER -> AppURL.USER_SERVLET;
+      default -> AppURL.INDEX_JSP;
     };
   }
 
