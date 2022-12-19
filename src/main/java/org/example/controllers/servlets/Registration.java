@@ -3,16 +3,16 @@ package org.example.controllers.servlets;
 
 import static java.util.Objects.nonNull;
 import static org.example.controllers.servlets.Util.forward;
+import static org.example.controllers.servlets.Util.sendRedirect;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.example.AppUrl;
+import org.example.AppURL;
 import org.example.controllers.managers.UserManager;
 import org.example.exceptions.DAOException;
-import org.example.exceptions.RegistrationException;
 import org.example.models.User;
 import org.example.models.taxienum.UserRole;
 import org.example.util.LocalDateConverter;
@@ -27,7 +27,7 @@ public class Registration extends HttpServlet {
   @Override
   protected void doGet(HttpServletRequest request, HttpServletResponse response)
       throws ServletException {
-    forward(AppUrl.REGISTRATION, request, response);
+    forward(AppURL.REGISTRATION_JSP, request, response);
   }
 
   @Override
@@ -40,9 +40,9 @@ public class Registration extends HttpServlet {
         manager.create(user);
       } catch (DAOException e) {
         log.error(DAOException.USER_NOT_CREATE, e);
-        throw new RegistrationException(e);
+        sendRedirect(response, request.getHeader("referer"));
       }
-      forward(AppUrl.INDEX, request, response);
+
     }
   }
 
