@@ -10,6 +10,5 @@ public enum UserRole {
       case "USER" -> USER;
       default -> throw new IllegalStateException("Unexpected value: " + role);
     };
-
   }
 }
