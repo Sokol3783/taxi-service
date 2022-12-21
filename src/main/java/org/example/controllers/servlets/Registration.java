@@ -5,6 +5,7 @@ import static java.util.Objects.nonNull;
 import static org.example.controllers.servlets.Util.forward;
 import static org.example.controllers.servlets.Util.sendRedirect;
 
+import java.sql.SQLException;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -38,7 +39,7 @@ public class Registration extends HttpServlet {
       UserManager manager = new UserManager();
       try {
         manager.create(user);
-      } catch (DAOException e) {
+      } catch (SQLException e) {
         log.error(DAOException.USER_NOT_CREATE, e);
         sendRedirect(response, request.getHeader("referer"));
       }

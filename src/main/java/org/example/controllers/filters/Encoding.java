@@ -7,9 +7,7 @@ import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
-import javax.servlet.annotation.WebFilter;
 
-@WebFilter(filterName = "encoding", urlPatterns = {"/*"})
 public class Encoding implements Filter {
 
   private String encoding;
@@ -23,9 +21,10 @@ public class Encoding implements Filter {
   public void doFilter(
       ServletRequest request, ServletResponse response, FilterChain chain)
       throws IOException, ServletException {
-    request.setCharacterEncoding(encoding);
+    if (request.getCharacterEncoding() == null) {
+      request.setCharacterEncoding(encoding);
+    }
     chain.doFilter(request, response);
-
   }
 
 }

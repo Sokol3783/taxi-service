@@ -9,12 +9,12 @@ public enum CarCategory {
 
   public static ConcurrentMap<CarCategory, Integer> prices;
 
-  public static CarCategory getCategory(String role) {
-    return switch (role.toUpperCase()) {
+  public static CarCategory getCategory(String category) {
+    return switch (category.toUpperCase()) {
       case "ECONOMY" -> ECONOMY;
       case "STANDARD" -> STANDARD;
       case "BUSYNESS" -> BUSYNESS;
-      default -> throw new IllegalStateException("Unexpected value: " + role);
+      default -> throw new IllegalStateException("Unexpected value: " + category);
     };
 
   }

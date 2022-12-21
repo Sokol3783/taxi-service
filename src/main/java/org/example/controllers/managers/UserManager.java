@@ -44,7 +44,7 @@ public class UserManager implements Manager<User> {
   }
 
   @Override
-  public User create(User model) throws DAOException {
+  public User create(User model) throws SQLException {
     return userDAO.create(model, pool.getConnection());
   }
 

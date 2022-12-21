@@ -34,19 +34,19 @@ public class UserDAO implements DAO<User> {
 
 
   @Override
-  public User create(User model, Connection con) throws DAOException {
-    try {
+  public User create(User model, Connection con) throws SQLException {
+    con.setAutoCommit(false);
+    try (PreparedStatement statement = con.prepareStatement(CREATE)) {
+      statement.setString(1, model.getFirstName());
+      statement.setString(2, model.getSecondName());
+      statement.setString(3, model.getPhone());
+      statement.setString(4, String.valueOf(model.getRole()));
+      statement.setString(5, model.getEmail());
+      statement.setDate(6, Date.valueOf(model.getBirthDate()));
+      boolean execute = statement.execute();
       con.commit();
-      try (PreparedStatement statement = con.prepareStatement(CREATE)) {
-        statement.setString(1, model.getFirstName());
-        statement.setString(2, model.getSecondName());
-        statement.setString(3, model.getPhone());
-        statement.setString(4, String.valueOf(model.getRole()));
-        statement.setString(5, model.getEmail());
-        statement.setDate(6, Date.valueOf(model.getBirthDate()));
-        if (statement.execute()) {
-          return model;
-        }
+      if (execute) {
+        return model;
       }
     } catch (SQLException e) {
       DAOUtil.rollbackCommit(con, log);

@@ -25,4 +25,5 @@ public class Order implements Serializable {
   int discount;
   long orderNumber;
   LocalDateTime createAt;
+  long distance;
 }

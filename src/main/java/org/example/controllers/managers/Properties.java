@@ -8,6 +8,8 @@ public class Properties {
   private static final String PATH_PROPERTIES = "/WEB-INF/app.properties";
 
   private static final String PATH_SCRIPT = "/WEB-INF/initialdb.sql";
+
+  public static final String LANG = "lang";
   public static java.util.Properties properties;
 
   public static String getStringFromProperties(String key) {

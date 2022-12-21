@@ -1,9 +1,13 @@
 package org.example.controllers.managers;
 
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.List;
 import org.example.dao.BasicConnectionPool;
+import org.example.dao.DAOUtil;
 import org.example.dao.SimpleConnectionPool;
 import org.example.dao.postgres.CarDAO;
+import org.example.exceptions.DAOException;
 import org.example.models.Car;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,30 +27,40 @@ public class CarManager implements Manager<Car> {
 
   @Override
   public Car create(Car model) {
-    return null;
+    try {
+      return dao.create(model, pool.getConnection());
+    } catch (SQLException e) {
+      log.error(e.getLocalizedMessage());
+      throw new DAOException(e);
+    }
   }
 
   @Override
   public void delete(int id) {
-
+    Connection connection = pool.getConnection();
+    dao.delete(id, connection);
+    DAOUtil.connectionClose(connection, log);
   }
 
   @Override
   public Car findById(int id) {
-    return null;
+    Connection connection = pool.getConnection();
+    Car car = dao.get(id, connection);
+    DAOUtil.connectionClose(connection, log);
+    return car;
   }
 
   @Override
   public void update(Car model) {
-
+    dao.update(model, pool.getConnection());
   }
 
   @Override
   public List findAll() {
-    return null;
+    return dao.getAll(pool.getConnection());
   }
 
   public Car findByNumber(String number) {
-    return null;
+    return dao.get(number, pool.getConnection());
   }
 }

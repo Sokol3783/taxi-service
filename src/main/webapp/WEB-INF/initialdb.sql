@@ -3,7 +3,8 @@
 DROP TABLE IF EXISTS "discounts";
 DROP TABLE IF EXISTS "cars";
 DROP TABLE IF EXISTS "orders";
-DROP TABLE IF EXISTS "users" cascade;
+DROP TABLE IF EXISTS "price";
+DROP TABLE IF EXISTS "users" CASCADE;
 
 SELECT 'create DATABASE TAXI
       ENCODING UTF8'
@@ -42,7 +43,8 @@ create TABLE orders (
   cost INTEGER,
   discount INTEGER,
   create_date timestamp,
-  order_number INTEGER
+  order_number INTEGER,
+  distance int
 );
 
 CREATE TABLE discounts (
@@ -57,6 +59,11 @@ CREATE TABLE price (
   car_category VARCHAR(15),
   current_price INTEGER
 );
+
+
+INSERT INTO price(car_category, current_price) values ('ECONOMY', 1);
+INSERT INTO price(car_category, current_price) values ('STANDARD', 2);
+INSERT INTO price(car_category, current_price) values ('BUSYNESS', 3);
 
 INSERT INTO users(first_name, last_name, phone, user_role, email, password)
        VALUES('Федор', 'Зотов', '380993785685', 'Admin', 'examples@google.com', 'password1');
@@ -77,7 +84,7 @@ INSERT INTO users(first_name, last_name, phone,  user_role, email, password)
        VALUES('Василий', 'Кузнецов', '380963437885', 'User', 'examples6@google.com', 'password1');
 
 INSERT INTO cars(car_number, car_name,category, capacity)
-        VALUES('AX097A1','Шеврлое Авео', 'Comfort', 4);
+        VALUES('AX097A1','Шеврлое Авео', 'ECONOMY', 4);
 
 INSERT INTO cars(car_number, car_name,category, capacity)
-VALUES('AX807A1','BMW m3', 'Premium', 2);
+VALUES('AX807A1','BMW m3', 'STANDARD', 2);
