@@ -66,9 +66,9 @@ public class Login extends HttpServlet {
   private void moveToMenu(User user, final HttpServletRequest request,
       final HttpServletResponse response) throws ServletException {
     if (nonNull(user)) {
-      forward(UserManager.getRoleURL(user), request, response);
+      sendRedirect(response, request.getContextPath() + UserManager.getRoleURL(user));
     } else {
-      sendRedirect(response, request.getHeader("referer"));
+      forward(request.getHeader("referer"), request, response);
     }
   }
 

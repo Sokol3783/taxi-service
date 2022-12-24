@@ -9,4 +9,6 @@ public class AppURL {
   public static final String USER_SERVLET = "/user";
   public static final String ADMIN_SERVLET = "/admin";
 
+  public static final String USER_ACTION_SERVLET = "/user-action";
+
 }

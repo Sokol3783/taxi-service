@@ -1,7 +1,7 @@
 package org.example.controllers.servlets;
 
 import static java.lang.System.out;
-import static org.example.controllers.servlets.Util.sendRedirect;
+import static org.example.controllers.servlets.Util.forward;
 import static org.example.models.taxienum.CarCategory.getCategory;
 
 import java.util.ArrayList;
@@ -12,18 +12,20 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import org.example.AppURL;
 import org.example.models.Car;
 import org.example.models.Fleet;
 import org.example.models.taxienum.CarCategory;
 
-@WebServlet(name = "userAction", urlPatterns = "/user-action")
+@WebServlet(name = "user-action", urlPatterns = AppURL.USER_ACTION_SERVLET)
 public class UserAction extends HttpServlet {
 
   @Override
   protected void doPost(HttpServletRequest request, HttpServletResponse response)
       throws ServletException {
     String act = request.getParameter("act");
-
+    setCarValues(request);
     if (act != null) {
       switch (act) {
         case "findCar" -> findCarPreferCategory(request, response);
@@ -32,6 +34,12 @@ public class UserAction extends HttpServlet {
         case "createOrder" -> createOrder(request, response);
       }
     }
+  }
+
+  private void setCarValues(HttpServletRequest request) {
+    HttpSession session = request.getSession();
+    session.setAttribute("carCategory", request.getParameter("car-category"));
+    session.setAttribute("passengers", request.getParameter("passengers"));
   }
 
   private void findCarExceptPreferCategory(HttpServletRequest request,
@@ -46,7 +54,7 @@ public class UserAction extends HttpServlet {
       }
       request.getSession().setAttribute("Cars", cars);
     }
-    sendRedirect(response, request.getHeader("referer"));
+    forward(request.getHeader("referer"), request, response);
   }
 
   private List<Car> findFreeCarExceptCategory(CarCategory category, int passengers) {
@@ -72,7 +80,7 @@ public class UserAction extends HttpServlet {
       }
       request.getSession().setAttribute("Cars", cars);
     }
-    sendRedirect(response, request.getHeader("referer"));
+    forward(request.getHeader("referer"), request, response);
   }
 
   private void createOrder(HttpServletRequest request, HttpServletResponse response) {
@@ -92,7 +100,7 @@ public class UserAction extends HttpServlet {
       }
       request.getSession().setAttribute("Cars", cars);
     }
-    sendRedirect(response, request.getHeader("referer"));
+    forward(request.getHeader("referer"), request, response);
   }
 
   private List<Car> findFreeCarByCategory(CarCategory category, int passengers) {
