@@ -12,12 +12,6 @@ BEGIN
              FROM orders
              WHERE orders.client_id = discounts.owner_discount);
 END
-
-    /*
-    owner_discount   int references users (user_id),
-    amount_spent     INTEGER,
-    percent_discount INTEGER
-     */
 $$
     LANGUAGE 'plpgsql';
 /* */
