@@ -56,13 +56,13 @@ public class BasicConnectionPool implements SimpleConnectionPool {
     }
 
 
-    public static void runSQLScript(InputStream input, Connection connection) {
+    public static void runSQLScript(InputStream input, String delimiter, Connection connection) {
         if (input != null) {
             BufferedReader reader = new BufferedReader(new InputStreamReader(input));
             Stream<String> lines = reader.lines();
             try (Statement statement = connection.createStatement()) {
                 List<String> queriesList = Stream
-                        .of(lines.collect(Collectors.joining()).split(";"))
+                        .of(lines.collect(Collectors.joining()).split(delimiter))
                         .collect(Collectors.toList());
                 queriesList.forEach(sqlQuery -> {
                     try {

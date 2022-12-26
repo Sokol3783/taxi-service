@@ -1,7 +1,9 @@
 --Focused on POSTGRE SQL
 
-DROP TABLE IF EXISTS "discounts";
+DROP TABLE IF EXISTS "discounts" CASCADE;
+DROP TABLE IF exists "discount_limits";
 DROP TABLE IF EXISTS "cars";
+DROP TRIGGER IF EXISTS "count_discount" ON "orders";
 DROP TABLE IF EXISTS "orders";
 DROP TABLE IF EXISTS "price";
 DROP TABLE IF EXISTS "users" CASCADE;
@@ -118,7 +120,7 @@ INSERT INTO cars(car_number, car_name, category, capacity)
 VALUES ('AX847A1', 'BMW m6', 'STANDARD', 6);
 
 INSERT INTO cars(car_number, car_name, category, capacity)
-VALUES ('AX877A1', 'BMW m2', 'STANDARD', 3);
+VALUES ('AX817A1', 'BMW m2', 'STANDARD', 3);
 
 INSERT INTO cars(car_number, car_name, category, capacity)
 VALUES ('AX877A1', 'Tesla', 'BUSYNESS', 4);
@@ -139,9 +141,6 @@ INSERT INTO price(car_category, current_price)
 VALUES ('BUSYNESS', 3);
 
 INSERT INTO discount_limits(bottom_limit, top_limit, percent)
-VALUES (0, 1000, 1);
-
-INSERT INTO discount_limits(bottom_limit, top_limit, percent)
 VALUES (1000, 5000, 3);
 
 INSERT INTO discount_limits(bottom_limit, top_limit, percent)
@@ -151,3 +150,33 @@ INSERT INTO discount_limits(bottom_limit, top_limit, percent)
 VALUES (10000, 999999, 10);
 
 
+CREATE OR REPLACE FUNCTION Update_Discount()
+    RETURNS trigger AS
+$$
+BEGIN
+    UPDATE discounts
+    SET (amount_spent, percent_discount)=
+            (SELECT sum(amount_spent),
+                    max((SELECT percent
+                         FROM discount_limits
+                         WHERE bottom_limit <= amount_spent
+                           AND top_limit > amount_spent)) AS percent_discount
+             FROM orders
+             WHERE orders.client_id = discounts.owner_discount);
+END;
+
+    /*
+    owner_discount   int references users (user_id),
+    amount_spent     INTEGER,
+    percent_discount INTEGER
+     */
+$$
+    LANGUAGE 'plpgsql';
+CREATE TRIGGER order_insert_trigger
+    AFTER INSERT
+    ON "orders"
+    FOR EACH ROW
+EXECUTE PROCEDURE Update_Discount();
+
+/*
+ */

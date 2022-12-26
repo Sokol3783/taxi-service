@@ -3,6 +3,7 @@ package org.example.controllers.managers;
 import org.example.dao.BasicConnectionPool;
 import org.example.dao.SimpleConnectionPool;
 import org.example.dao.postgres.SalesManagementDAO;
+import org.example.models.Discount;
 import org.example.models.User;
 
 public class SalesManagement {
@@ -29,7 +30,7 @@ public class SalesManagement {
     public void updateDiscountUser(User user) {
     }
 
-    public int getDiscountByUser(User user) {
-        return 0;
+    public Discount getDiscountByUser(User user) {
+        return dao.getDiscountByUser(user, pool.getConnection());
     }
 }
