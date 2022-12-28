@@ -3,7 +3,7 @@
 // https://account.mapbox.com
 const ACCESS_TOKEN = 'pk.eyJ1Ijoic29rb2wzNzgzIiwiYSI6ImNsYnl5eHNuaDExaXQzcXAzdWoyZWtncXIifQ.lFJFZjk9xzCDMFuPqwxS7A';
 const DISTANCE_QUERY = 'https://api.mapbox.com/directions-matrix/v1/mapbox/driving/';
-const elemDistance = document.getElementById('distance');
+
 let departure = [];
 let destination = [];
 
@@ -18,7 +18,6 @@ script.onload = () => {
         })
     }
 };
-
 
 function controlDistance(event) {
 
@@ -44,6 +43,7 @@ function findDistance() {
 
 function parseDistance(responseText) {
     let parse = JSON.parse(responseText), totalDistance;
+    var elemDistance = document.getElementById('distance');
     totalDistance = 0;
     if (parse.hasOwnProperty("destinations")) {
         let destArr = parse.destinations;
@@ -51,8 +51,39 @@ function parseDistance(responseText) {
         for (let i = 0; i < destArr.length; i++) {
             totalDistance += parseInt(destArr[i].distance);
         }
-        Math.round(totalDistance);
+        elemDistance.value = totalDistance;
     }
+    countCost();
+}
 
-    elemDistance.value = totalDistance;
+function countCost() {
+    const elemDistance = document.getElementById('distance');
+    const elemCost = document.getElementById('cost');
+    if (elemDistance.value > 0) {
+        let price = findPriceCategory()
+        elemCost.value = price * elemDistance.value;
+    } else {
+        elemCost.value = 0;
+    }
+}
+
+function findPriceCategory() {
+    const elemCarCategory = document.getElementById('car-category');
+    const mapCategory = getMapFromPrice();
+    let price = 1;
+    if (elemCarCategory != null) {
+        mapCategory.forEach(s => {
+            let keyValue = s.split('=');
+            if (keyValue[0] == elemCarCategory.value) {
+                price = keyValue[1];
+            }
+        })
+    }
+    return price;
+}
+
+function getMapFromPrice() {
+    let string = document.getElementById('prices').value;
+    let strings = string.split(',');
+    return strings;
 }

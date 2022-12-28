@@ -35,16 +35,33 @@
     </div>
 </nav>
 <form class="container p-3 mb-3" action="user-action" method="post">
+    <c:if test="${not empty sessionScope.CarError}">
+        <div class="col-12 justify-content-center mb-5">
+            <h3 class="text-center alert-danger" id="exampleModalLongTitle"><fmt:message
+                    key="${sessionScope.CarError}"/></h3>
+        </div>
+        <c:remove var="CarError" scope="session"/>
+    </c:if>
     <div class="row">
         <div class="col-9 mb-3">
             <select class="form-select form-select" aria-label=".form-select example" name="car-category"
-                    id="car-category"
-                    <c:if test="${not empty sessionScope.carCategory}">value="${sessionScope.carCategory}"</c:if>>
-                <option selected><fmt:message key="ChoiceCategory"/></option>
-                <option value="ECONOMY"><fmt:message key="ECONOMY"/></option>
-                <option value="STANDARD"><fmt:message key="STANDARD"/></option>
-                <option value="BUSYNESS"><fmt:message key="BUSYNESS"/></option>
+                    id="car-category" onchange="countCost()">
+                <option <c:if test="${empty sessionScope.carCategory}">selected="selected"</c:if>><fmt:message
+                        key="ChoiceCategory"/></option>
+                <option
+                        <c:if test="${sessionScope.carCategory == 'ECONOMY'}">selected="selected"</c:if>
+                        value="ECONOMY">
+                    <fmt:message key="ECONOMY"/></option>
+                <option
+                        <c:if test="${sessionScope.carCategory == 'STANDARD'}">selected="selected"</c:if>
+                        value="STANDARD">
+                    <fmt:message key="STANDARD"/></option>
+                <option
+                        <c:if test="${sessionScope.carCategory == 'BUSYNESS'}">selected="selected"</c:if>
+                        value="BUSYNESS">
+                    <fmt:message key="BUSYNESS"/></option>
             </select>
+            <input type="hidden" id="prices" value="${sessionScope.prices}">
         </div>
         <div class="col-3 mb-3 ">
             <fmt:message key="number_passengers" var="numberPassengers"/>
@@ -60,43 +77,44 @@
             </c:choose>
         </div>
     </div>
-    <div class="col-12 justify-content-start mb-2">
-        <button name="act" value="findCar" type="submit" class="btn btn-primary background-orange-button">
-            <fmt:message key="find_car"/></button>
-    </div>
-</form>
-<form action="user-action" method="post">
-    <div class="container mb-3">
-        <div class="row">
-            <div class="col-md-3">
+    <div class="container">
+        <div class="row mb-3">
+            <div class="col-2">
                 <span class="input-group-text"><fmt:message key="Cost"/></span>
             </div>
-            <div class="col-md-2">
-                <input type="number" readonly class="form-control-plaintext input-group-text" id="cost" value="">
+            <div class="col-2">
+                <input type="number" readonly class="form-control-plaintext input-group-text" name="cost" id="cost"
+                       <c:if test="${not empty sessionScope.cost}">value="${sessionScope.cost}"</c:if>>
             </div>
-            <div class="col-md-3">
+            <div class="col-2">
                 <span class="input-group-text"><fmt:message key="discount"/></span>
             </div>
-            <div class="col-md-2">
-                <input type="number" readonly class="form-control-plaintext input-group-text" id="percentDiscount"
-                       value="">
+            <div class="col-2">
+                <input type="number" readonly class="form-control-plaintext input-group-text" name="percentDiscount"
+                       id="percentDiscount"
+                       <c:if test="${not empty sessionScope.percentDiscount}">value="${sessionScope.percentDiscount}"</c:if>>
             </div>
-            <div class="col-md-2">
+            <div class="col-2">
                 <span class="input-group-text"><fmt:message key="km"/></span>
-                <input type="number" readonly class="form-control-plaintext input-group-text" id="distance"
-                       value="">
+            </div>
+            <div class="col-2">
+                <input type="number" readonly class="form-control-plaintext input-group-text" name="distance"
+                       id="distance"
+                       <c:if test="${not empty sessionScope.distance}">value="${sessionScope.distance}"</c:if>>
             </div>
         </div>
     </div>
-    <div class="container g-3 m-2 row">
+    <div class="container g-3 m-2">
         <div class="mb-3 row">
             <label for="addressDeparture" class="col-sm-2 col-form-label"><fmt:message
                     key="address_departure"/></label>
             <div class="col-10">
                 <mapbox-address-autofill class="departure">
-                    <input type="text" class="address form-control" id="addressDeparture"
-                           autocomplete="shipping street-address">
-                    <input type="hidden" class="coordinates departure">
+                    <input type="text" class="address form-control" name="addressDeparture" id="addressDeparture"
+                           autocomplete="shipping street-address" onchange="countCost()"
+                           <c:if test="${not empty sessionScope.addressDeparture}">value="${sessionScope.addressDeparture}"</c:if>>
+                    <input type="hidden" name="coordinatesDeparture" class="coordinates departure"
+                           <c:if test="${not empty sessionScope.coordinatesDeparture}">value="${sessionScope.coordinatesDeparture}"</c:if>>
                 </mapbox-address-autofill>
             </div>
         </div>
@@ -105,17 +123,29 @@
                     key="destination"/></label>
             <div class="col-10">
                 <mapbox-address-autofill class="destination">
-                    <input type="text" class="address form-control" id="destination"
-                           autocomplete="billing street-address">
-                    <input type="hidden" class="coordinates destination">
+                    <input type="text" class="address form-control" name="destination" id="destination"
+                           <c:if test="${not empty sessionScope.destination}">value="${sessionScope.destination}"</c:if>
+                           autocomplete="billing street-address" onchange="countCost()">
+                    <input type="hidden" name="coordinatesDestination" class="coordinates destination"
+                           <c:if test="${not empty sessionScope.coordinatesDestination}">value="${sessionScope.coordinatesDestination}"</c:if>>
                 </mapbox-address-autofill>
             </div>
         </div>
         <div class="col-12">
-            <button onClick="validateFreeCar" name="act"
+            <button name="act"
                     value="createOrder" type="submit" class="btn btn-primary background-orange-button">
                 <fmt:message key="create_order"/>
             </button>
+            <c:if test="${sessionScope.alternative==true}">
+                <button name="act"
+                        value="otherCategory" type="submit" class="btn btn-primary background-orange-button">
+                    <fmt:message key="create_order_several_cars"/>
+                </button>
+                <button name="act"
+                        value="severalCars" type="submit" class="btn btn-primary background-orange-button">
+                    <fmt:message key="create_order_another_category"/>
+                </button>
+            </c:if>
         </div>
     </div>
 </form>

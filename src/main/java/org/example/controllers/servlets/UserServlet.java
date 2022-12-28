@@ -42,7 +42,10 @@ public class UserServlet extends HttpServlet {
         User user = (User) session.getAttribute("USER");
         Discount discount = instance.getDiscountByUser(user);
         session.setAttribute("discount", discount);
-        session.setAttribute("percent_discount", discount);
+        session.setAttribute("percentDiscount", discount.getPercent());
+        session.setAttribute("alternative", false);
+        String map = instance.getPrices().toString();
+        session.setAttribute("prices", map.replaceAll("[{} ]", ""));
     }
 
     @Override

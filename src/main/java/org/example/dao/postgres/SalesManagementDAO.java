@@ -23,12 +23,7 @@ public class SalesManagementDAO {
 
     private static final Logger log = LoggerFactory.getLogger(SalesManagementDAO.class);
     private static final String GET_PRICE_BY_CATEGORY = "SELECT TOP current_price FROM price WHERE car_category=? ORDER BY date ";
-    private static final String GET_PRICES = "SELECT *\n" +
-            "FROM price\n" +
-            "         JOIN (SELECT price_id, max(date_update) maxDate\n" +
-            "               FROM price\n" +
-            "               GROUP BY price_id) b\n" +
-            "              ON price.price_id = b.price_id AND price.date = b.maxDate";
+    private static final String GET_PRICES = "SELECT * FROM price JOIN (SELECT price_id, max(date_update) maxDate FROM price GROUP BY price_id, car_category) b    ON price.price_id = b.price_id AND price.date_update = b.maxDate";
     private static final String CREATE_PRICE_BY_CATEGORY = "INSERT INTO price (current_price=?, car_category=?";
     private static final String GET_DISCOUNTS = "SELECT * FROM discounts LEFT JOIN users u on u.user_id = discounts.owner_discount";
     private static final String GET_DISCOUNT_BY_USER = "SELECT * FROM discounts LEFT JOIN users u on u.user_id = discounts.owner_discount WHERE u.phone=?";
@@ -59,8 +54,9 @@ public class SalesManagementDAO {
                         resultSet.getInt("current_price"));
             }
         } catch (SQLException e) {
-            log.error(DAOException.PRICE_NOT_FOUND, e);
-            throw new DAOException(e);
+            for (CarCategory category : CarCategory.values()) {
+                prices.put(category, 1);
+            }
         } finally {
             DAOUtil.connectionClose(con, log);
         }

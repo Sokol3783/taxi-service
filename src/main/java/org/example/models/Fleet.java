@@ -18,8 +18,8 @@ public class Fleet {
     private static Fleet fleet;
 
     private Fleet() {
-        carsAvailableToOrder = new CopyOnWriteArraySet();
-        carsOnRoute = new CopyOnWriteArraySet();
+        carsAvailableToOrder = new CopyOnWriteArraySet<>();
+        carsOnRoute = new CopyOnWriteArraySet<>();
         manager = new CarManager();
     }
 
@@ -36,8 +36,15 @@ public class Fleet {
     Set status "available to order" to all cars, except cars "on board"
     */
     public void setCarsAvailableToOrder() {
-        List<Car> cars = manager.findAll();
+        List cars = manager.findAll();
         carsAvailableToOrder.addAll(cars.stream().filter(s -> !carsOnRoute.contains(s)).toList());
+    }
+
+    public void setCarsOnRoute(List<Car> cars) {
+        cars.forEach(s -> {
+            carsAvailableToOrder.removeIf(ca -> ca.equals(s));
+            carsOnRoute.add(s);
+        });
     }
 
     /*
@@ -49,14 +56,9 @@ public class Fleet {
     }
 
     public void deactivateCar(String number) {
-        boolean carDeactivate = carsAvailableToOrder.removeIf(s -> {
-            return s.getNumber().equalsIgnoreCase(number);
-        });
-
+        boolean carDeactivate = carsAvailableToOrder.removeIf(s -> s.getNumber().equalsIgnoreCase(number));
         if (!carDeactivate) {
-            carsOnRoute.removeIf(s -> {
-                return s.getNumber().equalsIgnoreCase(number);
-            });
+            carsOnRoute.removeIf(s -> s.getNumber().equalsIgnoreCase(number));
         }
     }
 
@@ -73,23 +75,23 @@ public class Fleet {
     Find the car for category and minimal capacity
      */
     public Optional<Car> findFreeCarByCategory(CarCategory category, int passengers) {
-        return Optional.ofNullable(carsAvailableToOrder.stream()
-                .filter(s -> s.getCategory().equals(category))
+        return carsAvailableToOrder.stream()
+                .filter(s -> s.getCategory() != category)
                 .filter(s -> s.getCapacity() >= passengers).min(Comparator.comparingInt(Car::getCapacity))
-                .stream().findFirst().orElse(null));
+                .stream().findFirst();
     }
 
     public Optional<Car> findFreeCarExceptCategory(CarCategory category, int passengers) {
-        return Optional.ofNullable(carsAvailableToOrder.stream()
-                .filter(s -> !s.getCategory().equals(category))
+        return carsAvailableToOrder.stream()
+                .filter(s -> s.getCategory() != (category))
                 .filter(s -> s.getCapacity() >= passengers).min(Comparator.comparingInt(Car::getCapacity))
-                .stream().findFirst().orElse(null));
+                .stream().findFirst();
     }
 
     public List<Car> findFreeSeveralCarsByCategory(CarCategory category, int passengers) {
         int sumCapacity = 0;
         List<Car> severalCars = new ArrayList<>();
-        carsAvailableToOrder.stream().filter(s -> s.getCategory().equals(category))
+        carsAvailableToOrder.stream().filter(s -> s.getCategory() == category)
                 .sorted(Comparator.comparingInt(Car::getCapacity))
                 .takeWhile(s -> {
                     severalCars.add(s);
