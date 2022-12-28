@@ -46,7 +46,7 @@ create TABLE orders
     address_departure varchar(250),
     destination       varchar(250),
     cost              INTEGER,
-    discount          INTEGER,
+    percent_discount  INTEGER,
     create_date       timestamp,
     order_number      SERIAL,
     distance          int

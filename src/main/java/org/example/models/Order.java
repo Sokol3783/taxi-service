@@ -21,7 +21,7 @@ public class Order implements Serializable {
     List<Car> cars;
     User client;
     long cost;
-    int discount;
+    int percentDiscount;
     long orderNumber;
     LocalDateTime createAt;
     long distance;

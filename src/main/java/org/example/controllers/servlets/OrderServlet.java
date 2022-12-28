@@ -2,10 +2,8 @@ package org.example.controllers.servlets;
 
 import org.example.AppURL;
 import org.example.controllers.managers.OrderManager;
-import org.example.models.Car;
-import org.example.models.Fleet;
-import org.example.models.Order;
-import org.example.models.User;
+import org.example.controllers.managers.UserManager;
+import org.example.models.*;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -13,7 +11,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -25,10 +22,10 @@ import static org.example.controllers.servlets.Util.sendRedirect;
 public class OrderServlet extends HttpServlet {
 
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException {
         User user = (User) req.getSession().getAttribute("USER");
         if (nonNull(user)) {
-            forward(AppURL.USER_SERVLET, req, resp);
+            forward(UserManager.getRoleURL(user), req, resp);
         } else {
             sendRedirect(resp, req.getContextPath() + AppURL.LOGIN_SERVLET);
         }
@@ -36,32 +33,41 @@ public class OrderServlet extends HttpServlet {
     }
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException {
         User user = (User) req.getSession().getAttribute("USER");
         if (nonNull(user)) {
-            createOrder(req, resp);
+            createOrder(req);
             forward(AppURL.ORDER_JSP, req, resp);
         } else {
             sendRedirect(resp, req.getContextPath() + AppURL.LOGIN_SERVLET);
         }
     }
 
-    private void createOrder(HttpServletRequest req, HttpServletResponse resp) {
+    private void createOrder(HttpServletRequest req) {
         OrderManager manager = new OrderManager();
-        Order order = manager.create(buildOrder(req, resp));
+        Order order = manager.create(buildOrder(req));
         Fleet fleet = Fleet.getInstance();
         fleet.setCarsOnRoute(order.getCars());
+        removeOrderFromSession(req);
     }
 
-    private Order buildOrder(HttpServletRequest req, HttpServletResponse resp) {
+    private void removeOrderFromSession(HttpServletRequest req) {
+        String[] params = {"carCategory, passengers, cost,distance, addressDeparture,coordinatesDeparture,destination,coordinatesDestination"};
+        HttpSession session = req.getSession();
+        for (String param : params) {
+            session.removeAttribute(param);
+        }
+    }
+
+    private Order buildOrder(HttpServletRequest req) {
         final HttpSession session = req.getSession();
         return Order.builder().cars((List<Car>) session.getAttribute("cars"))
                 .client((User) session.getAttribute("USER"))
-                .cost(Long.valueOf(session.getAttribute("cost").toString()))
+                .cost(Long.parseLong(session.getAttribute("cost").toString()))
                 .addressDeparture((String) session.getAttribute("addressDeparture"))
                 .destination((String) session.getAttribute("destination"))
-                .discount(Integer.parseInt(session.getAttribute("discount").toString()))
-                .distance(Long.valueOf(session.getAttribute("distance").toString()))
+                .percentDiscount(((Discount) session.getAttribute("discount")).getPercent())
+                .distance(Long.parseLong(session.getAttribute("distance").toString()))
                 .createAt(LocalDateTime.now()).build();
     }
 

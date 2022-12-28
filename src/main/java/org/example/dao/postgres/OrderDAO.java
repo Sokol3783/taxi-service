@@ -19,8 +19,8 @@ import static org.example.exceptions.DAOException.*;
 public class OrderDAO implements DAO<Order> {
 
     private static final Logger log = LoggerFactory.getLogger(OrderDAO.class);
-    private static final String CREATE = "INSERT INTO orders(cars_numbers,client_id,address_departure,destination,cost,discount,order_number,distance) VALUES(?, (SELECT user_id FROM users WHERE phone=?), ?, ?, ?, ?, ?,?,?)";
-    private static final String UPDATE = "UPDATE orders SET (cars_numbers=?,client_id=?,address_departure=?,destination=?,cost=?,discount=?,order_number=?) WHERE order_id=?";
+    private static final String CREATE = "INSERT INTO orders(cars_numbers,client_id,address_departure,destination,cost,percent_discount,distance, create_date) VALUES(?, (SELECT user_id FROM users WHERE phone=?), ?, ?, ?, ?, ?, ?)";
+    private static final String UPDATE = "UPDATE orders SET (cars_numbers=?,client_id=?,address_departure=?,destination=?,cost=?,percent_discount=?,order_number=?) WHERE order_id=?";
     private static final String DELETE = "DELETE FROM orders WHERE id=?";
     private static final String SELECT_ALL = "SELECT * FROM orders";
     private static final String SELECT = SELECT_ALL + " WHERE order_id=?";
@@ -34,18 +34,17 @@ public class OrderDAO implements DAO<Order> {
             statement.setString(3, model.getAddressDeparture());
             statement.setString(4, model.getDestination());
             statement.setLong(5, model.getCost());
-            statement.setInt(5, model.getDiscount());
-            statement.setLong(5, model.getOrderNumber());
-            statement.setLong(6, model.getDistance());
-            boolean execute = statement.execute();
-            con.commit();
-            if (execute) {
+            statement.setInt(6, model.getPercentDiscount());
+            statement.setLong(7, model.getDistance());
+            statement.setDate(8, LocalDateConverter.convertToDatabaseColumn(model.getCreateAt()));
+            if (statement.executeUpdate() > 0) {
+                con.commit();
                 return model;
             }
         } catch (SQLException e) {
             DAOUtil.rollbackCommit(con, log);
-            log.error(USER_NOT_CREATE, e);
-            throw new DAOException(USER_NOT_CREATE);
+            log.error(ORDER_NOT_CREATE, e);
+            throw new DAOException(ORDER_NOT_CREATE);
         } finally {
             DAOUtil.connectionClose(con, log);
         }
@@ -106,10 +105,10 @@ public class OrderDAO implements DAO<Order> {
                 .cost(result.getLong("cost"))
                 .addressDeparture(result.getString("address_departure"))
                 .destination(result.getString("destination"))
-                .discount(result.getInt("discount"))
+                .percentDiscount(result.getInt("percent_discount"))
                 .distance(result.getLong("distance"))
                 .orderNumber(result.getLong("order_number"))
-                .createAt(LocalDateConverter.convertToEntityAttribute(result.getDate("create_date")).atStartOfDay()).build();
+                .createAt(LocalDateConverter.convertToEntityAttributeTime(result.getDate("create_date"))).build();
     }
 
     private User getClient(int client_id, Connection con) {

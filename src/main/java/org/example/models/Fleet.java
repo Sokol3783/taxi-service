@@ -41,10 +41,12 @@ public class Fleet {
     }
 
     public void setCarsOnRoute(List<Car> cars) {
-        cars.forEach(s -> {
-            carsAvailableToOrder.removeIf(ca -> ca.equals(s));
-            carsOnRoute.add(s);
-        });
+        if (cars != null) {
+            cars.forEach(s -> {
+                carsAvailableToOrder.removeIf(ca -> ca.equals(s));
+                carsOnRoute.add(s);
+            });
+        }
     }
 
     /*
