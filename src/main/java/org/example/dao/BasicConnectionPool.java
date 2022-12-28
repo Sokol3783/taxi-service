@@ -49,12 +49,7 @@ public class BasicConnectionPool implements SimpleConnectionPool {
             throw new DAOException();
         }
     }
-
-    @Override
-    public String getUrl() {
-        return null;
-    }
-
+    
 
     public static void runSQLScript(InputStream input, String delimiter, Connection connection) {
         if (input != null) {

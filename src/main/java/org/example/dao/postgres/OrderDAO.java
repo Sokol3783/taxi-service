@@ -5,6 +5,8 @@ import org.example.dao.DAOUtil;
 import org.example.exceptions.DAOException;
 import org.example.models.Car;
 import org.example.models.Order;
+import org.example.models.User;
+import org.example.util.LocalDateConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -74,13 +76,11 @@ public class OrderDAO implements DAO<Order> {
             statement.setInt(1, id);
             ResultSet result = statement.executeQuery();
             if (result.next()) {
-                return buildOrder(result);
+                return buildOrder(result, con);
             }
         } catch (SQLException e) {
             log.error(ORDER_NOT_FOUND, e);
             throw new DAOException(ORDER_NOT_FOUND);
-        } finally {
-            DAOUtil.connectionClose(con, log);
         }
         return Order.builder().build();
     }
@@ -91,19 +91,40 @@ public class OrderDAO implements DAO<Order> {
         try (PreparedStatement statement = con.prepareStatement(SELECT_ALL)) {
             ResultSet result = statement.executeQuery();
             while (result.next()) {
-                models.add(buildOrder(result));
+                models.add(buildOrder(result, con));
             }
         } catch (SQLException e) {
             log.error(USER_NOT_FOUND, e);
             throw new DAOException(USER_NOT_FOUND);
-        } finally {
-            DAOUtil.connectionClose(con, log);
         }
         return models;
     }
 
-    private Order buildOrder(ResultSet result) throws DAOException {
-        return null;
+    private Order buildOrder(ResultSet result, Connection con) throws SQLException {
+        return Order.builder().cars(getCars(result.getArray("cars_numbers"), con))
+                .client(getClient(result.getInt("client_id"), con))
+                .cost(result.getLong("cost"))
+                .addressDeparture(result.getString("address_departure"))
+                .destination(result.getString("destination"))
+                .discount(result.getInt("discount"))
+                .distance(result.getLong("distance"))
+                .orderNumber(result.getLong("order_number"))
+                .createAt(LocalDateConverter.convertToEntityAttribute(result.getDate("create_date")).atStartOfDay()).build();
+    }
+
+    private User getClient(int client_id, Connection con) {
+        UserDAO dao = new UserDAO();
+        return dao.get(client_id, con);
+    }
+
+    private List<Car> getCars(Array car_numbers, Connection con) throws SQLException {
+        String[] carNumbers = (String[]) car_numbers.getArray();
+        List<Car> cars = new ArrayList<>();
+        CarDAO dao = new CarDAO();
+        for (String carNumber : carNumbers) {
+            cars.add(dao.get(carNumber, con));
+        }
+        return cars;
     }
 
     @Override

@@ -3,6 +3,7 @@ package org.example.controllers.servlets;
 import org.example.AppURL;
 import org.example.controllers.managers.OrderManager;
 import org.example.models.Car;
+import org.example.models.Fleet;
 import org.example.models.Order;
 import org.example.models.User;
 
@@ -27,6 +28,17 @@ public class OrderServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         User user = (User) req.getSession().getAttribute("USER");
         if (nonNull(user)) {
+            forward(AppURL.USER_SERVLET, req, resp);
+        } else {
+            sendRedirect(resp, req.getContextPath() + AppURL.LOGIN_SERVLET);
+        }
+        /*createOrder(req, resp);*/
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        User user = (User) req.getSession().getAttribute("USER");
+        if (nonNull(user)) {
             createOrder(req, resp);
             forward(AppURL.ORDER_JSP, req, resp);
         } else {
@@ -36,18 +48,20 @@ public class OrderServlet extends HttpServlet {
 
     private void createOrder(HttpServletRequest req, HttpServletResponse resp) {
         OrderManager manager = new OrderManager();
-        manager.create(buildOrder(req, resp));
+        Order order = manager.create(buildOrder(req, resp));
+        Fleet fleet = Fleet.getInstance();
+        fleet.setCarsOnRoute(order.getCars());
     }
 
     private Order buildOrder(HttpServletRequest req, HttpServletResponse resp) {
         final HttpSession session = req.getSession();
         return Order.builder().cars((List<Car>) session.getAttribute("cars"))
                 .client((User) session.getAttribute("USER"))
-                .cost((Long) session.getAttribute("cost"))
+                .cost(Long.valueOf(session.getAttribute("cost").toString()))
                 .addressDeparture((String) session.getAttribute("addressDeparture"))
                 .destination((String) session.getAttribute("destination"))
-                .discount((int) session.getAttribute("discount"))
-                .distance((Long) session.getAttribute("distance"))
+                .discount(Integer.parseInt(session.getAttribute("discount").toString()))
+                .distance(Long.valueOf(session.getAttribute("distance").toString()))
                 .createAt(LocalDateTime.now()).build();
     }
 

@@ -6,21 +6,21 @@ import java.util.Optional;
 
 public class LocalDateConverter {
 
-  public static Date convertToDatabaseColumn(LocalDate localDate) {
-    return Optional.ofNullable(localDate)
-        .map(Date::valueOf)
-        .orElse(null);
-  }
+    public static Date convertToDatabaseColumn(LocalDate localDate) {
+        return Optional.ofNullable(localDate)
+                .map(Date::valueOf)
+                .orElse(null);
+    }
 
-  public static LocalDate convertToEntityAttribute(Date date) {
-    return Optional.ofNullable(date)
-        .map(Date::toLocalDate)
-        .orElse(null);
-  }
+    public static LocalDate convertToEntityAttribute(Date date) {
+        return Optional.ofNullable(date)
+                .map(Date::toLocalDate)
+                .orElse(null);
+    }
 
-  public static LocalDate convertToEntityAttribute(String date) {
-    return Optional.ofNullable(date).map(Date::valueOf)
-        .map(Date::toLocalDate)
-        .orElse(null);
-  }
+    public static LocalDate convertToEntityAttribute(String date) {
+        return Optional.ofNullable(date).map(Date::valueOf)
+                .map(Date::toLocalDate)
+                .orElse(null);
+    }
 }

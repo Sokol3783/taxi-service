@@ -34,6 +34,7 @@ public class UserAction extends HttpServlet {
                 case "otherCategory" -> findCarExceptPreferCategory(request, response);
                 case "severalCars" -> findSeveralCars(request, response);
             }
+
         } else {
             forward(AppURL.USER_JSP, request, response);
         }

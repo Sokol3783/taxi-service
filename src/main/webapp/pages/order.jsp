@@ -39,7 +39,7 @@
     <div class="justify-content-lg-start">
         <h2><fmt:message key="CarsOrdered"/></h2>
         <c:forEach var="car" items="${sessionScope.cars}">
-            <p><fmt:message key="Car"/> + " " + car.carName + <fmt:message key="number"/> + car.number</p>
+            <!-- <p><fmt:message key="Car"/> + " " + car.carName + <fmt:message key="number"/> + car.number</p> -->
         </c:forEach>
     </div>
     <div class="">кнопка возврат к юзерам</div>

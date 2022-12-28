@@ -133,7 +133,7 @@
         </div>
         <div class="col-12">
             <button name="act"
-                    value="createOrder" type="submit" class="btn btn-primary background-orange-button">
+                    value="findCar" type="submit" class="btn btn-primary background-orange-button">
                 <fmt:message key="create_order"/>
             </button>
             <c:if test="${sessionScope.alternative==true}">
