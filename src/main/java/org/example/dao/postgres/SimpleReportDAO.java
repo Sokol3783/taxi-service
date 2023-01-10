@@ -34,7 +34,7 @@ public class SimpleReportDAO implements DAOReport {
         }
     }
 
-    private void setConditions(PreparedStatement statement, Map<Integer, String> conditions) {
+    private PreparedStatement setConditions(PreparedStatement statement, Map<Integer, String> conditions) {
         conditions.forEach((key, value) -> {
             try {
                 statement.setString(key, value);
@@ -43,6 +43,7 @@ public class SimpleReportDAO implements DAOReport {
                 throw new DAOException(e);
             }
         });
+        return statement;
     }
 
     private JSONArray createArrayString(ResultSet resultSet) {
