@@ -1,18 +1,23 @@
 package org.example.controllers.managers;
 
 
+import java.sql.SQLException;
 import java.util.List;
-import org.example.AppUrl;
+import org.example.AppURL;
 import org.example.dao.BasicConnectionPool;
 import org.example.dao.SimpleConnectionPool;
 import org.example.dao.postgres.UserDAO;
+import org.example.exceptions.DAOException;
 import org.example.models.User;
 import org.example.models.taxienum.UserRole;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class UserManager implements Manager<User> {
 
-  private UserDAO userDAO;
-  private SimpleConnectionPool pool;
+  private final UserDAO userDAO;
+  private final SimpleConnectionPool pool;
+  private static final Logger log = LoggerFactory.getLogger(UserManager.class);
 
   public UserManager() {
     userDAO = new UserDAO();
@@ -22,40 +27,44 @@ public class UserManager implements Manager<User> {
   public static String getRoleURL(User user) {
     UserRole role = user.getRole();
     return switch (role) {
-      case ADMIN -> AppUrl.ADMIN;
-      case USER -> AppUrl.USER;
-      case DRIVER -> AppUrl.DRIVER;
-      default -> AppUrl.INDEX;
+      case ADMIN -> AppURL.ADMIN_SERVLET;
+      case USER -> AppURL.USER_SERVLET;
+      default -> AppURL.INDEX_JSP;
     };
   }
 
   public User findUserLoginPassword(String login, String password) {
-    return userDAO.findUserPhoneMailAndPassword(login, password,
-        pool.getConnection());
+    try {
+      return userDAO.findUserPhoneMailAndPassword(login, password,
+          pool.getConnection());
+    } catch (SQLException e) {
+      log.error(DAOException.USER_NOT_FOUND);
+      throw new DAOException(e);
+    }
   }
 
   @Override
-  public User create(User model) {
+  public User create(User model) throws SQLException {
     return userDAO.create(model, pool.getConnection());
   }
 
   @Override
   public void delete(int id) {
-
+    throw new UnsupportedOperationException();
   }
 
   @Override
   public User findById(int id) {
-    return null;
+    return userDAO.get(id, pool.getConnection());
   }
 
   @Override
-  public void update(User subject) {
-
+  public void update(User model) {
+    userDAO.update(model, pool.getConnection());
   }
 
   @Override
   public List<User> findAll() {
-    return null;
+    return userDAO.getAll(pool.getConnection());
   }
 }

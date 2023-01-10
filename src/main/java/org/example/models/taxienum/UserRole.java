@@ -2,19 +2,13 @@ package org.example.models.taxienum;
 
 public enum UserRole {
   ADMIN,
-  USER,
-  DRIVER;
+  USER;
 
   public static UserRole getRole(String role) {
-    switch (role) {
-      case "ADMIN":
-        return ADMIN;
-      case "USER":
-        return USER;
-      case "DRIVER":
-        return DRIVER;
-    }
-    return null;
+    return switch (role.toUpperCase()) {
+      case "ADMIN" -> ADMIN;
+      case "USER" -> USER;
+      default -> throw new IllegalStateException("Unexpected value: " + role);
+    };
   }
-
 }
