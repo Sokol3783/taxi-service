@@ -33,6 +33,7 @@ public class UserAction extends HttpServlet {
                 case "findCar" -> findCar(request, response);
                 case "otherCategory" -> findCarExceptPreferCategory(request, response);
                 case "severalCars" -> findSeveralCars(request, response);
+                case "createOrder" -> moveToOrder(request, response);
             }
 
         } else {
@@ -60,11 +61,11 @@ public class UserAction extends HttpServlet {
 
         List<Car> cars = findFreeCarExceptCategory(category, passengers);
         if (cars.isEmpty()) {
-            request.getSession().setAttribute("CarError", "noFreeCarAnotherCategory");
+            request.getSession().setAttribute("carError", "noFreeCarAnotherCategory");
             forward(AppURL.USER_JSP, request, response);
             return;
         }
-        request.getSession().setAttribute("Cars", cars);
+        request.getSession().setAttribute("cars", cars);
         sendRedirect(response, request.getContextPath() + ORDER_SERVLET);
     }
 
@@ -84,11 +85,11 @@ public class UserAction extends HttpServlet {
         if (passengers > 0) {
             List<Car> cars = fleet.findFreeSeveralCarsByCategory(category, passengers);
             if (cars.isEmpty()) {
-                request.getSession().setAttribute("CarError", "noFreeCarsInCategory");
+                request.getSession().setAttribute("carError", "noFreeCarsInCategory");
                 forward(AppURL.USER_JSP, request, response);
                 return;
             }
-            request.getSession().setAttribute("Cars", cars);
+            request.getSession().setAttribute("cars", cars);
             sendRedirect(response, request.getContextPath() + ORDER_SERVLET);
         }
     }
@@ -99,12 +100,12 @@ public class UserAction extends HttpServlet {
         List<Car> cars = findFreeCarByCategory(category, passengers);
         int count = cars != null ? cars.stream().mapToInt(Car::getCapacity).sum() : 0;
         if (count >= passengers) {
-            moveToOrder(cars, request, response);
+            request.getSession().setAttribute("cars", cars);
         } else {
             request.getSession().setAttribute("alternative", true);
-            request.getSession().setAttribute("CarError", "noFreeCarCategory");
-            moveToUser(request, response);
+            request.getSession().setAttribute("carError", "noFreeCarCategory");
         }
+        moveToUser(request, response);
     }
 
     private void moveToUser(HttpServletRequest request, HttpServletResponse response) throws ServletException {
@@ -112,10 +113,16 @@ public class UserAction extends HttpServlet {
     }
 
 
-    private void moveToOrder(List<Car> cars, HttpServletRequest request, HttpServletResponse response) throws ServletException {
-        HttpSession session = request.getSession();
-        session.setAttribute("cars", cars);
-        forward(ORDER_SERVLET, request, response);
+    private void moveToOrder(HttpServletRequest request, HttpServletResponse response) throws ServletException {
+        int passengers = Integer.parseInt(request.getParameter("passengers"));
+        List<Car> cars = (List<Car>) request.getSession().getAttribute("cars");
+        int count = cars != null ? cars.stream().mapToInt(Car::getCapacity).sum() : 0;
+        if (count >= passengers) {
+            forward(ORDER_SERVLET, request, response);
+        } else {
+            request.getSession().setAttribute("carError", "noCarsSelected");
+            moveToUser(request, response);
+        }
     }
 
     private List<Car> findFreeCarByCategory(CarCategory category, int passengers) {

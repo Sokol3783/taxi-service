@@ -1,9 +1,8 @@
 --Focused on POSTGRE SQL
 
-DROP TABLE IF EXISTS "discounts" CASCADE;
+DROP TABLE IF EXISTS "discounts";
 DROP TABLE IF EXISTS "discount_limits";
 DROP TABLE IF EXISTS "cars";
-DROP TRIGGER IF EXISTS "count_discount" ON "orders";
 DROP TABLE IF EXISTS "orders";
 DROP TABLE IF EXISTS "price" CASCADE;
 DROP TABLE IF EXISTS "users" CASCADE;
@@ -55,7 +54,7 @@ create TABLE orders
 CREATE TABLE discounts
 (
     discount_id      SERIAL PRIMARY KEY,
-    owner_discount   int references users (user_id),
+    owner_discount   int references users (user_id) UNIQUE,
     amount_spent     INTEGER,
     percent_discount INTEGER
 );
@@ -154,3 +153,20 @@ VALUES (5000, 10000, 5);
 
 INSERT INTO discount_limits(bottom_limit, top_limit, percent)
 VALUES (10000, 999999, 10);
+
+INSERT INTO orders(cars_numbers, client_id, cost, percent_discount, create_date, distance)
+VALUES ('{AX807A1}', 2, 400, 0, '07.01.2023', 31);
+
+INSERT INTO orders(cars_numbers, client_id, cost, percent_discount, create_date, distance)
+VALUES ('{AX807A1}', 2, 600, 0, '07.01.2023', 45);
+
+INSERT INTO orders(cars_numbers, client_id, cost, percent_discount, create_date, distance)
+VALUES ('{AX877A1}', 3, 1500, 0, '07.01.2023', 70);
+
+INSERT INTO orders(cars_numbers, client_id, cost, percent_discount, create_date, distance)
+VALUES ('{AX877A1,AX889A1,AX863A1}', 5, 4500, 0, '07.01.2023', 70);
+
+
+
+
+

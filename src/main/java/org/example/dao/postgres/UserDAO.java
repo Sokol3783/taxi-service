@@ -142,19 +142,7 @@ public class UserDAO implements DAO<User> {
 
     @Override
     public void delete(int id, Connection con) {
-        try (PreparedStatement statement = con.prepareStatement(DELETE)) {
-            statement.setInt(1, id);
-            int i = statement.executeUpdate();
-            if (i <= 0) {
-                log.error(USER_NOT_DELETE);
-                throw new DAOException(USER_NOT_DELETE);
-            }
-        } catch (SQLException e) {
-            log.error(USER_NOT_FOUND, e);
-            throw new DAOException(USER_NOT_FOUND);
-        } finally {
-            DAOUtil.connectionClose(con, log);
-        }
+        OrderDAO.callQuery(id, con, DELETE, log);
     }
 
     public User findUserPhoneMailAndPassword(String login, String password, Connection con)

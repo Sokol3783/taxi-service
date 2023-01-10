@@ -14,4 +14,5 @@ public class AppURL {
     public static final String LOGIN_SERVLET = "/login";
 
     public static final String ORDER_JSP = "/pages/order.jsp";
+    public static final String LOGOUT_SERVLET = "/logout";
 }

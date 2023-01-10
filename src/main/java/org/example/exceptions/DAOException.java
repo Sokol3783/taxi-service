@@ -4,6 +4,11 @@ public class DAOException extends RuntimeException {
 
     public static final String PRICE_NOT_FOUND = "Price hasn't been found.";
     public static final String DISCOUNT_NOT_FOUND = "Discount hasn't been found.";
+    public static final String REPORT_MISTAKE = "Mistake in query text";
+    public static final String REPORT_MISTAKE_COUNT_ROWS = "There are no rows to count in report";
+    public static final String REPORT_BUILDING_ARRAY = "Mistake in building report strings";
+    public static final String REPORT_SET_CONDITION = "Mistake in setting condition";
+    public static final String REPORT_BUILD_RESULT_ARRAY = "Report result hasn't been build";
     public static String USER_NOT_CREATE = "User hasn't been created.";
 
     public static String USER_NOT_DELETE = "User hasn't been deleted.";

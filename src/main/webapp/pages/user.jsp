@@ -20,7 +20,7 @@
     <title> Taxi </title>
 </head>
 <body class="container vh-100 background">
-<nav class="navbar navbar-expand-md navbar-light background-orange">
+<nav class="navbar navbar-expand-md navbar-light background-orange justify-content-between">
     <div class="container-fluid">
         <div class="dropdown">
             <button class="btn btn-warning dropdown-toggle" id="content-Language" type="button"
@@ -31,6 +31,10 @@
                 <li><a class="dropdown-item" href="${context_path}/user?lang=en"><fmt:message key="en"/></a></li>
                 <li><a class="dropdown-item" href="${context_path}/user?lang=ru"><fmt:message key="ru"/></a></li>
             </ul>
+        </div>
+        <div>
+            <span><button type="button" onclick="location.href='${context_path}/logout';"
+                          class="btn btn-info add-new"><i></i><fmt:message key="logout"/></button></span>
         </div>
     </div>
 </nav>
@@ -134,7 +138,7 @@
         <div class="col-12">
             <button name="act"
                     value="findCar" type="submit" class="btn btn-primary background-orange-button">
-                <fmt:message key="create_order"/>
+                <fmt:message key="find_car"/>
             </button>
             <c:if test="${sessionScope.alternative==true}">
                 <button name="act"
@@ -146,6 +150,10 @@
                     <fmt:message key="create_order_another_category"/>
                 </button>
             </c:if>
+            <button name="act"
+                    value="createOrder" type="submit" class="btn btn-primary background-orange-button">
+                <fmt:message key="create_order"/>
+            </button>
         </div>
     </div>
 </form>

@@ -2,8 +2,10 @@ package org.example.controllers.servlets;
 
 import org.example.AppURL;
 import org.example.controllers.managers.OrderManager;
+import org.example.controllers.managers.SalesManagement;
 import org.example.controllers.managers.UserManager;
 import org.example.models.*;
+import org.example.models.taxienum.CarCategory;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -13,6 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 import static java.util.Objects.nonNull;
 import static org.example.controllers.servlets.Util.forward;
@@ -29,7 +32,6 @@ public class OrderServlet extends HttpServlet {
         } else {
             sendRedirect(resp, req.getContextPath() + AppURL.LOGIN_SERVLET);
         }
-        /*createOrder(req, resp);*/
     }
 
     @Override
@@ -52,7 +54,7 @@ public class OrderServlet extends HttpServlet {
     }
 
     private void removeOrderFromSession(HttpServletRequest req) {
-        String[] params = {"carCategory, passengers, cost,distance, addressDeparture,coordinatesDeparture,destination,coordinatesDestination"};
+        String[] params = {"carCategory", "passengers", "addressDeparture", "coordinatesDeparture", "destination", "coordinatesDestination"};
         HttpSession session = req.getSession();
         for (String param : params) {
             session.removeAttribute(param);
@@ -61,14 +63,29 @@ public class OrderServlet extends HttpServlet {
 
     private Order buildOrder(HttpServletRequest req) {
         final HttpSession session = req.getSession();
-        return Order.builder().cars((List<Car>) session.getAttribute("cars"))
+        List<Car> cars = (List<Car>) session.getAttribute("cars");
+        Discount discount = (Discount) session.getAttribute("discount");
+        return Order.builder().cars(cars)
                 .client((User) session.getAttribute("USER"))
-                .cost(Long.parseLong(session.getAttribute("cost").toString()))
+                .cost(countCost(cars, discount, session))
                 .addressDeparture((String) session.getAttribute("addressDeparture"))
                 .destination((String) session.getAttribute("destination"))
-                .percentDiscount(((Discount) session.getAttribute("discount")).getPercent())
+                .percentDiscount(discount.getPercent())
                 .distance(Long.parseLong(session.getAttribute("distance").toString()))
                 .createAt(LocalDateTime.now()).build();
+    }
+
+    private long countCost(List<Car> cars, Discount discount, HttpSession session) {
+        Map<CarCategory, Integer> prices = SalesManagement.getInstance().getPrices();
+        long distance = Long.parseLong(session.getAttribute("distance").toString());
+        long cost = 0;
+        for (Car car : cars) {
+            long costWithoutDiscount = prices.get(car.getCategory()) * distance;
+            long sumDiscount = costWithoutDiscount / 100 * discount.getPercent();
+            cost += costWithoutDiscount - sumDiscount;
+        }
+        session.setAttribute("cost", cost);
+        return cost;
     }
 
 }

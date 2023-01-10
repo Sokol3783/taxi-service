@@ -128,7 +128,11 @@ public class OrderDAO implements DAO<Order> {
 
     @Override
     public void delete(int id, Connection con) {
-        try (PreparedStatement statement = con.prepareStatement(DELETE)) {
+        callQuery(id, con, DELETE, log);
+    }
+
+    static void callQuery(int id, Connection con, String delete, Logger log) {
+        try (PreparedStatement statement = con.prepareStatement(delete)) {
             statement.setInt(1, id);
             int i = statement.executeUpdate();
             if (i <= 0) {
