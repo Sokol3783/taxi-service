@@ -1,23 +1,7 @@
-package org.example.dao.postgres;
+package org.example.dao.daoimplementaion;
 
-import org.example.dao.DAO;
-import org.example.dao.DAOUtil;
-import org.example.exceptions.DAOException;
-import org.example.models.Car;
-import org.example.models.Order;
-import org.example.models.User;
-import org.example.util.LocalDateConverter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.example.exceptions.DAOException.*;
-
-public class OrderDAO implements DAO<Order> {
-
+public class OrderDAO {
+/*
     private static final Logger log = LoggerFactory.getLogger(OrderDAO.class);
     private static final String CREATE = "INSERT INTO orders(cars_numbers,client_id,address_departure,destination,cost,percent_discount,distance, create_date) VALUES(?, (SELECT user_id FROM users WHERE phone=?), ?, ?, ?, ?, ?, ?)";
     private static final String UPDATE = "UPDATE orders SET (cars_numbers=?,client_id=?,address_departure=?,destination=?,cost=?,percent_discount=?,order_number=?) WHERE order_id=?";
@@ -26,7 +10,7 @@ public class OrderDAO implements DAO<Order> {
     private static final String SELECT = SELECT_ALL + " WHERE order_id=?";
 
     @Override
-    public Order create(Order model, Connection con) throws SQLException {
+    public Order create(Order model) throws SQLException {
         con.setAutoCommit(false);
         try (PreparedStatement statement = con.prepareStatement(CREATE)) {
             statement.setArray(1, getCarNumbers(model.getCars(), con));
@@ -51,7 +35,7 @@ public class OrderDAO implements DAO<Order> {
         return Order.builder().build();
     }
 
-    private Array getCarNumbers(List<Car> cars, Connection con) throws SQLException {
+    private Array getCarNumbers(List<Car> cars) throws SQLException {
         if (cars.size() == 0) {
             log.error("There are no checked car");
             throw new IllegalArgumentException();
@@ -64,13 +48,13 @@ public class OrderDAO implements DAO<Order> {
     }
 
     @Override
-    public void update(Order model, Connection con) {
+    public void update(Order model) {
         DAOUtil.connectionClose(con, log);
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public Order get(int id, Connection con) {
+    public Order get(int id) {
         try (PreparedStatement statement = con.prepareStatement(SELECT)) {
             statement.setInt(1, id);
             ResultSet result = statement.executeQuery();
@@ -99,7 +83,7 @@ public class OrderDAO implements DAO<Order> {
         return models;
     }
 
-    private Order buildOrder(ResultSet result, Connection con) throws SQLException {
+    private Order buildOrder(ResultSet result) throws SQLException {
         return Order.builder().cars(getCars(result.getArray("cars_numbers"), con))
                 .client(getClient(result.getInt("client_id"), con))
                 .cost(result.getLong("cost"))
@@ -111,12 +95,12 @@ public class OrderDAO implements DAO<Order> {
                 .createAt(LocalDateConverter.convertToEntityAttributeTime(result.getDate("create_date"))).build();
     }
 
-    private User getClient(int client_id, Connection con) {
+    private User getClient(int client_id) {
         UserDAO dao = new UserDAO();
         return dao.get(client_id, con);
     }
 
-    private List<Car> getCars(Array car_numbers, Connection con) throws SQLException {
+    private List<Car> getCars(Array car_numbers) throws SQLException {
         String[] carNumbers = (String[]) car_numbers.getArray();
         List<Car> cars = new ArrayList<>();
         CarDAO dao = new CarDAO();
@@ -127,11 +111,11 @@ public class OrderDAO implements DAO<Order> {
     }
 
     @Override
-    public void delete(int id, Connection con) {
+    public void delete(int id) {
         callQuery(id, con, DELETE, log);
     }
 
-    static void callQuery(int id, Connection con, String delete, Logger log) {
+    static void callQuery(int id, String delete, Logger log) {
         try (PreparedStatement statement = con.prepareStatement(delete)) {
             statement.setInt(1, id);
             int i = statement.executeUpdate();
@@ -146,4 +130,6 @@ public class OrderDAO implements DAO<Order> {
             DAOUtil.connectionClose(con, log);
         }
     }
+
+ */
 }

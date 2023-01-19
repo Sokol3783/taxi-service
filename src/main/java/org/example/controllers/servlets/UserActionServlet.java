@@ -16,12 +16,12 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.example.AppURL.ORDER_SERVLET;
-import static org.example.controllers.servlets.Util.forward;
-import static org.example.controllers.servlets.Util.sendRedirect;
+import static org.example.controllers.servlets.UtilServlet.forward;
+import static org.example.controllers.servlets.UtilServlet.sendRedirect;
 import static org.example.models.taxienum.CarCategory.getCategory;
 
 @WebServlet(name = "user-action", urlPatterns = AppURL.USER_ACTION_SERVLET)
-public class UserAction extends HttpServlet {
+public class UserActionServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)

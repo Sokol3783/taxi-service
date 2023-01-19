@@ -1,8 +1,8 @@
 package org.example.controllers.managers;
 
-import org.example.dao.BasicConnectionPool;
 import org.example.dao.SimpleConnectionPool;
-import org.example.dao.postgres.SalesManagementDAO;
+import org.example.dao.connectionpool.BasicConnectionPool;
+import org.example.dao.daoimplementaion.SalesManagementDAO;
 import org.example.models.Discount;
 import org.example.models.User;
 import org.example.models.taxienum.CarCategory;

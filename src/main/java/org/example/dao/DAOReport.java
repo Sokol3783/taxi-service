@@ -6,6 +6,5 @@ import java.util.Map;
 
 @FunctionalInterface
 public interface DAOReport {
-
     JSONArray getReport(String query, Map<Integer, String> conditions);
 }

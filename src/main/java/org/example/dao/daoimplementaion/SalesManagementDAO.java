@@ -1,6 +1,6 @@
-package org.example.dao.postgres;
+package org.example.dao.daoimplementaion;
 
-import org.example.dao.DAOUtil;
+import org.example.dao.daoutil.DAOUtil;
 import org.example.exceptions.DAOException;
 import org.example.models.Discount;
 import org.example.models.User;

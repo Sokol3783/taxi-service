@@ -1,24 +1,8 @@
-package org.example.dao.postgres;
+package org.example.dao.daoimplementaion;
 
-import org.example.dao.DAO;
-import org.example.dao.DAOUtil;
-import org.example.exceptions.DAOException;
-import org.example.models.Car;
-import org.example.models.taxienum.CarCategory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+public class CarDAOimpl {
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.example.exceptions.DAOException.*;
-
-public class CarDAO implements DAO<Car> {
-
+    /*
     private static final Logger log = LoggerFactory.getLogger(CarDAO.class);
     private static final String CREATE = "INSERT INTO cars(car_number, car_name,category, capacity) VALUES(?, ?, ?, ?)";
     private static final String UPDATE = "UPDATE cars SET (car_number=?,car_name=?,category=?,capacity=?) WHERE car_number=?";
@@ -113,4 +97,6 @@ public class CarDAO implements DAO<Car> {
     public void delete(int id, Connection con) {
         throw new IllegalArgumentException();
     }
+
+ */
 }
