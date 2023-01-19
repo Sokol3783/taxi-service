@@ -13,7 +13,7 @@ import java.io.Serializable;
 @EqualsAndHashCode
 @ToString
 public class Car implements Serializable {
-
+  private static final long serialVersionUID = 33;
   private final User driver;
   private final String number;
   private final CarCategory category;

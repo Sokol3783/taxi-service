@@ -12,7 +12,7 @@ import java.io.Serializable;
 @EqualsAndHashCode
 @ToString
 public class Discount implements Serializable {
-
+    private static final long serialVersionUID = 17;
     User user;
     int percent;
     int amountSpent;

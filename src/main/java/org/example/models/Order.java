@@ -14,7 +14,7 @@ import java.util.List;
 @EqualsAndHashCode
 @ToString
 public class Order implements Serializable {
-
+    private static final long serialVersionUID = 29;
     int id;
     String addressDeparture;
     String destination;
