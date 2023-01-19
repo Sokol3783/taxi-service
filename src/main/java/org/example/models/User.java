@@ -15,6 +15,8 @@ import java.time.LocalDate;
 @ToString
 public class User implements Serializable {
 
+  private static final long serialVersionUID = 27;
+
   @ToString.Exclude
   private final String password;
   private final UserRole role;
