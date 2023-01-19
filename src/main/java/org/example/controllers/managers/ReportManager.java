@@ -1,8 +1,8 @@
 package org.example.controllers.managers;
 
 import org.example.dao.DAOReport;
-import org.example.dao.postgres.QueryReportDAO;
-import org.example.dao.postgres.SimpleReportDAO;
+import org.example.dao.daoreport.SimpleReportDAO;
+import org.example.dao.daoimplementaion.QueryReportDAO;
 import org.example.models.User;
 import org.json.JSONArray;
 

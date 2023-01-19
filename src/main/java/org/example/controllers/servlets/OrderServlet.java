@@ -18,12 +18,12 @@ import java.util.List;
 import java.util.Map;
 
 import static java.util.Objects.nonNull;
-import static org.example.controllers.servlets.Util.forward;
-import static org.example.controllers.servlets.Util.sendRedirect;
+import static org.example.controllers.servlets.UtilServlet.forward;
+import static org.example.controllers.servlets.UtilServlet.sendRedirect;
 
 @WebServlet(name = "order", urlPatterns = AppURL.ORDER_SERVLET)
 public class OrderServlet extends HttpServlet {
-
+/*
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException {
         User user = (User) req.getSession().getAttribute("USER");

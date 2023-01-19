@@ -1,22 +1,7 @@
 package org.example.controllers.managers;
 
-import org.example.dao.BasicConnectionPool;
-import org.example.dao.SimpleConnectionPool;
-import org.example.dao.postgres.OrderDAO;
-import org.example.exceptions.DAOException;
-import org.example.models.Order;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.example.exceptions.DAOException.ORDER_NOT_CREATE;
-
-public class OrderManager implements Manager<Order> {
-
+public class OrderManager {
+/*
     private final OrderDAO dao;
     private final SimpleConnectionPool pool;
     private static final Logger log = LoggerFactory.getLogger(OrderManager.class);
@@ -75,4 +60,6 @@ public class OrderManager implements Manager<Order> {
         }
 
     }
+
+ */
 }

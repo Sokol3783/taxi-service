@@ -10,7 +10,7 @@ import java.io.PrintWriter;
 
 @WebServlet(name = "errorHandler",
         urlPatterns = {"/errorHandler"})
-public class ErrorHandler extends HttpServlet {
+public class ErrorHandlerServlet extends HttpServlet {
 
     protected void doGet(HttpServletRequest request,
                          HttpServletResponse response) throws ServletException, IOException {

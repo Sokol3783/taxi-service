@@ -1,20 +1,18 @@
 package org.example.dao;
 
 import java.io.Serializable;
-import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.List;
 
 public interface DAO<T extends Serializable> {
 
-  T create(T model, Connection con) throws SQLException;
+    T create(T model);
 
-  void update(T model, Connection con);
+    void update(T model);
 
-  T get(int id, Connection con);
+    T get(int id);
 
-  List<T> getAll(Connection con);
+    List<T> getAll();
 
-  void delete(int id, Connection con);
+    void delete(int id);
 
 }

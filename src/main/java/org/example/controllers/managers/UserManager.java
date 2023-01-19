@@ -1,21 +1,8 @@
 package org.example.controllers.managers;
 
 
-import org.example.AppURL;
-import org.example.dao.BasicConnectionPool;
-import org.example.dao.SimpleConnectionPool;
-import org.example.dao.postgres.UserDAO;
-import org.example.exceptions.DAOException;
-import org.example.models.User;
-import org.example.models.taxienum.UserRole;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.sql.SQLException;
-import java.util.List;
-
-public class UserManager implements Manager<User> {
-
+public class UserManager {
+/*
     private final UserDAO userDAO;
     private final SimpleConnectionPool pool;
     private static final Logger log = LoggerFactory.getLogger(UserManager.class);
@@ -68,4 +55,6 @@ public class UserManager implements Manager<User> {
     public List<User> findAll() {
         return userDAO.getAll(pool.getConnection());
     }
+
+ */
 }

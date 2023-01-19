@@ -13,11 +13,11 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import static java.util.Objects.nonNull;
-import static org.example.controllers.servlets.Util.forward;
-import static org.example.controllers.servlets.Util.sendRedirect;
+import static org.example.controllers.servlets.UtilServlet.forward;
+import static org.example.controllers.servlets.UtilServlet.sendRedirect;
 
 @WebServlet(name = "login", urlPatterns = "/login")
-public class Login extends HttpServlet {
+public class LoginServlet extends HttpServlet {
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException {

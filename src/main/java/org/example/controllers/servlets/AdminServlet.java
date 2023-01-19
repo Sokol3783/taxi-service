@@ -16,8 +16,8 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import static java.util.Objects.nonNull;
-import static org.example.controllers.servlets.Util.forward;
-import static org.example.controllers.servlets.Util.sendRedirect;
+import static org.example.controllers.servlets.UtilServlet.forward;
+import static org.example.controllers.servlets.UtilServlet.sendRedirect;
 
 @WebServlet(name = "admin", urlPatterns = AppURL.ADMIN_SERVLET)
 public class AdminServlet extends HttpServlet {

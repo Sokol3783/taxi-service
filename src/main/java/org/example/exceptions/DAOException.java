@@ -24,6 +24,8 @@ public class DAOException extends RuntimeException {
     public static String USER_NOT_UPDATE = "User hasn't been update";
     public static String ROLLBACK_FAIL = "Rollback failed";
 
+    public static String AUTO_COMMIT_FALSE_FAILED = "Auto commit doesn't turn off";
+
 
     public DAOException() {
         super();

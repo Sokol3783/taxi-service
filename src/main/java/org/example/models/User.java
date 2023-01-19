@@ -1,15 +1,16 @@
 package org.example.models;
 
-import java.io.Serializable;
-import java.time.LocalDate;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 import org.example.models.taxienum.UserRole;
 
+import java.io.Serializable;
+import java.time.LocalDate;
+
 @Builder
-@Getter
+@Getter(lazy = true)
 @EqualsAndHashCode
 @ToString
 public class User implements Serializable {

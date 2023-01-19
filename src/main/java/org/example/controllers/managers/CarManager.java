@@ -1,19 +1,7 @@
 package org.example.controllers.managers;
 
-import org.example.dao.BasicConnectionPool;
-import org.example.dao.DAOUtil;
-import org.example.dao.SimpleConnectionPool;
-import org.example.dao.postgres.CarDAO;
-import org.example.exceptions.DAOException;
-import org.example.models.Car;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.util.List;
-
-public class CarManager implements Manager<Car> {
+public class CarManager {
+    /*
 
     private final CarDAO dao;
     private final SimpleConnectionPool pool;
@@ -63,5 +51,5 @@ public class CarManager implements Manager<Car> {
 
     public Car findByNumber(String number) {
         return dao.get(number, pool.getConnection());
-    }
+    }*/
 }

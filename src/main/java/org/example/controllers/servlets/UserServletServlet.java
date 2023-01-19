@@ -13,11 +13,11 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import static java.util.Objects.nonNull;
-import static org.example.controllers.servlets.Util.forward;
-import static org.example.controllers.servlets.Util.sendRedirect;
+import static org.example.controllers.servlets.UtilServlet.forward;
+import static org.example.controllers.servlets.UtilServlet.sendRedirect;
 
 @WebServlet(name = "user", urlPatterns = AppURL.USER_SERVLET)
-public class UserServlet extends HttpServlet {
+public class UserServletServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)

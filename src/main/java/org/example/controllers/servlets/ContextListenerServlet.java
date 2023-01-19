@@ -1,8 +1,8 @@
 package org.example.controllers.servlets;
 
-import org.example.controllers.managers.Properties;
-import org.example.dao.BasicConnectionPool;
-import org.example.dao.DAOUtil;
+import org.example.controllers.managers.PropertiesManager;
+import org.example.dao.connectionpool.BasicConnectionPool;
+import org.example.dao.daoutil.DAOUtil;
 import org.example.exceptions.DAOException;
 import org.example.models.Fleet;
 import org.example.util.FileReader;
@@ -20,14 +20,14 @@ import java.io.IOException;
 import java.sql.Connection;
 
 @WebListener
-public class ContextListener implements ServletContextListener, HttpSessionListener,
+public class ContextListenerServlet implements ServletContextListener, HttpSessionListener,
         HttpSessionAttributeListener {
 
-    private static final Logger log = LoggerFactory.getLogger(ContextListener.class);
+    private static final Logger log = LoggerFactory.getLogger(ContextListenerServlet.class);
 
     @Override
     public synchronized void contextInitialized(ServletContextEvent sce) {
-        if (Properties.properties == null) {
+        if (PropertiesManager.properties == null) {
             try {
                 if (setPropertiesFromFile(sce)) {
                     Connection con = BasicConnectionPool.getInstance().getConnection();
@@ -37,10 +37,10 @@ public class ContextListener implements ServletContextListener, HttpSessionListe
                     }
                     try {
                         BasicConnectionPool.runSQLScript(FileReader.readStreamFromWeb(sce,
-                                        Properties.getPathScript())
+                                        PropertiesManager.getPathScript())
                                 , ";", con);
                         BasicConnectionPool.runSQLScript(FileReader.readStreamFromWeb(sce,
-                                        Properties.getPathTriggerScript())
+                                        PropertiesManager.getPathTriggerScript())
                                 , "/* */", con);
                         Fleet.getInstance().setCarsAvailableToOrder();
                     } finally {
@@ -55,9 +55,9 @@ public class ContextListener implements ServletContextListener, HttpSessionListe
     }
 
     private boolean setPropertiesFromFile(ServletContextEvent sce) throws IOException {
-        Properties.setProperties(
-                FileReader.readStreamFromWeb(sce, Properties.getPathProperties()));
-        return Properties.properties.size() > 0;
+        PropertiesManager.setProperties(
+                FileReader.readStreamFromWeb(sce, PropertiesManager.getPathProperties()));
+        return PropertiesManager.properties.size() > 0;
     }
 
     @Override

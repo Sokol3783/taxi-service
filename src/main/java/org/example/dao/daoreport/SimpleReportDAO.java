@@ -1,8 +1,8 @@
-package org.example.dao.postgres;
+package org.example.dao.daoreport;
 
-import org.example.dao.BasicConnectionPool;
 import org.example.dao.DAOReport;
 import org.example.dao.SimpleConnectionPool;
+import org.example.dao.connectionpool.BasicConnectionPool;
 import org.example.exceptions.DAOException;
 import org.json.JSONArray;
 import org.json.JSONException;
