@@ -48,7 +48,7 @@ public class UserDAOimpl extends AbstractDAO<User> implements DAOUser<User> {
         Connection con = pool.getConnection();
         try {
             con.setAutoCommit(false);
-            PreparedStatement statement = getPrepareStatementCreateUser(model, CREATE, con);
+            PreparedStatement statement = getPrepareStatementByQuery(model, CREATE, con);
             User user = executeCreateUpdateQuery(statement);
             commitUserTransaction(user, con);
             return user;
@@ -65,7 +65,7 @@ public class UserDAOimpl extends AbstractDAO<User> implements DAOUser<User> {
         Connection con = pool.getConnection();
         try {
             con.setAutoCommit(false);
-            PreparedStatement statement = getPrepareStatementCreateUser(model, CREATE, con);
+            PreparedStatement statement = getPrepareStatementByQuery(model, CREATE, con);
             fillUserPassword(statement, password);
             User user = executeCreateUpdateQuery(statement);
             commitUserTransaction(user, con);
@@ -93,7 +93,7 @@ public class UserDAOimpl extends AbstractDAO<User> implements DAOUser<User> {
         return User.builder().build();
     }
 
-    private PreparedStatement getPrepareStatementCreateUser(User model, String query, Connection con) {
+    private PreparedStatement getPrepareStatementByQuery(User model, String query, Connection con) {
         try (PreparedStatement statement = getPrepareStatement(model, query, con)) {
             return statement;
         } catch (SQLException e) {
