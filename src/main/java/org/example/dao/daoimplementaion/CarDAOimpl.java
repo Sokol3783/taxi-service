@@ -5,6 +5,7 @@ import org.example.dao.DAOCar;
 import org.example.dao.SimpleConnectionPool;
 import org.example.dao.connectionpool.BasicConnectionPool;
 import org.example.dao.daoutil.DAOUtil;
+import org.example.exceptions.DAOException;
 import org.example.models.Car;
 import org.example.models.taxienum.CarCategory;
 import org.slf4j.Logger;
@@ -18,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.example.exceptions.DAOException.CAR_NOT_CREATE;
+import static org.example.exceptions.DAOException.CAR_NOT_FOUND;
 
 public class CarDAOimpl extends AbstractDAO<Car> implements DAOCar<Car> {
 
@@ -47,7 +49,7 @@ public class CarDAOimpl extends AbstractDAO<Car> implements DAOCar<Car> {
         Connection con = pool.getConnection();
         try {
             con.setAutoCommit(false);
-            PreparedStatement statement = prepareStatementCreateCar(model, con);
+            PreparedStatement statement = getPrepareStatementByQuery(model, CREATE, con);
             Car car = executeCreateUpdateQuery(statement);
             commitCarTransaction(car, con);
             return car;
@@ -74,8 +76,8 @@ public class CarDAOimpl extends AbstractDAO<Car> implements DAOCar<Car> {
         }
     }
 
-    private PreparedStatement prepareStatementCreateCar(Car model, Connection con) throws SQLException {
-        PreparedStatement statement = con.prepareStatement(CREATE);
+    private PreparedStatement getPrepareStatementByQuery(Car model, String query, Connection con) throws SQLException {
+        PreparedStatement statement = con.prepareStatement(query);
         statement.setString(1, model.getNumber());
         statement.setString(2, model.getCarName());
         statement.setString(3, model.getCategory().toString());
@@ -86,26 +88,22 @@ public class CarDAOimpl extends AbstractDAO<Car> implements DAOCar<Car> {
 
     @Override
     public void update(Car model) {
-        /*try (PreparedStatement statement = con.prepareStatement(UPDATE)) {
-            statement.setString(1, model.getNumber());
-            statement.setString(2, model.getCarName());
-            statement.setString(3, model.getCategory().toString());
-            statement.setInt(4, model.getCapacity());
-            boolean execute = statement.execute();
-            con.commit();
+        Connection con = pool.getConnection();
+        try {
+            con.setAutoCommit(false);
+            PreparedStatement statement = getPrepareStatementByQuery(model, UPDATE, con);
+            statement.setString(5, model.getNumber());
+            Car car = executeCreateUpdateQuery(statement);
+            commitCarTransaction(car, con);
         } catch (SQLException e) {
             DAOUtil.rollbackCommit(con, log);
-            log.error(CAR_NOT_UPDATE, e);
-            throw new DAOException(CAR_NOT_UPDATE);
+            log.error(CAR_NOT_CREATE, e);
         } finally {
             DAOUtil.connectionClose(con, log);
         }
-
-         */
     }
 
     public Car get(String number) {
-        /*
         try (PreparedStatement statement = con.prepareStatement(SELECT_BY_NUMBER)) {
             statement.setString(1, number);
             ResultSet result = statement.executeQuery();
@@ -116,8 +114,6 @@ public class CarDAOimpl extends AbstractDAO<Car> implements DAOCar<Car> {
             log.error(CAR_NOT_FOUND, e);
             throw new DAOException(CAR_NOT_FOUND);
         }
-
-         */
         return Car.builder().build();
     }
 
@@ -141,7 +137,6 @@ public class CarDAOimpl extends AbstractDAO<Car> implements DAOCar<Car> {
     }
 
     //TODO
-
     private Car buildCar(ResultSet result) throws SQLException {
         return Car.builder().carName(result.getString("car_name"))
                 .number(result.getString("car_number")).capacity(result.getInt("capacity"))
