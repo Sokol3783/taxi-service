@@ -1,41 +1,92 @@
 package org.example.dao.daoimplementaion;
 
-public class CarDAOimpl {
+import org.example.dao.AbstractDAO;
+import org.example.dao.DAOCar;
+import org.example.dao.SimpleConnectionPool;
+import org.example.dao.connectionpool.BasicConnectionPool;
+import org.example.dao.daoutil.DAOUtil;
+import org.example.models.Car;
+import org.example.models.taxienum.CarCategory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-    /*
-    private static final Logger log = LoggerFactory.getLogger(CarDAO.class);
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.example.exceptions.DAOException.CAR_NOT_CREATE;
+
+public class CarDAOimpl extends AbstractDAO<Car> implements DAOCar<Car> {
+
+    private static final Logger log = LoggerFactory.getLogger(CarDAOimpl.class);
     private static final String CREATE = "INSERT INTO cars(car_number, car_name,category, capacity) VALUES(?, ?, ?, ?)";
     private static final String UPDATE = "UPDATE cars SET (car_number=?,car_name=?,category=?,capacity=?) WHERE car_number=?";
     private static final String DELETE = "DELETE FROM users WHERE id=?";
     private static final String SELECT_ALL = "SELECT * FROM cars";
-    private static final String SELECT = SELECT_ALL + " WHERE car_number=?";
+    private static final String SELECT_BY_NUMBER = SELECT_ALL + " WHERE car_number=?";
+
+    private static SimpleConnectionPool pool;
+
+    private CarDAOimpl() {
+    }
+
+    public static CarDAOimpl getInstance() {
+        synchronized (UserDAOimpl.class) {
+            if (pool == null) {
+                pool = BasicConnectionPool.getInstance();
+            }
+        }
+        return new CarDAOimpl();
+    }
 
     @Override
-    public Car create(Car model, Connection con) throws SQLException {
-        con.setAutoCommit(false);
-        try (PreparedStatement statement = con.prepareStatement(CREATE)) {
-            statement.setString(1, model.getNumber());
-            statement.setString(2, model.getCarName());
-            statement.setString(3, model.getCategory().toString());
-            statement.setInt(4, model.getCapacity());
-            boolean execute = statement.execute();
-            con.commit();
-            if (execute) {
-                return model;
-            }
+    public Car create(Car model) {
+        Connection con = pool.getConnection();
+        try {
+            con.setAutoCommit(false);
+            PreparedStatement statement = prepareStatementCreateCar(model, con);
+            Car car = executeCreateUpdateQuery(statement);
+            commitCarTransaction(car, con);
+            return car;
         } catch (SQLException e) {
             DAOUtil.rollbackCommit(con, log);
-            log.error(USER_NOT_CREATE, e);
-            throw new DAOException(USER_NOT_CREATE);
+            log.error(CAR_NOT_CREATE, e);
         } finally {
             DAOUtil.connectionClose(con, log);
         }
         return Car.builder().build();
     }
 
+    private Car executeCreateUpdateQuery(PreparedStatement statement) throws SQLException {
+        ResultSet result = statement.executeQuery();
+        if (result.next()) {
+            return buildCar(result);
+        }
+        return Car.builder().build();
+    }
+
+    private void commitCarTransaction(Car car, Connection con) throws SQLException {
+        if (!car.isEmpty()) {
+            con.commit();
+        }
+    }
+
+    private PreparedStatement prepareStatementCreateCar(Car model, Connection con) throws SQLException {
+        PreparedStatement statement = con.prepareStatement(CREATE);
+        statement.setString(1, model.getNumber());
+        statement.setString(2, model.getCarName());
+        statement.setString(3, model.getCategory().toString());
+        statement.setInt(4, model.getCapacity());
+        return statement;
+    }
+
+
     @Override
-    public void update(Car model, Connection con) {
-        try (PreparedStatement statement = con.prepareStatement(UPDATE)) {
+    public void update(Car model) {
+        /*try (PreparedStatement statement = con.prepareStatement(UPDATE)) {
             statement.setString(1, model.getNumber());
             statement.setString(2, model.getCarName());
             statement.setString(3, model.getCategory().toString());
@@ -49,15 +100,13 @@ public class CarDAOimpl {
         } finally {
             DAOUtil.connectionClose(con, log);
         }
+
+         */
     }
 
-    @Override
-    public Car get(int id, Connection con) {
-        throw new UnsupportedOperationException();
-    }
-
-    public Car get(String number, Connection con) {
-        try (PreparedStatement statement = con.prepareStatement(SELECT)) {
+    public Car get(String number) {
+        /*
+        try (PreparedStatement statement = con.prepareStatement(SELECT_BY_NUMBER)) {
             statement.setString(1, number);
             ResultSet result = statement.executeQuery();
             if (result.next()) {
@@ -67,13 +116,16 @@ public class CarDAOimpl {
             log.error(CAR_NOT_FOUND, e);
             throw new DAOException(CAR_NOT_FOUND);
         }
+
+         */
         return Car.builder().build();
     }
 
 
     @Override
-    public List<Car> getAll(Connection con) {
+    public List<Car> getAll() {
         List<Car> models = new ArrayList<>();
+        /*
         try (PreparedStatement statement = con.prepareStatement(SELECT_ALL)) {
             ResultSet result = statement.executeQuery();
             while (result.next()) {
@@ -83,8 +135,12 @@ public class CarDAOimpl {
             log.error(CAR_NOT_FOUND, e);
             throw new DAOException(CAR_NOT_FOUND);
         }
+
+         */
         return models;
     }
+
+    //TODO
 
     private Car buildCar(ResultSet result) throws SQLException {
         return Car.builder().carName(result.getString("car_name"))
@@ -94,9 +150,17 @@ public class CarDAOimpl {
     }
 
     @Override
-    public void delete(int id, Connection con) {
-        throw new IllegalArgumentException();
+    public Car getCar(String number) {
+        return null;
     }
 
- */
+    @Override
+    public List<Car> getAllByCategory(CarCategory category) {
+        return null;
+    }
+
+    @Override
+    public void updateCategory(Car model, CarCategory category) {
+
+    }
 }
