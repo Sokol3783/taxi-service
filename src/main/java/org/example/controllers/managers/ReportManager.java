@@ -1,8 +1,8 @@
 package org.example.controllers.managers;
 
-import org.example.dao.DAOReport;
+import org.example.dao.ReportDAO;
 import org.example.dao.daoreport.QueryReportTexts;
-import org.example.dao.daoreport.SimpleReportDAO;
+import org.example.dao.daoreport.ReportDAOimpl;
 import org.example.models.User;
 import org.json.JSONArray;
 
@@ -12,11 +12,11 @@ import java.util.Map;
 
 public class ReportManager {
 
-    private static DAOReport dao;
+    private static ReportDAO dao;
     private static ReportManager report;
 
     private ReportManager() {
-        dao = new SimpleReportDAO();
+        dao = new ReportDAOimpl();
     }
 
     public static ReportManager getInstance() {
