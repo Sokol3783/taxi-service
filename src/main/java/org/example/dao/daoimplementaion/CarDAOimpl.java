@@ -31,6 +31,8 @@ public class CarDAOimpl extends AbstractDAO<Car> implements DAOCar<Car> {
     private static final String SELECT_ALL = "SELECT * FROM cars";
     private static final String SELECT_BY_NUMBER = SELECT_ALL + " WHERE car_number=?";
 
+    private static final String SELECT_ALL_BY_CATEGORY = SELECT_ALL + "WHERE car_category=?";
+
     private static SimpleConnectionPool pool;
 
     private CarDAOimpl() {
@@ -134,7 +136,6 @@ public class CarDAOimpl extends AbstractDAO<Car> implements DAOCar<Car> {
             log.error(CAR_NOT_FOUND, e);
             throw new DAOException(CAR_NOT_FOUND);
         }
-
         return models;
     }
 
@@ -148,7 +149,19 @@ public class CarDAOimpl extends AbstractDAO<Car> implements DAOCar<Car> {
 
     @Override
     public List<Car> getAllByCategory(CarCategory category) {
-        return null;
+        List<Car> models = new ArrayList<>();
+        try (Connection con = pool.getConnection();
+             PreparedStatement statement = con.prepareStatement(SELECT_ALL_BY_CATEGORY)) {
+            statement.setString(1, category.toString());
+            ResultSet result = statement.executeQuery();
+            while (result.next()) {
+                models.add(buildCar(result));
+            }
+        } catch (SQLException e) {
+            log.error(CAR_NOT_FOUND, e);
+            throw new DAOException(CAR_NOT_FOUND);
+        }
+        return models;
     }
 
     @Override
