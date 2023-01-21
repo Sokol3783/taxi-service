@@ -1,10 +1,12 @@
 package org.example.dao.daoutil;
 
+import org.example.exceptions.DAOException;
 import org.slf4j.Logger;
 
 import java.sql.Connection;
 import java.sql.SQLException;
 
+import static org.example.exceptions.DAOException.CONNECTION_CLOSE_FAIL;
 import static org.example.exceptions.DAOException.ROLLBACK_FAIL;
 
 public class DAOUtil {
@@ -14,7 +16,8 @@ public class DAOUtil {
             try {
                 con.close();
             } catch (SQLException e) {
-                throw new RuntimeException(e);
+                log.error(CONNECTION_CLOSE_FAIL, e);
+                throw new DAOException(e);
             }
         }
     }
@@ -28,5 +31,4 @@ public class DAOUtil {
             }
         }
     }
-
 }

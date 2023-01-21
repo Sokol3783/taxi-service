@@ -9,6 +9,7 @@ public class DAOException extends RuntimeException {
     public static final String REPORT_BUILDING_ARRAY = "Mistake in building report strings";
     public static final String REPORT_SET_CONDITION = "Mistake in setting condition";
     public static final String REPORT_BUILD_RESULT_ARRAY = "Report result hasn't been build";
+    public static final String CONNECTION_CLOSE_FAIL = "Connection hasn't been shutdown!";
     public static String USER_NOT_CREATE = "User hasn't been created.";
 
     public static String USER_NOT_DELETE = "User hasn't been deleted.";
@@ -18,6 +19,8 @@ public class DAOException extends RuntimeException {
     public static String CAR_NOT_UPDATE = "Car hasn't been update";
 
     public static String CAR_NOT_FOUND = "Car hasn't been found";
+
+    public static String CAR_NOT_CREATE = "Car hasn't been created.";
 
     public static String ORDER_NOT_CREATE = "Order hasn't been created.";
 
