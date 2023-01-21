@@ -5,6 +5,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 @Builder
@@ -12,6 +13,7 @@ import java.io.Serializable;
 @EqualsAndHashCode
 @ToString
 public class Discount implements Serializable, Container {
+    @Serial
     private static final long serialVersionUID = 17;
     User user;
     int percent;
