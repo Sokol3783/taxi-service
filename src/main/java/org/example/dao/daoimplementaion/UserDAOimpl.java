@@ -3,6 +3,7 @@ package org.example.dao.daoimplementaion;
 import org.example.dao.AbstractDAO;
 import org.example.dao.DAOUser;
 import org.example.dao.SimpleConnectionPool;
+import org.example.dao.connectionpool.BasicConnectionPool;
 import org.example.dao.daoutil.DAOUtil;
 import org.example.exceptions.DAOException;
 import org.example.models.User;
@@ -28,10 +29,18 @@ public class UserDAOimpl extends AbstractDAO<User> implements DAOUser<User> {
     private static final String SELECT_BY_ID = SELECT_ALL + " WHERE user_id=?";
     private static final String SELECT_BY_PHONEMAIL = "SELECT * FROM users WHERE (phone=? OR email=?)";
 
-    private SimpleConnectionPool pool;
+    private static SimpleConnectionPool pool;
 
-    public UserDAOimpl(SimpleConnectionPool pool) {
-        this.pool = pool;
+    private UserDAOimpl() {
+    }
+
+    public static UserDAOimpl getInstance() {
+        synchronized (UserDAOimpl.class) {
+            if (pool == null) {
+                pool = BasicConnectionPool.getInstance();
+            }
+        }
+        return new UserDAOimpl();
     }
 
     @Override
@@ -39,26 +48,26 @@ public class UserDAOimpl extends AbstractDAO<User> implements DAOUser<User> {
         Connection con = pool.getConnection();
         try {
             con.setAutoCommit(false);
-            PreparedStatement statement = getPrepareStatementCreateUser(model, USER_NOT_CREATE, con);
-            User user = executeUserChanges(statement);
+            PreparedStatement statement = getPrepareStatementCreateUser(model, CREATE, con);
+            User user = executeCreateUpdateQuery(statement);
             commitUserTransaction(user, con);
             return user;
         } catch (SQLException e) {
             DAOUtil.rollbackCommit(con, log);
-            log.error(AUTO_COMMIT_FALSE_FAILED, e);
         } finally {
             DAOUtil.connectionClose(con, log);
         }
-        return null;
+        return User.builder().build();
     }
 
+    @Override
     public User create(User model, String password) {
         Connection con = pool.getConnection();
         try {
             con.setAutoCommit(false);
-            PreparedStatement statement = getPrepareStatementCreateUser(model, USER_NOT_CREATE, con);
+            PreparedStatement statement = getPrepareStatementCreateUser(model, CREATE, con);
             fillUserPassword(statement, password);
-            User user = executeUserChanges(statement);
+            User user = executeCreateUpdateQuery(statement);
             commitUserTransaction(user, con);
             return user;
         } catch (SQLException e) {
@@ -76,7 +85,7 @@ public class UserDAOimpl extends AbstractDAO<User> implements DAOUser<User> {
         }
     }
 
-    private User executeUserChanges(PreparedStatement statement) throws SQLException {
+    private User executeCreateUpdateQuery(PreparedStatement statement) throws SQLException {
         ResultSet result = statement.executeQuery();
         if (result.next()) {
             return buildUser(result);
@@ -100,12 +109,6 @@ public class UserDAOimpl extends AbstractDAO<User> implements DAOUser<User> {
         return statement;
     }
 
-
-    private void fillUserPassword(PreparedStatement statement, String password) throws SQLException {
-        PasswordAuthentication auth = new PasswordAuthentication(13);
-        statement.setString(7, auth.hash(password.toCharArray()));
-    }
-
     private void fillFieldsExceptPassword(PreparedStatement statement, User model) throws SQLException {
         statement.setString(1, model.getFirstName());
         statement.setString(2, model.getSecondName());
@@ -115,13 +118,18 @@ public class UserDAOimpl extends AbstractDAO<User> implements DAOUser<User> {
         statement.setDate(6, Date.valueOf(model.getBirthDate()));
     }
 
+    private void fillUserPassword(PreparedStatement statement, String password) throws SQLException {
+        PasswordAuthentication auth = new PasswordAuthentication(13);
+        statement.setString(7, auth.hash(password.toCharArray()));
+    }
+
     @Override
     public void update(User model) {
         Connection con = pool.getConnection();
         try {
             con.setAutoCommit(false);
             PreparedStatement statement = getPrepareStatementUpdateUser(model, UPDATE, con);
-            executeUserChanges(statement);
+            executeCreateUpdateQuery(statement);
             commitUpdateTransaction(statement.getUpdateCount(), con);
         } catch (SQLException e) {
             DAOUtil.rollbackCommit(con, log);
@@ -188,6 +196,7 @@ public class UserDAOimpl extends AbstractDAO<User> implements DAOUser<User> {
         return null;
     }
 
+    @Override
     public User findUserPhoneMailAndPassword(String login, String password) {
         Connection con = pool.getConnection();
         try (PreparedStatement statement = con.prepareStatement(SELECT_BY_PHONEMAIL)) {
@@ -241,6 +250,8 @@ public class UserDAOimpl extends AbstractDAO<User> implements DAOUser<User> {
         }
     }
 
+
+    //TODO
     private User buildUser(ResultSet resultSet) throws SQLException {
         return User.builder().firstName(resultSet.getString("first_name"))
                 .secondName(resultSet.getString("last_name"))
