@@ -104,11 +104,12 @@ public class CarDAOimpl extends AbstractDAO<Car> implements DAOCar<Car> {
     }
 
     public Car get(String number) {
-        try (PreparedStatement statement = con.prepareStatement(SELECT_BY_NUMBER)) {
+        try (Connection con = pool.getConnection();
+             PreparedStatement statement = con.prepareStatement(SELECT_BY_NUMBER)) {
             statement.setString(1, number);
             ResultSet result = statement.executeQuery();
             if (result.next()) {
-                return Car.builder().build();
+                return buildCar(result);
             }
         } catch (SQLException e) {
             log.error(CAR_NOT_FOUND, e);
