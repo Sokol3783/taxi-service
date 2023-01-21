@@ -5,6 +5,6 @@ import org.json.JSONArray;
 import java.util.Map;
 
 @FunctionalInterface
-public interface DAOReport {
+public interface ReportDAO {
     JSONArray getReport(String query, Map<Integer, String> conditions);
 }

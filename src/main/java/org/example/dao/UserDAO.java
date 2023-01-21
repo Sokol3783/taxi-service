@@ -2,7 +2,7 @@ package org.example.dao;
 
 import java.io.Serializable;
 
-public interface DAOUser<T extends Serializable> extends DAO<T> {
+public interface UserDAO<T extends Serializable> extends DAO<T> {
 
     T get(String login);
 
