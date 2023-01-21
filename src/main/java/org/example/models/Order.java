@@ -13,7 +13,7 @@ import java.util.List;
 @Getter
 @EqualsAndHashCode
 @ToString
-public class Order implements Serializable {
+public class Order implements Serializable,Container{
     private static final long serialVersionUID = 29;
     int id;
     String addressDeparture;
@@ -25,4 +25,9 @@ public class Order implements Serializable {
     long orderNumber;
     LocalDateTime createAt;
     long distance;
+
+    @Override
+    public boolean isEmpty() {
+        return client.isEmpty() || addressDeparture.isEmpty() && destination.isEmpty();
+    }
 }

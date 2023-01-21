@@ -11,9 +11,14 @@ import java.io.Serializable;
 @Getter
 @EqualsAndHashCode
 @ToString
-public class Discount implements Serializable {
+public class Discount implements Serializable, Container {
     private static final long serialVersionUID = 17;
     User user;
     int percent;
     int amountSpent;
+
+    @Override
+    public boolean isEmpty() {
+        return user.isEmpty() && percent == 0;
+    }
 }

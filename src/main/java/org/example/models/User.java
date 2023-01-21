@@ -13,7 +13,7 @@ import java.time.LocalDate;
 @Getter(lazy = true)
 @EqualsAndHashCode
 @ToString
-public class User implements Serializable {
+public class User implements Serializable, Container {
 
   private static final long serialVersionUID = 27;
 
