@@ -12,11 +12,19 @@ import java.io.Serializable;
 @Getter(lazy = true)
 @EqualsAndHashCode
 @ToString
-public class Car implements Serializable {
+public class Car implements Serializable, Container {
   private static final long serialVersionUID = 33;
   private final User driver;
   private final String number;
   private final CarCategory category;
   private final int capacity;
   private final String carName;
+
+  @Override
+  public boolean isEmpty() {
+    if (category == null){
+      return true;
+    }
+    return number.isEmpty() || capacity <= 0 || carName.isEmpty();
+  }
 }
