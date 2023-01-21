@@ -1,19 +1,22 @@
 package org.example.dao.daoimplementaion;
 
-import org.example.dao.AbstractDAO;
-import org.example.dao.OrderDAO;
-import org.example.dao.SimpleConnectionPool;
+import org.example.dao.*;
 import org.example.dao.connectionpool.BasicConnectionPool;
 import org.example.dao.daoutil.DAOUtil;
+import org.example.exceptions.DAOException;
+import org.example.models.Car;
 import org.example.models.Order;
 import org.example.models.User;
+import org.example.util.LocalDateConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+
+import static org.example.exceptions.DAOException.USER_NOT_CREATE;
 
 public class OrderDAOimpl extends AbstractDAO<Order> implements OrderDAO<Order> {
 
@@ -39,19 +42,14 @@ public class OrderDAOimpl extends AbstractDAO<Order> implements OrderDAO<Order> 
     }
 
     @Override
-    public void update(Order model) {
-        super.update(model);
-    }
-
-    @Override
     public Order create(Order model) {
         Connection con = pool.getConnection();
         try {
             con.setAutoCommit(false);
             PreparedStatement statement = getPrepareStatementByQuery(model, CREATE, con);
-            User user = executeCreateUpdateQuery(statement);
-            commitUserTransaction(user, con);
-            return user;
+            Order order = executeCreateUpdateQuery(statement);
+            commitOrderTransaction(order, con);
+            return order;
         } catch (SQLException e) {
             DAOUtil.rollbackCommit(con, log);
         } finally {
@@ -60,14 +58,80 @@ public class OrderDAOimpl extends AbstractDAO<Order> implements OrderDAO<Order> 
         return Order.builder().build();
     }
 
+    private PreparedStatement getPrepareStatementByQuery(Order model, String query, Connection con) {
+        try (PreparedStatement statement = getPrepareStatement(model, query, con)) {
+            return statement;
+        } catch (SQLException e) {
+            DAOUtil.rollbackCommit(con, log);
+            log.error(USER_NOT_CREATE, e);
+            throw new DAOException();
+        }
+    }
+
+    private PreparedStatement getPrepareStatement(Order model, String query, Connection con) throws SQLException {
+        PreparedStatement statement = con.prepareStatement(query);
+        fillQueryFields(statement, model);
+        return statement;
+    }
+
+    private void fillQueryFields(PreparedStatement statement, Order model) throws SQLException {
+        statement.setArray(1, getCarNumbers(model.getCars(), statement.getConnection()));
+        statement.setString(2, model.getClient().getPhone());
+        statement.setString(3, model.getAddressDeparture());
+        statement.setString(4, model.getDestination());
+        statement.setLong(5, model.getCost());
+        statement.setInt(6, model.getPercentDiscount());
+        statement.setLong(7, model.getDistance());
+        statement.setDate(8, LocalDateConverter.convertToDatabaseColumn(model.getCreateAt()));
+    }
+
+    private void commitOrderTransaction(Order order, Connection con) throws SQLException {
+        if (!order.isEmpty()) {
+            con.commit();
+        }
+    }
+
+    private Order executeCreateUpdateQuery(PreparedStatement statement) throws SQLException {
+        ResultSet result = statement.executeQuery();
+        if (result.next()) {
+            return buildOrder(result);
+        }
+        return Order.builder().build();
+    }
+
+
     @Override
     public Order get(int id) {
-        return super.get(id);
+       /* try (ConnectionPreparedStatement statement = con.prepareStatement(SELECT)) {
+            statement.setInt(1, id);
+            ResultSet result = statement.executeQuery();
+            if (result.next()) {
+                return buildOrder(result, con);
+            }
+        } catch (SQLException e) {
+            log.error(ORDER_NOT_FOUND, e);
+            throw new DAOException(ORDER_NOT_FOUND);
+        }*/
+        return Order.builder().build();
     }
 
     @Override
     public List<Order> getAll() {
-        return super.getAll();
+        List<Order> models = new ArrayList<>();
+       /*
+        try (PreparedStatement statement = con.prepareStatement(SELECT_ALL)) {
+            ResultSet result = statement.executeQuery();
+            while (result.next()) {
+                models.add(buildOrder(result, con));
+            }
+        } catch (SQLException e) {
+            log.error(USER_NOT_FOUND, e);
+            throw new DAOException(USER_NOT_FOUND);
+        }
+        return models;
+
+        */
+        return models;
     }
 
     @Override
@@ -75,34 +139,22 @@ public class OrderDAOimpl extends AbstractDAO<Order> implements OrderDAO<Order> 
         super.delete(id);
     }
 
-    /*
     @Override
-    public Order create(Order model) throws SQLException {
-        con.setAutoCommit(false);
-        try (PreparedStatement statement = con.prepareStatement(CREATE)) {
-            statement.setArray(1, getCarNumbers(model.getCars(), con));
-            statement.setString(2, model.getClient().getPhone());
-            statement.setString(3, model.getAddressDeparture());
-            statement.setString(4, model.getDestination());
-            statement.setLong(5, model.getCost());
-            statement.setInt(6, model.getPercentDiscount());
-            statement.setLong(7, model.getDistance());
-            statement.setDate(8, LocalDateConverter.convertToDatabaseColumn(model.getCreateAt()));
-            if (statement.executeUpdate() > 0) {
-                con.commit();
-                return model;
-            }
-        } catch (SQLException e) {
-            DAOUtil.rollbackCommit(con, log);
-            log.error(ORDER_NOT_CREATE, e);
-            throw new DAOException(ORDER_NOT_CREATE);
-        } finally {
-            DAOUtil.connectionClose(con, log);
-        }
-        return Order.builder().build();
+    public Order getByNumber(String number) {
+        return null;
     }
 
-    private Array getCarNumbers(List<Car> cars) throws SQLException {
+    @Override
+    public List<Order> getByNumbers(List<String> numbers) {
+        return null;
+    }
+
+    @Override
+    public Order swapCar(Order model, Map<Car, List<Car>> cars) {
+        return null;
+    }
+
+    private Array getCarNumbers(List<Car> cars, Connection con) throws SQLException {
         if (cars.size() == 0) {
             log.error("There are no checked car");
             throw new IllegalArgumentException();
@@ -114,46 +166,10 @@ public class OrderDAOimpl extends AbstractDAO<Order> implements OrderDAO<Order> 
         return con.createArrayOf("VARCHAR", numbers);
     }
 
-    @Override
-    public void update(Order model) {
-        DAOUtil.connectionClose(con, log);
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public Order get(int id) {
-        try (PreparedStatement statement = con.prepareStatement(SELECT)) {
-            statement.setInt(1, id);
-            ResultSet result = statement.executeQuery();
-            if (result.next()) {
-                return buildOrder(result, con);
-            }
-        } catch (SQLException e) {
-            log.error(ORDER_NOT_FOUND, e);
-            throw new DAOException(ORDER_NOT_FOUND);
-        }
-        return Order.builder().build();
-    }
-
-    @Override
-    public List<Order> getAll(Connection con) {
-        List<Order> models = new ArrayList<>();
-        try (PreparedStatement statement = con.prepareStatement(SELECT_ALL)) {
-            ResultSet result = statement.executeQuery();
-            while (result.next()) {
-                models.add(buildOrder(result, con));
-            }
-        } catch (SQLException e) {
-            log.error(USER_NOT_FOUND, e);
-            throw new DAOException(USER_NOT_FOUND);
-        }
-        return models;
-    }
-
     //TODO
     private Order buildOrder(ResultSet result) throws SQLException {
-        return Order.builder().cars(getCars(result.getArray("cars_numbers"), con))
-                .client(getClient(result.getInt("client_id"), con))
+        return Order.builder().cars(getCars(result.getArray("cars_numbers")))
+                .client(getClient(result.getInt("client_id")))
                 .cost(result.getLong("cost"))
                 .addressDeparture(result.getString("address_departure"))
                 .destination(result.getString("destination"))
@@ -164,18 +180,17 @@ public class OrderDAOimpl extends AbstractDAO<Order> implements OrderDAO<Order> 
     }
 
     private User getClient(int client_id) {
-        UserDAO dao = new UserDAO();
-        return dao.get(client_id, con);
+        UserDAO<User> dao = UserDAOimpl.getInstance();
+        return dao.get(client_id);
     }
 
     private List<Car> getCars(Array car_numbers) throws SQLException {
         String[] carNumbers = (String[]) car_numbers.getArray();
         List<Car> cars = new ArrayList<>();
-        CarDAO dao = new CarDAO();
+        CarDAO<Car> dao = CarDAOimpl.getInstance();
         for (String carNumber : carNumbers) {
-            cars.add(dao.get(carNumber, con));
+            cars.add(dao.getByNumber(carNumber));
         }
         return cars;
     }
-    */
 }
