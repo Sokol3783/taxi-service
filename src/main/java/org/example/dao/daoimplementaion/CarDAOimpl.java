@@ -11,10 +11,7 @@ import org.example.models.taxienum.CarCategory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -128,7 +125,7 @@ public class CarDAOimpl extends AbstractDAO<Car> implements CarDAO<Car> {
         List<Car> models = new ArrayList<>();
         try (Connection con = pool.getConnection();
              PreparedStatement statement = con.prepareStatement(SELECT_BY_NUMBERS)) {
-            statement.setArray(1, con.createArrayOf("VARCHAR", numbers.toArray()));
+            statement.setArray(1, carNumbersToArray(numbers, con));
             ResultSet result = statement.executeQuery();
             while (result.next()) {
                 models.add(buildCar(result));
@@ -140,6 +137,13 @@ public class CarDAOimpl extends AbstractDAO<Car> implements CarDAO<Car> {
         return models;
     }
 
+    private Array carNumbersToArray(List<String> numbers, Connection con) throws SQLException {
+        if (numbers.size() == 0) {
+            log.error("There are no checked car");
+            throw new IllegalArgumentException();
+        }
+        return con.createArrayOf("VARCHAR", numbers.toArray());
+    }
 
     @Override
     public List<Car> getAll() {
