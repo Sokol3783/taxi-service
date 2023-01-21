@@ -1,6 +1,6 @@
 package org.example.dao.daoreport;
 
-import org.example.dao.DAOReport;
+import org.example.dao.ReportDAO;
 import org.example.dao.SimpleConnectionPool;
 import org.example.dao.connectionpool.BasicConnectionPool;
 import org.example.exceptions.DAOException;
@@ -16,7 +16,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-public class SimpleReportDAO implements DAOReport {
+public class SimpleReportDAO implements ReportDAO {
 
     SimpleConnectionPool pool = BasicConnectionPool.getInstance();
     private static final Logger log = LoggerFactory.getLogger(SimpleReportDAO.class);

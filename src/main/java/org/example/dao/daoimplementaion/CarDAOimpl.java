@@ -1,7 +1,7 @@
 package org.example.dao.daoimplementaion;
 
 import org.example.dao.AbstractDAO;
-import org.example.dao.DAOCar;
+import org.example.dao.CarDAO;
 import org.example.dao.SimpleConnectionPool;
 import org.example.dao.connectionpool.BasicConnectionPool;
 import org.example.dao.daoutil.DAOUtil;
@@ -21,7 +21,7 @@ import java.util.List;
 import static org.example.exceptions.DAOException.CAR_NOT_CREATE;
 import static org.example.exceptions.DAOException.CAR_NOT_FOUND;
 
-public class CarDAOimpl extends AbstractDAO<Car> implements DAOCar<Car> {
+public class CarDAOimpl extends AbstractDAO<Car> implements CarDAO<Car> {
 
     private static final Logger log = LoggerFactory.getLogger(CarDAOimpl.class);
     private static final String CREATE = "INSERT INTO cars(car_number, car_name,category, capacity) VALUES(?, ?, ?, ?)";

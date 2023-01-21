@@ -1,14 +1,81 @@
 package org.example.dao.daoimplementaion;
 
-public class OrderDAO {
-/*
-    private static final Logger log = LoggerFactory.getLogger(OrderDAO.class);
+import org.example.dao.AbstractDAO;
+import org.example.dao.OrderDAO;
+import org.example.dao.SimpleConnectionPool;
+import org.example.dao.connectionpool.BasicConnectionPool;
+import org.example.dao.daoutil.DAOUtil;
+import org.example.models.Order;
+import org.example.models.User;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.util.List;
+
+public class OrderDAOimpl extends AbstractDAO<Order> implements OrderDAO<Order> {
+
+    private static final Logger log = LoggerFactory.getLogger(OrderDAOimpl.class);
     private static final String CREATE = "INSERT INTO orders(cars_numbers,client_id,address_departure,destination,cost,percent_discount,distance, create_date) VALUES(?, (SELECT user_id FROM users WHERE phone=?), ?, ?, ?, ?, ?, ?)";
     private static final String UPDATE = "UPDATE orders SET (cars_numbers=?,client_id=?,address_departure=?,destination=?,cost=?,percent_discount=?,order_number=?) WHERE order_id=?";
     private static final String DELETE = "DELETE FROM orders WHERE id=?";
     private static final String SELECT_ALL = "SELECT * FROM orders";
     private static final String SELECT = SELECT_ALL + " WHERE order_id=?";
 
+    private static SimpleConnectionPool pool;
+
+    private OrderDAOimpl() {
+    }
+
+    public static OrderDAOimpl getInstance() {
+        synchronized (OrderDAOimpl.class) {
+            if (pool == null) {
+                pool = BasicConnectionPool.getInstance();
+            }
+        }
+        return new OrderDAOimpl();
+    }
+
+    @Override
+    public void update(Order model) {
+        super.update(model);
+    }
+
+    @Override
+    public Order create(Order model) {
+        Connection con = pool.getConnection();
+        try {
+            con.setAutoCommit(false);
+            PreparedStatement statement = getPrepareStatementByQuery(model, CREATE, con);
+            User user = executeCreateUpdateQuery(statement);
+            commitUserTransaction(user, con);
+            return user;
+        } catch (SQLException e) {
+            DAOUtil.rollbackCommit(con, log);
+        } finally {
+            DAOUtil.connectionClose(con, log);
+        }
+        return Order.builder().build();
+    }
+
+    @Override
+    public Order get(int id) {
+        return super.get(id);
+    }
+
+    @Override
+    public List<Order> getAll() {
+        return super.getAll();
+    }
+
+    @Override
+    public void delete(int id) {
+        super.delete(id);
+    }
+
+    /*
     @Override
     public Order create(Order model) throws SQLException {
         con.setAutoCommit(false);
@@ -83,6 +150,7 @@ public class OrderDAO {
         return models;
     }
 
+    //TODO
     private Order buildOrder(ResultSet result) throws SQLException {
         return Order.builder().cars(getCars(result.getArray("cars_numbers"), con))
                 .client(getClient(result.getInt("client_id"), con))
@@ -109,27 +177,5 @@ public class OrderDAO {
         }
         return cars;
     }
-
-    @Override
-    public void delete(int id) {
-        callQuery(id, con, DELETE, log);
-    }
-
-    static void callQuery(int id, String delete, Logger log) {
-        try (PreparedStatement statement = con.prepareStatement(delete)) {
-            statement.setInt(1, id);
-            int i = statement.executeUpdate();
-            if (i <= 0) {
-                log.error(USER_NOT_DELETE);
-                throw new DAOException(USER_NOT_DELETE);
-            }
-        } catch (SQLException e) {
-            log.error(USER_NOT_FOUND, e);
-            throw new DAOException(USER_NOT_FOUND);
-        } finally {
-            DAOUtil.connectionClose(con, log);
-        }
-    }
-
- */
+    */
 }

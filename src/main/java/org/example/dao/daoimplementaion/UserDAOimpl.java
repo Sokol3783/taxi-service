@@ -1,8 +1,8 @@
 package org.example.dao.daoimplementaion;
 
 import org.example.dao.AbstractDAO;
-import org.example.dao.DAOUser;
 import org.example.dao.SimpleConnectionPool;
+import org.example.dao.UserDAO;
 import org.example.dao.connectionpool.BasicConnectionPool;
 import org.example.dao.daoutil.DAOUtil;
 import org.example.exceptions.DAOException;
@@ -19,7 +19,7 @@ import java.util.List;
 
 import static org.example.exceptions.DAOException.*;
 
-public class UserDAOimpl extends AbstractDAO<User> implements DAOUser<User> {
+public class UserDAOimpl extends AbstractDAO<User> implements UserDAO<User> {
     private static final Logger log = LoggerFactory.getLogger(UserDAOimpl.class);
     private static final String CREATE = "INSERT INTO users(first_name,last_name,phone,user_role,email,birthday,password) VALUES(?, ?, ?, ?, ?, ?)";
     private static final String UPDATE = "UPDATE users SET (first_name=?,last_name=?,phone=?,email=?,birthday=?) WHERE user_id=?";
