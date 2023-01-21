@@ -26,6 +26,7 @@ public class CarDAOimpl extends AbstractDAO<Car> implements DAOCar<Car> {
     private static final Logger log = LoggerFactory.getLogger(CarDAOimpl.class);
     private static final String CREATE = "INSERT INTO cars(car_number, car_name,category, capacity) VALUES(?, ?, ?, ?)";
     private static final String UPDATE = "UPDATE cars SET (car_number=?,car_name=?,category=?,capacity=?) WHERE car_number=?";
+    private static final String UPDATE_NUMBER = "UPDATE cars SET (car_number=?) WHERE car_number=?";
     private static final String DELETE = "DELETE FROM users WHERE id=?";
     private static final String SELECT_ALL = "SELECT * FROM cars";
     private static final String SELECT_BY_NUMBER = SELECT_ALL + " WHERE car_number=?";
@@ -103,7 +104,8 @@ public class CarDAOimpl extends AbstractDAO<Car> implements DAOCar<Car> {
         }
     }
 
-    public Car get(String number) {
+    @Override
+    public Car getByNumber(String number) {
         try (Connection con = pool.getConnection();
              PreparedStatement statement = con.prepareStatement(SELECT_BY_NUMBER)) {
             statement.setString(1, number);
@@ -122,8 +124,8 @@ public class CarDAOimpl extends AbstractDAO<Car> implements DAOCar<Car> {
     @Override
     public List<Car> getAll() {
         List<Car> models = new ArrayList<>();
-        /*
-        try (PreparedStatement statement = con.prepareStatement(SELECT_ALL)) {
+        try (Connection con = pool.getConnection();
+             PreparedStatement statement = con.prepareStatement(SELECT_ALL)) {
             ResultSet result = statement.executeQuery();
             while (result.next()) {
                 models.add(buildCar(result));
@@ -133,7 +135,6 @@ public class CarDAOimpl extends AbstractDAO<Car> implements DAOCar<Car> {
             throw new DAOException(CAR_NOT_FOUND);
         }
 
-         */
         return models;
     }
 
@@ -146,17 +147,25 @@ public class CarDAOimpl extends AbstractDAO<Car> implements DAOCar<Car> {
     }
 
     @Override
-    public Car getCar(String number) {
-        return null;
-    }
-
-    @Override
     public List<Car> getAllByCategory(CarCategory category) {
         return null;
     }
 
     @Override
-    public void updateCategory(Car model, CarCategory category) {
-
+    public void updateNumber(Car model, String number) {
+        Connection con = pool.getConnection();
+        try {
+            con.setAutoCommit(false);
+            PreparedStatement statement = con.prepareStatement(UPDATE_NUMBER);
+            statement.setString(1, number);
+            statement.setString(2, model.getNumber());
+            Car car = executeCreateUpdateQuery(statement);
+            commitCarTransaction(car, con);
+        } catch (SQLException e) {
+            DAOUtil.rollbackCommit(con, log);
+            log.error(CAR_NOT_CREATE, e);
+        } finally {
+            DAOUtil.connectionClose(con, log);
+        }
     }
 }
