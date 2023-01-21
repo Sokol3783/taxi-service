@@ -5,6 +5,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -13,7 +14,8 @@ import java.util.List;
 @Getter
 @EqualsAndHashCode
 @ToString
-public class Order implements Serializable,Container{
+public class Order implements Serializable, Container {
+    @Serial
     private static final long serialVersionUID = 29;
     int id;
     String addressDeparture;
