@@ -1,8 +1,8 @@
 package org.example.controllers.managers;
 
 import org.example.dao.DAOReport;
+import org.example.dao.daoreport.QueryReportTexts;
 import org.example.dao.daoreport.SimpleReportDAO;
-import org.example.dao.daoimplementaion.QueryReportDAO;
 import org.example.models.User;
 import org.json.JSONArray;
 
@@ -32,7 +32,7 @@ public class ReportManager {
         Map<Integer, String> map = new HashMap<>();
         map.put(1, start.toString());
         map.put(2, end.toString());
-        return dao.getReport(QueryReportDAO.reportByPeriod, map);
+        return dao.getReport(QueryReportTexts.reportByPeriod, map);
     }
 
     public JSONArray getOrderByPeriodAndClient(LocalDate start, LocalDate end, User user) {
@@ -40,6 +40,6 @@ public class ReportManager {
         map.put(1, start.toString());
         map.put(2, end.toString());
         map.put(3, user.getPhone());
-        return dao.getReport(QueryReportDAO.reportByPeriod, map);
+        return dao.getReport(QueryReportTexts.reportByPeriod, map);
     }
 }
