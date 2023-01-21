@@ -12,5 +12,5 @@ public interface OrderDAO<T extends Serializable> extends DAO<T> {
 
     List<T> getByNumbers(List<String> numbers);
 
-    T replaceCar(T model, Map<Car, List<Car>> cars);
+    T swapCar(T model, Map<Car, List<Car>> cars);
 }
