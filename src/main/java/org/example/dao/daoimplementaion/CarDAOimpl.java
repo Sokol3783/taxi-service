@@ -30,6 +30,7 @@ public class CarDAOimpl extends AbstractDAO<Car> implements CarDAO<Car> {
     private static final String DELETE = "DELETE FROM users WHERE id=?";
     private static final String SELECT_ALL = "SELECT * FROM cars";
     private static final String SELECT_BY_NUMBER = SELECT_ALL + " WHERE car_number=?";
+    private static final String SELECT_BY_NUMBERS = SELECT_ALL + " WHERE car_number IN ?";
 
     private static final String SELECT_ALL_BY_CATEGORY = SELECT_ALL + "WHERE car_category=?";
 
@@ -120,6 +121,23 @@ public class CarDAOimpl extends AbstractDAO<Car> implements CarDAO<Car> {
             throw new DAOException(CAR_NOT_FOUND);
         }
         return Car.builder().build();
+    }
+
+    @Override
+    public List<Car> getByNumbers(List<String> numbers) {
+        List<Car> models = new ArrayList<>();
+        try (Connection con = pool.getConnection();
+             PreparedStatement statement = con.prepareStatement(SELECT_BY_NUMBERS)) {
+            statement.setArray(1, con.createArrayOf("VARCHAR", numbers.toArray()));
+            ResultSet result = statement.executeQuery();
+            while (result.next()) {
+                models.add(buildCar(result));
+            }
+        } catch (SQLException e) {
+            log.error(CAR_NOT_FOUND, e);
+            throw new DAOException(CAR_NOT_FOUND);
+        }
+        return models;
     }
 
 
