@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 
 import static org.example.exceptions.DAOException.USER_NOT_CREATE;
+import static org.example.exceptions.DAOException.USER_NOT_FOUND;
 
 public class OrderDAOimpl extends AbstractDAO<Order> implements OrderDAO<Order> {
 
@@ -25,7 +26,7 @@ public class OrderDAOimpl extends AbstractDAO<Order> implements OrderDAO<Order> 
     private static final String UPDATE = "UPDATE orders SET (cars_numbers=?,client_id=?,address_departure=?,destination=?,cost=?,percent_discount=?,order_number=?) WHERE order_id=?";
     private static final String DELETE = "DELETE FROM orders WHERE id=?";
     private static final String SELECT_ALL = "SELECT * FROM orders";
-    private static final String SELECT = SELECT_ALL + " WHERE order_id=?";
+    private static final String SELECT_BY_ID = SELECT_ALL + " WHERE order_id=?";
 
     private static SimpleConnectionPool pool;
 
@@ -102,35 +103,37 @@ public class OrderDAOimpl extends AbstractDAO<Order> implements OrderDAO<Order> 
 
     @Override
     public Order get(int id) {
-       /* try (ConnectionPreparedStatement statement = con.prepareStatement(SELECT)) {
+        Connection con = pool.getConnection();
+        try (PreparedStatement statement = con.prepareStatement(SELECT_BY_ID)) {
             statement.setInt(1, id);
             ResultSet result = statement.executeQuery();
             if (result.next()) {
-                return buildOrder(result, con);
+                return buildOrder(result);
             }
         } catch (SQLException e) {
-            log.error(ORDER_NOT_FOUND, e);
-            throw new DAOException(ORDER_NOT_FOUND);
-        }*/
+            log.error(USER_NOT_FOUND, e);
+            throw new DAOException(USER_NOT_FOUND);
+        } finally {
+            DAOUtil.connectionClose(con, log);
+        }
         return Order.builder().build();
     }
 
     @Override
     public List<Order> getAll() {
         List<Order> models = new ArrayList<>();
-       /*
+        Connection con = pool.getConnection();
         try (PreparedStatement statement = con.prepareStatement(SELECT_ALL)) {
             ResultSet result = statement.executeQuery();
             while (result.next()) {
-                models.add(buildOrder(result, con));
+                models.add(buildOrder(result));
             }
         } catch (SQLException e) {
             log.error(USER_NOT_FOUND, e);
             throw new DAOException(USER_NOT_FOUND);
+        } finally {
+            DAOUtil.connectionClose(con, log);
         }
-        return models;
-
-        */
         return models;
     }
 
