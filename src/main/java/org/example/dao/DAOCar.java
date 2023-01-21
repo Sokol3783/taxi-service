@@ -7,9 +7,9 @@ import java.util.List;
 
 public interface DAOCar<T extends Serializable> extends DAO<T> {
 
-    T getCar(String number);
+    T getByNumber(String number);
 
     List<T> getAllByCategory(CarCategory category);
 
-    void updateCategory(T model, CarCategory category);
+    void updateNumber(T model, String number);
 }
