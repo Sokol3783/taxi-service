@@ -16,10 +16,10 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-public class SimpleReportDAO implements ReportDAO {
+public class ReportDAOimpl implements ReportDAO {
 
     SimpleConnectionPool pool = BasicConnectionPool.getInstance();
-    private static final Logger log = LoggerFactory.getLogger(SimpleReportDAO.class);
+    private static final Logger log = LoggerFactory.getLogger(ReportDAOimpl.class);
 
     @Override
     public JSONArray getReport(String query, Map<Integer, String> conditions) {
