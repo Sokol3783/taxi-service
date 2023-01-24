@@ -41,7 +41,7 @@ public class RegistrationServlet extends HttpServlet {
             try {
                 manager.create(user);
             } catch (SQLException e) {
-                log.error(DAOException.USER_NOT_CREATE, e);
+                log.error(LOGIN_ERROR, e);
                 sendRedirect(response, request.getHeader("referer"));
             }
 
