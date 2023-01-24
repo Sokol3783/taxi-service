@@ -43,6 +43,7 @@ public class OrderDAOimpl extends AbstractDAO<Order> implements OrderDAO<Order> 
         return new OrderDAOimpl();
     }
 
+    //TODO work with Car and User model, smth wrong but I don't what
     @Override
     public Order create(Order model) {
         Connection con = pool.getConnection();
