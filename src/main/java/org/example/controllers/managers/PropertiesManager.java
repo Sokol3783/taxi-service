@@ -3,7 +3,7 @@ package org.example.controllers.managers;
 import java.io.IOException;
 import java.io.InputStream;
 
-public class Properties {
+public class PropertiesManager {
 
     private static final String PATH_PROPERTIES = "/WEB-INF/app.properties";
 

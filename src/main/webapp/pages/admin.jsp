@@ -15,13 +15,13 @@
     <link rel="stylesheet" href="./styles/bootstrap.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.2.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.1/css/dataTables.bootstrap5.min.css">
-    <link rel="stylesheet" href="./styles/style.css">
     <script src="./js/mapbox_scripts.js"></script>
     <script src="./js/order-report.js"></script>
     <script src="./js/bootstrap.bundle.js"></script>
+    <link rel="stylesheet" href="./styles/style.css">
     <title> Taxi </title>
 </head>
-<body class="container vh-100 background">
+<body class="vh-100 background">
 <nav class="navbar navbar-expand-md navbar-light background-orange justify-content-between">
     <div class="container-fluid">
         <div class="dropdown">
@@ -30,15 +30,14 @@
                 <fmt:message key="Language"/>
             </button>
             <ul class="dropdown-menu dropdown-menu-orange">
-                <li><a class="dropdown-item" href="${context_path}/admin?lang=en"><fmt:message key="en"/></a></li>
-                <li><a class="dropdown-item" href="${context_path}/admin?lang=ru"><fmt:message key="ru"/></a></li>
+                <li><a class="dropdown-item" href="${context_path}/user?lang=en"><fmt:message key="en"/></a></li>
+                <li><a class="dropdown-item" href="${context_path}/user?lang=ru"><fmt:message key="ru"/></a></li>
             </ul>
         </div>
-    </div>
-
-    <div>
+        <div>
             <span><button type="button" onclick="location.href='${context_path}/logout';"
                           class="btn btn-info add-new"><i></i><fmt:message key="logout"/></button></span>
+        </div>
     </div>
 </nav>
 <div class="container">
@@ -46,7 +45,7 @@
         <div class="col-lg-4 client-filter">
             <div></div>
         </div>
-        <div class="col-lg-6">
+        <div row class="col-lg-6">
             <div class="col-lg-3">
                 <span class="input-group-text" id="basic-addon2"><fmt:message key="startPeriod"/></span>
                 <input type="date" class="form-control" name="startPeriod" aria-label="Username"
@@ -88,7 +87,7 @@
     </tr>
     </thead>
     <tbody>
-    <c:forEach var="line" items="${sessionScope.report}">
+    <!--<c:forEach var="line" items="${sessionScope.report}">
         <tr>
             <th scope="row">${car.numberLine}</th>
             <td>${car.client}</td>
@@ -96,7 +95,7 @@
             <td>${car.distance}</td>
             <td>${car.date}</td>
         </tr>
-    </c:forEach>
+    </c:forEach>-->
     </tbody>
 </table>
 </body>

@@ -1,8 +1,8 @@
-package org.example.dao.postgres;
+package org.example.dao.daoreport;
 
-import org.example.dao.BasicConnectionPool;
-import org.example.dao.DAOReport;
+import org.example.dao.ReportDAO;
 import org.example.dao.SimpleConnectionPool;
+import org.example.dao.connectionpool.BasicConnectionPool;
 import org.example.exceptions.DAOException;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -16,10 +16,10 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-public class SimpleReportDAO implements DAOReport {
+public class ReportDAOimpl implements ReportDAO {
 
     SimpleConnectionPool pool = BasicConnectionPool.getInstance();
-    private static final Logger log = LoggerFactory.getLogger(SimpleReportDAO.class);
+    private static final Logger log = LoggerFactory.getLogger(ReportDAOimpl.class);
 
     @Override
     public JSONArray getReport(String query, Map<Integer, String> conditions) {
@@ -34,7 +34,7 @@ public class SimpleReportDAO implements DAOReport {
         }
     }
 
-    private void setConditions(PreparedStatement statement, Map<Integer, String> conditions) {
+    private PreparedStatement setConditions(PreparedStatement statement, Map<Integer, String> conditions) {
         conditions.forEach((key, value) -> {
             try {
                 statement.setString(key, value);
@@ -43,6 +43,7 @@ public class SimpleReportDAO implements DAOReport {
                 throw new DAOException(e);
             }
         });
+        return statement;
     }
 
     private JSONArray createArrayString(ResultSet resultSet) {

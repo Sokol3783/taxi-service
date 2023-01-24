@@ -16,8 +16,8 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import static java.util.Objects.nonNull;
-import static org.example.controllers.servlets.Util.forward;
-import static org.example.controllers.servlets.Util.sendRedirect;
+import static org.example.controllers.servlets.UtilServlet.forward;
+import static org.example.controllers.servlets.UtilServlet.sendRedirect;
 
 @WebServlet(name = "admin", urlPatterns = AppURL.ADMIN_SERVLET)
 public class AdminServlet extends HttpServlet {
@@ -51,9 +51,9 @@ public class AdminServlet extends HttpServlet {
         LocalDate start = getLocaleDate(req, "startPeriod");
         LocalDate end = getLocaleDate(req, "endPeriod");
         if (nonNull(filteredUser)) {
-            return report.getOrderByPeriod(start, end);
-        } else {
             return report.getOrderByPeriodAndClient(start, end, filteredUser);
+        } else {
+            return report.getOrderByPeriod(start, end);
         }
     }
 
@@ -62,10 +62,10 @@ public class AdminServlet extends HttpServlet {
         LocalDate endPeriod = getLocaleDate(req, "endPeriod");
         LocalDateTime start = LocalDate.now().atStartOfDay();
         if (!nonNull(startPeriod)) {
-            req.setAttribute("startPeriod", start);
+            req.setAttribute("startPeriod", start.toLocalDate());
         }
         if (!nonNull(endPeriod)) {
-            req.setAttribute("endPeriod", start.plusDays(1));
+            req.setAttribute("endPeriod", start.plusDays(1).toLocalDate());
         }
     }
 

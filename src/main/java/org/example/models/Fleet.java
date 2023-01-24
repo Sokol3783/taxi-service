@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CopyOnWriteArraySet;
 
-public class Fleet {
+public class Fleet implements Container {
 
     private final CopyOnWriteArraySet<Car> carsAvailableToOrder;
     private final CopyOnWriteArraySet<Car> carsOnRoute;
@@ -103,5 +103,10 @@ public class Fleet {
             return new ArrayList<>();
         }
         return severalCars;
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return carsAvailableToOrder.isEmpty() && carsOnRoute.isEmpty();
     }
 }
