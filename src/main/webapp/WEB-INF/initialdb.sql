@@ -47,7 +47,7 @@ create TABLE orders
     cost              INTEGER,
     percent_discount  INTEGER,
     create_date       timestamp,
-    order_number      SERIAL,
+    order_number      INTEGER,
     distance          int
 );
 
