@@ -4,7 +4,6 @@ import org.example.models.Car;
 
 import java.io.Serializable;
 import java.util.List;
-import java.util.Map;
 
 public interface OrderDAO<T extends Serializable> extends DAO<T> {
 
@@ -12,5 +11,5 @@ public interface OrderDAO<T extends Serializable> extends DAO<T> {
 
     List<T> getByNumbers(List<String> numbers);
 
-    T swapCar(T model, Map<Car, List<Car>> cars);
+    T swapCar(T model, List<Car> cars);
 }

@@ -14,10 +14,8 @@ import org.slf4j.LoggerFactory;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
-import static org.example.exceptions.DAOException.USER_NOT_CREATE;
-import static org.example.exceptions.DAOException.USER_NOT_FOUND;
+import static org.example.exceptions.DAOException.*;
 
 public class OrderDAOimpl extends AbstractDAO<Order> implements OrderDAO<Order> {
 
@@ -25,7 +23,10 @@ public class OrderDAOimpl extends AbstractDAO<Order> implements OrderDAO<Order> 
     private static final String CREATE = "INSERT INTO orders(cars_numbers,client_id,address_departure,destination,cost,percent_discount,distance, create_date) VALUES(?, (SELECT user_id FROM users WHERE phone=?), ?, ?, ?, ?, ?, ?)";
     private static final String UPDATE = "UPDATE orders SET (cars_numbers=?,client_id=?,address_departure=?,destination=?,cost=?,percent_discount=?,order_number=?) WHERE order_id=?";
     private static final String DELETE = "DELETE FROM orders WHERE id=?";
+    private static final String SWAP_CAR_IN_ORDER = "UPDATE orders SET cars_numbers=? WHERE number=?";
     private static final String SELECT_ALL = "SELECT * FROM orders";
+    private static final String SELECT_BY_NUMBER = SELECT_ALL + " WHERE number=?";
+    private static final String SELECT_BY_NUMBERS = SELECT_ALL + " WHERE number IN ?";
     private static final String SELECT_BY_ID = SELECT_ALL + " WHERE order_id=?";
 
     private static SimpleConnectionPool pool;
@@ -144,17 +145,86 @@ public class OrderDAOimpl extends AbstractDAO<Order> implements OrderDAO<Order> 
 
     @Override
     public Order getByNumber(String number) {
-        return null;
+        Connection con = pool.getConnection();
+        try (PreparedStatement statement = con.prepareStatement(SELECT_BY_NUMBER)) {
+            statement.setString(1, number);
+            ResultSet result = statement.executeQuery();
+            if (result.next()) {
+                return buildOrder(result);
+            }
+        } catch (SQLException e) {
+            log.error(USER_NOT_FOUND, e);
+            throw new DAOException(USER_NOT_FOUND);
+        } finally {
+            DAOUtil.connectionClose(con, log);
+        }
+        return Order.builder().build();
     }
 
     @Override
     public List<Order> getByNumbers(List<String> numbers) {
-        return null;
+        List<Order> models = new ArrayList<>();
+        Connection con = pool.getConnection();
+        try (PreparedStatement statement = con.prepareStatement(SELECT_ALL)) {
+            statement.setArray(1, carNumbersToArray(numbers, con));
+            ResultSet result = statement.executeQuery();
+            while (result.next()) {
+                models.add(buildOrder(result));
+            }
+        } catch (SQLException e) {
+            log.error(CAR_NOT_FOUND, e);
+            throw new DAOException(CAR_NOT_FOUND);
+        } finally {
+            DAOUtil.connectionClose(con, log);
+        }
+        return models;
+    }
+
+    private Array carNumbersToArray(List<String> numbers, Connection con) throws SQLException {
+        if (numbers.size() == 0) {
+            log.error("There are no checked car");
+            throw new IllegalArgumentException();
+        }
+        return con.createArrayOf("VARCHAR", numbers.toArray());
     }
 
     @Override
-    public Order swapCar(Order model, Map<Car, List<Car>> cars) {
-        return null;
+    public Order swapCar(Order model, List<Car> cars) {
+        /*Connection con = pool.getConnection();
+        try {
+            con.setAutoCommit(false);
+            PreparedStatement statement = updateSwapCar(model, cars, con);
+            Order order = executeCreateUpdateQuery(statement);
+            commitOrderTransaction(order, con);
+            return order;
+        } catch (SQLException e) {
+            DAOUtil.rollbackCommit(con, log);
+        } finally {
+            DAOUtil.connectionClose(con, log);
+        }
+        */
+        return model;
+    }
+
+    private PreparedStatement updateSwapCar(Order model, List<Car> cars, Connection con) throws SQLException {
+        PreparedStatement statement = getPrepareStatementSwapCar(SWAP_CAR_IN_ORDER, con);
+        fillStatementSwapCar(model.getOrderNumber(), cars, statement);
+        return statement;
+    }
+
+    private void fillStatementSwapCar(long number, List<Car> cars, PreparedStatement statement) throws SQLException {
+        statement.setArray(1, getCarNumbers(cars, statement.getConnection()));
+        statement.setLong(2, number);
+    }
+
+    private PreparedStatement getPrepareStatementSwapCar(String query, Connection con) {
+        try (PreparedStatement statement = con.prepareStatement(query)) {
+            return statement;
+        } catch (SQLException e) {
+            DAOUtil.rollbackCommit(con, log);
+            log.error(USER_NOT_CREATE, e);
+            throw new DAOException();
+        }
     }
 
     private Array getCarNumbers(List<Car> cars, Connection con) throws SQLException {
@@ -182,11 +252,13 @@ public class OrderDAOimpl extends AbstractDAO<Order> implements OrderDAO<Order> 
                 .createAt(LocalDateConverter.convertToEntityAttributeTime(result.getDate("create_date"))).build();
     }
 
+    //TODO
     private User getClient(int client_id) {
         UserDAO<User> dao = UserDAOimpl.getInstance();
         return dao.get(client_id);
     }
 
+    //TODO
     private List<Car> getCars(Array car_numbers) throws SQLException {
         String[] carNumbers = (String[]) car_numbers.getArray();
         List<Car> cars = new ArrayList<>();
