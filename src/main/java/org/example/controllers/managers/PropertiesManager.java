@@ -5,12 +5,7 @@ import java.io.InputStream;
 
 public class PropertiesManager {
 
-    private static final String PATH_PROPERTIES = "/WEB-INF/app.properties";
-
-    private static final String PATH_SCRIPT = "/WEB-INF/initialdb.sql";
-
-    private static final String PATH_TRIGGER_SCRIPT = "/WEB-INF/order_triger.sql";
-
+    private static String PATH_PROPERTIES;
     public static final String LANG = "lang";
     public static java.util.Properties properties;
 
@@ -28,6 +23,15 @@ public class PropertiesManager {
 
     public static java.util.Properties getProperties() {
         if (properties == null) {
+            PATH_PROPERTIES = "/resources/app.properties";
+            properties = new java.util.Properties();
+        }
+        return properties;
+    }
+
+    public static java.util.Properties getProperties(String path) {
+        if (properties == null) {
+            PATH_PROPERTIES = path;
             properties = new java.util.Properties();
         }
         return properties;
@@ -47,11 +51,7 @@ public class PropertiesManager {
         return PATH_PROPERTIES;
     }
 
-    public static String getPathScript() {
-        return PATH_SCRIPT;
-    }
-
-    public static String getPathTriggerScript() {
-        return PATH_TRIGGER_SCRIPT;
+    public static String getPathTriggerScript(String name) {
+        return properties.getProperty(name);
     }
 }

@@ -36,12 +36,13 @@ public class ContextListenerServlet implements ServletContextListener, HttpSessi
                         throw new RuntimeException("Invalid login or password");
                     }
                     try {
-                        BasicConnectionPool.runSQLScript(FileReader.readStreamFromWeb(sce,
-                                        PropertiesManager.getPathScript())
+                        initilizeDB();
+                        /*BasicConnectionPool.runSQLScript(FileReader.readStreamFromWeb(sce,
+                                        PropertiesManager.getPathScriptDBinititalizaion())
                                 , ";", con);
                         BasicConnectionPool.runSQLScript(FileReader.readStreamFromWeb(sce,
                                         PropertiesManager.getPathTriggerScript())
-                                , "/* */", con);
+                                ,, con);*/
                         Fleet.getInstance().setCarsAvailableToOrder();
                     } finally {
                         DAOUtil.connectionClose(con, log);
@@ -52,6 +53,10 @@ public class ContextListenerServlet implements ServletContextListener, HttpSessi
                 throw new DAOException(e);
             }
         }
+    }
+
+    private void initilizeDB() {
+
     }
 
     private boolean setPropertiesFromFile(ServletContextEvent sce) throws IOException {
