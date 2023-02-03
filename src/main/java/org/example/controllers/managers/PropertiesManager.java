@@ -5,7 +5,7 @@ import java.io.InputStream;
 
 public class PropertiesManager {
 
-    private static String PATH_PROPERTIES;
+    private static String FILE_NAME_PROPERTIES;
     public static final String LANG = "lang";
     public static java.util.Properties properties;
 
@@ -23,7 +23,7 @@ public class PropertiesManager {
 
     public static java.util.Properties getProperties() {
         if (properties == null) {
-            PATH_PROPERTIES = "/resources/app.properties";
+            FILE_NAME_PROPERTIES = "/resources/app.properties";
             properties = new java.util.Properties();
         }
         return properties;
@@ -31,7 +31,7 @@ public class PropertiesManager {
 
     public static java.util.Properties getProperties(String path) {
         if (properties == null) {
-            PATH_PROPERTIES = path;
+            FILE_NAME_PROPERTIES = path;
             properties = new java.util.Properties();
         }
         return properties;
@@ -47,8 +47,8 @@ public class PropertiesManager {
         properties = prop;
     }
 
-    public static String getPathProperties() {
-        return PATH_PROPERTIES;
+    public static String getFileNameProperties() {
+        return FILE_NAME_PROPERTIES;
     }
 
     public static String getPathTriggerScript(String name) {
