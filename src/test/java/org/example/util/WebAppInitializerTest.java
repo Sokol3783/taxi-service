@@ -25,7 +25,6 @@ class WebAppInitializerTest {
         assertEquals("", PropertiesManager.getStringFromProperties("DB_URL"));
         assertEquals("default_initialDB.sql", PropertiesManager.getStringFromProperties("defaultScenario"));
         assertEquals("rebase_initialDB.sql", PropertiesManager.getStringFromProperties("rebaseScenario"));
-
         assertNotEquals(0, PropertiesManager.getStringFromProperties("defaultTriggersScenario").length());
 
         UserDAO<User> userDAO = UserDAOimpl.getInstance();
@@ -34,4 +33,17 @@ class WebAppInitializerTest {
         assertEquals(9, carDAO.getAll().size());
 
     }
+
+    @Test
+    void defaultPropertiesWebApp() {
+        assertEquals("org.h2.Driver", PropertiesManager.getStringFromProperties("Driver"));
+        assertEquals("jdbc:h2:mem:TAXI", PropertiesManager.getStringFromProperties("DB_URL"));
+        assertEquals("postgres", PropertiesManager.getStringFromProperties("SALogin"));
+        assertEquals("postgres", PropertiesManager.getStringFromProperties("SAPassword"));
+        assertEquals("", PropertiesManager.getStringFromProperties("DB_URL"));
+        assertEquals("default_initialDB.sql", PropertiesManager.getStringFromProperties("defaultScenario"));
+        assertEquals("rebase_initialDB.sql", PropertiesManager.getStringFromProperties("rebaseScenario"));
+        assertNotEquals(0, PropertiesManager.getStringFromProperties("defaultTriggersScenario").length());
+    }
+
 }
