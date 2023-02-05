@@ -1,11 +1,5 @@
 --Focused on POSTGRE SQL
 --All mistakes and warnings specify to do select query of create tables
-/*DROP TABLE IF EXISTS "discounts";
-DROP TABLE IF EXISTS "discount_limits";
-DROP TABLE IF EXISTS "cars";
-DROP TABLE IF EXISTS "orders";
-DROP TABLE IF EXISTS "price" CASCADE;
-DROP TABLE IF EXISTS "users" CASCADE;*/
 
 SELECT 'CREATE DATABASE TAXI
       ENCODING UTF8'
