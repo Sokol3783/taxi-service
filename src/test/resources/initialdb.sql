@@ -1,5 +1,3 @@
---Focused on POSTGRE SQL
-
 DROP TABLE IF EXISTS "discounts";
 DROP TABLE IF EXISTS "discount_limits";
 DROP TABLE IF EXISTS "cars";
@@ -16,7 +14,7 @@ WHERE NOT EXISTS(SELECT FROM pg_user WHERE pg_user.usename = 'TAXIADMIN');
 
 GRANT ALL PRIVILEGES ON DATABASE "TAXI" to "TAXIADMIN";
 
-create TABLE users
+CREATE TABLE users
 (
     user_id    SERIAL PRIMARY KEY,
     password   varchar(50),
@@ -28,7 +26,7 @@ create TABLE users
     user_role  varchar(15)
 );
 
-create TABLE cars
+CREATE TABLE cars
 (
     car_id     SERIAL PRIMARY KEY,
     car_number varchar(30) unique,
@@ -37,10 +35,10 @@ create TABLE cars
     capacity   int
 );
 
-create TABLE orders
+CREATE TABLE orders
 (
     order_id          SERIAL PRIMARY KEY,
-    cars_numbers      varchar[],
+    cars_numbers      int references ordered_cars(ordered_cars_id),
     client_id         int references users (user_id),
     address_departure varchar(250),
     destination       varchar(250),
@@ -49,6 +47,14 @@ create TABLE orders
     create_date       timestamp,
     order_number      INTEGER,
     distance          int
+);
+
+CREATE TABLE ordered_cars
+(
+    ordered_cars_id     SERIAL PRIMARY KEY,
+    car_id              int references users (car_id),
+    order_id            int references cars(car_id)
+
 );
 
 CREATE TABLE discounts
@@ -165,8 +171,3 @@ VALUES ('{AX877A1}', 3, 1500, 0, '07.01.2023', 70);
 
 INSERT INTO orders(cars_numbers, client_id, cost, percent_discount, create_date, distance)
 VALUES ('{AX877A1,AX889A1,AX863A1}', 5, 4500, 0, '07.01.2023', 70);
-
-
-
-
-

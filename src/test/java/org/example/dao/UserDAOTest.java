@@ -42,5 +42,23 @@ class UserDAOTest {
 
     }
 
+    @Test
+    void getUserByLogin() {
 
+    }
+
+    @Test
+    void getUserByUserPhoneMailAndPassword() {
+
+    }
+
+    @Test
+    void updatePassword() {
+
+    }
+
+    @Test
+    void createWithPassword() {
+
+    }
 }
