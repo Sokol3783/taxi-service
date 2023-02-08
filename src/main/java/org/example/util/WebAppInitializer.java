@@ -13,9 +13,9 @@ public class WebAppInitializer {
 
     private static final Logger log = LoggerFactory.getLogger(WebAppInitializer.class);
 
-    public synchronized static void initializeApp() {
+    public synchronized static void initializeApp(Class classStarter) {
         try {
-            setDefaultProperties();
+            setDefaultProperties(classStarter);
             Connection con = BasicConnectionPool.getInstance().getConnection();
             initializeDB(con);
         } catch (IOException e) {
@@ -51,8 +51,8 @@ public class WebAppInitializer {
     }
 
 
-    private static boolean setDefaultProperties() throws IOException {
-        InputStream is = FileReader.getFileFromResourceAsStream(WebAppInitializer.class, PropertiesManager.getFileNameProperties());
+    private static boolean setDefaultProperties(Class classStarter) throws IOException {
+        InputStream is = FileReader.getFileFromResourceAsStream(classStarter, PropertiesManager.getFileNameProperties());
         PropertiesManager.setProperties(is);
         return PropertiesManager.properties.size() > 0;
     }

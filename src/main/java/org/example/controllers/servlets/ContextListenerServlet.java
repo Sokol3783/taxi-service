@@ -18,7 +18,7 @@ public class ContextListenerServlet implements ServletContextListener, HttpSessi
     @Override
     public synchronized void contextInitialized(ServletContextEvent sce) {
         if (PropertiesManager.properties == null) {
-            WebAppInitializer.initializeApp();
+            WebAppInitializer.initializeApp(ContextListenerServlet.class);
         }
     }
 

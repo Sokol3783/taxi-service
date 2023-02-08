@@ -6,7 +6,7 @@ import java.util.List;
 public abstract class AbstractDAO<T extends Serializable> implements DAO<T> {
     @Override
     public void update(T model) {
-
+        throw new UnsupportedOperationException();
     }
 
     @Override

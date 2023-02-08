@@ -1,16 +1,27 @@
 --Focused on POSTGRE SQL
 --All mistakes and warnings specify to do select query of create tables
 
-SELECT 'CREATE DATABASE TAXI
-      ENCODING UTF8'
-WHERE NOT EXISTS(SELECT FROM pg_database WHERE datname = 'TAXI');
+--I don't find "best practice", so do function to public catalog and then call it, DB dobe
 
-SELECT 'CREATE USER IF NOT EXISTS TAXIADMIN with PASSWORD adminpassword123'
-WHERE NOT EXISTS(SELECT FROM pg_user WHERE pg_user.usename = 'TAXIADMIN');
+CREATE OR REPLACE FUNCTION public.create_db(
+	)
+    RETURNS void
+    LANGUAGE 'sql'
+AS $BODY$
+BEGIN
+   IF NOT EXISTS (SELECT FROM pg_database WHERE datname = 'TAXI') THEN
+       CREATE DATABASE TAXI ENCODING UTF8;
+    END IF;
+END
+$BODY$;
+
+SELECT public.create_db;
+
+CREATE USER IF NOT EXISTS TAXIADMIN with PASSWORD adminpassword123
 
 GRANT ALL PRIVILEGES ON DATABASE "TAXI" to "TAXIADMIN";
 
-SELECT 'CREATE TABLE users
+CREATE TABLE IF NOT EXISTS users
 (
     user_id    SERIAL PRIMARY KEY,
     password   varchar(50),
@@ -20,24 +31,20 @@ SELECT 'CREATE TABLE users
     birthday   DATE,
     email      varchar(50) unique,
     user_role  varchar(15)
-)'
-WHERE NOT EXISTS(SELECT FROM pg_tables WHERE pg_tables.name = 'users');
+)
 
-
-SELECT 'CREATE TABLE cars
+CREATE TABLE IF NOT EXISTS cars
 (
     car_id     SERIAL PRIMARY KEY,
     car_number varchar(30) unique,
     car_name   varchar(100),
     category   varchar(15),
     capacity   int
-)'
-WHERE NOT EXISTS(SELECT FROM pg_tables WHERE pg_tables.name = 'cars');
+)
 
-SELECT 'CREATE TABLE orders
+CREATE TABLE IF NOT EXISTS orders
 (
     order_id          SERIAL PRIMARY KEY,
-    cars_numbers      varchar[],
     client_id         int references users (user_id),
     address_departure varchar(250),
     destination       varchar(250),
@@ -46,36 +53,31 @@ SELECT 'CREATE TABLE orders
     CREATE_date       timestamp,
     order_number      INTEGER,
     distance          int
-)'
-WHERE NOT EXISTS(SELECT FROM pg_tables WHERE pg_tables.name = 'orders');
+)
 
-SELECT 'CREATE TABLE discounts
+CREATE TABLE  IF NOT EXISTS discounts
 (
     discount_id      SERIAL PRIMARY KEY,
     owner_discount   int references users (user_id) UNIQUE,
     amount_spent     INTEGER,
     percent_discount INTEGER
-)'
-WHERE NOT EXISTS(SELECT FROM pg_tables WHERE pg_tables.name = 'discounts');
+)
 
-
-SELECT 'CREATE TABLE price
+CREATE TABLE  IF NOT EXISTS price
 (
     price_id      SERIAL PRIMARY KEY,
     car_category  VARCHAR(15) unique,
     current_price INTEGER,
     date_update   TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
-)'
-WHERE NOT EXISTS(SELECT FROM pg_tables WHERE pg_tables.name = 'price');
+)
 
-SELECT 'CREATE TABLE discount_limits
+CREATE TABLE  IF NOT EXISTS discount_limits
 (
     discount_limits_id SERIAL PRIMARY KEY,
     bottom_limit       INTEGER NOT NULL,
     top_limit          INTEGER,
     percent            INT     NOT NULL
-)'
-WHERE NOT EXISTS(SELECT FROM pg_tables WHERE pg_tables.name = 'discount_limits');
+)
 
 INSERT INTO price(car_category, current_price)
 values ('ECONOMY', 1);

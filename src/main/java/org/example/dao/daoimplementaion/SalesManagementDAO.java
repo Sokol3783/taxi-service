@@ -80,6 +80,7 @@ public class SalesManagementDAO {
         return builder.build();
     }
 
+    //TODO
     private Discount.DiscountBuilder getDefaultDiscount(User model) {
         return Discount.builder().user(model).
                 amountSpent(0).
@@ -116,6 +117,7 @@ public class SalesManagementDAO {
 
     }
 
+    //TODO
     private User buildUser(ResultSet resultSet) throws SQLException {
         User user = User.builder().firstName(resultSet.getString("first_name"))
                 .secondName(resultSet.getString("last_name"))
