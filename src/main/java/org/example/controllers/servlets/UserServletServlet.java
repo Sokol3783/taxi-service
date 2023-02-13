@@ -1,7 +1,7 @@
 package org.example.controllers.servlets;
 
 import org.example.AppURL;
-import org.example.controllers.managers.SalesManagement;
+import org.example.controllers.services.SalesManagement;
 import org.example.models.Discount;
 import org.example.models.User;
 

@@ -1,4 +1,4 @@
-package org.example.controllers.managers;
+package org.example.controllers.services;
 
 import org.example.dao.SimpleConnectionPool;
 import org.example.dao.connectionpool.BasicConnectionPool;

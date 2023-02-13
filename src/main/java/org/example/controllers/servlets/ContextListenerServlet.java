@@ -1,6 +1,6 @@
 package org.example.controllers.servlets;
 
-import org.example.controllers.managers.PropertiesManager;
+import org.example.controllers.services.PropertiesManager;
 import org.example.util.WebAppInitializer;
 
 import javax.servlet.ServletContextEvent;

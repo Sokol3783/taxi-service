@@ -1,7 +1,8 @@
 package org.example.dao;
 
 import org.example.dao.connectionpool.BasicConnectionPool;
-import org.junit.jupiter.api.BeforeEach;
+import org.example.util.WebAppInitializer;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 class UserDAOTest {
@@ -12,9 +13,9 @@ class UserDAOTest {
         pool = BasicConnectionPool.getInstance();
     }
 
-    @BeforeEach
+    @BeforeAll
     void setUp() {
-
+        WebAppInitializer.initializeApp(UserDAOTest.class);
     }
 
     @Test

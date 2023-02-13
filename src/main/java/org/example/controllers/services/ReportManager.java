@@ -1,4 +1,4 @@
-package org.example.controllers.managers;
+package org.example.controllers.services;
 
 import org.example.dao.ReportDAO;
 import org.example.dao.daoreport.QueryReportTexts;

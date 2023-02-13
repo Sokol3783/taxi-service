@@ -1,6 +1,6 @@
 package org.example.util;
 
-import org.example.controllers.managers.PropertiesManager;
+import org.example.controllers.services.PropertiesManager;
 import org.example.dao.connectionpool.BasicConnectionPool;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

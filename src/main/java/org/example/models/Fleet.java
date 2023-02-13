@@ -1,6 +1,6 @@
 package org.example.models;
 
-import org.example.controllers.managers.CarManager;
+import org.example.controllers.services.CarServices;
 import org.example.models.taxienum.CarCategory;
 
 import java.util.ArrayList;
@@ -14,13 +14,13 @@ public class Fleet implements Container {
     private final CopyOnWriteArraySet<Car> carsAvailableToOrder;
     private final CopyOnWriteArraySet<Car> carsOnRoute;
 
-    private final CarManager manager;
+    private final CarServices manager;
     private static Fleet fleet;
 
     private Fleet() {
         carsAvailableToOrder = new CopyOnWriteArraySet<>();
         carsOnRoute = new CopyOnWriteArraySet<>();
-        manager = new CarManager();
+        manager = new CarServices();
     }
 
     public static Fleet getInstance() {

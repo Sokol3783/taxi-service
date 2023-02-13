@@ -1,7 +1,7 @@
 package org.example.controllers.servlets;
 
 import org.example.AppURL;
-import org.example.controllers.managers.UserManager;
+import org.example.controllers.services.UserManager;
 import org.example.exceptions.DAOException;
 import org.example.models.User;
 

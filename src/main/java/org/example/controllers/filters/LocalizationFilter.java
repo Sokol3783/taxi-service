@@ -6,7 +6,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
-import static org.example.controllers.managers.PropertiesManager.LANG;
+import static org.example.controllers.services.PropertiesManager.LANG;
 
 public class LocalizationFilter implements Filter {
 
