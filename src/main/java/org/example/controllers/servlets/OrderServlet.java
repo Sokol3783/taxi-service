@@ -1,9 +1,8 @@
 package org.example.controllers.servlets;
 
-import org.example.AppURL;
-
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
+import org.example.AppURL;
 
 @WebServlet(name = "order", urlPatterns = AppURL.ORDER_SERVLET)
 public class OrderServlet extends HttpServlet {
@@ -71,5 +70,7 @@ public class OrderServlet extends HttpServlet {
         session.setAttribute("cost", cost);
         return cost;
     }
+
+ */
 
 }

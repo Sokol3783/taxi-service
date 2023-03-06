@@ -1,65 +1,53 @@
 package org.example.dao;
 
-import org.example.dao.connectionpool.BasicConnectionPool;
-import org.example.util.WebAppInitializer;
-import org.junit.jupiter.api.BeforeAll;
+import org.example.dao.daoimplementaion.UserDAOimpl;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 
 class UserDAOTest {
 
-    private final SimpleConnectionPool pool;
+  @Test
+  void createUser() {
+    UserDAO user = Mockito.mock(UserDAOimpl.class);
+  }
 
-    public UserDAOTest() {
-        pool = BasicConnectionPool.getInstance();
-    }
+  @Test
+  void updateUser() {
 
-    @BeforeAll
-    void setUp() {
-        WebAppInitializer.initializeApp(UserDAOTest.class);
-    }
+  }
 
-    @Test
-    void createUser() {
+  @Test
+  void getUser() {
 
-    }
+  }
 
-    @Test
-    void updateUser() {
+  @Test
+  void getAllUsers() {
 
-    }
+  }
 
-    @Test
-    void getUser() {
+  @Test
+  void deleteUser() {
 
-    }
+  }
 
-    @Test
-    void getAllUsers() {
+  @Test
+  void getUserByLogin() {
 
-    }
+  }
 
-    @Test
-    void deleteUser() {
+  @Test
+  void getUserByUserPhoneMailAndPassword() {
 
-    }
+  }
 
-    @Test
-    void getUserByLogin() {
+  @Test
+  void updatePassword() {
 
-    }
+  }
 
-    @Test
-    void getUserByUserPhoneMailAndPassword() {
+  @Test
+  void createWithPassword() {
 
-    }
-
-    @Test
-    void updatePassword() {
-
-    }
-
-    @Test
-    void createWithPassword() {
-
-    }
+  }
 }

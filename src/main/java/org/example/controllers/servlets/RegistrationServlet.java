@@ -52,5 +52,7 @@ public class RegistrationServlet extends HttpServlet {
         String passwordRepeat = request.getParameter("password_check");
         return password.compareTo(passwordRepeat) == 0;
     }
+    
+ */
 
 }
