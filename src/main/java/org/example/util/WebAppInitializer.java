@@ -1,10 +1,20 @@
 package org.example.util;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.tomcat.jdbc.pool.DataSource;
+import org.apache.tomcat.jdbc.pool.PoolProperties;
 import org.example.controllers.services.PropertiesManager;
+import org.example.dao.SimpleConnectionPool;
 import org.example.dao.connectionpool.BasicConnectionPool;
 
 @Slf4j
@@ -12,36 +22,72 @@ public class WebAppInitializer {
 
   public synchronized static void initializeApp(Class classStarter) {
     try {
-      setDefaultProperties(classStarter);
-      Connection con = BasicConnectionPool.getInstance().getConnection();
-      initializeDB(con);
-    } catch (IOException e) {
+      if (setDefaultProperties(classStarter)) {
+        SimpleConnectionPool instance = BasicConnectionPool.getInstance();
+        if (instance.isTestOnConnect()) {
+          initializeDB(instance.getConnection());
+        } else {
+          DataSource data = getDefaultPostgresDataSource();
+          initializeDB(data.getConnection());
+        }
+      } else {
+        throw new RuntimeException("Default properties has been broken");
+      }
+    } catch (IOException | SQLException e) {
       log.error("App hasn't been initialized!");
       throw new RuntimeException(e);
     }
   }
 
-  private static void initializeDB(Connection con) {
-    getFileByAppProperties();
-    //TODO
-        /*
-        In this place, should be method witch inject triggers to DB!!!
-         */
+  private static DataSource getDefaultPostgresDataSource() {
+    DataSource data = new DataSource();
+    PoolProperties properties = new PoolProperties();
+    properties.setDriverClassName(PropertiesManager.getStringFromProperties("driver"));
+    properties.setUrl(PropertiesManager.getStringFromProperties("SA_DB_URL"));
+    properties.setUsername(PropertiesManager.getStringFromProperties("SA_login"));
+    properties.setPassword(PropertiesManager.getStringFromProperties("SA_password"));
+    data.setPoolProperties(properties);
+    return data;
+  }
 
+  private static void initializeDB(Connection con) {
+    try (BufferedReader reader = new BufferedReader(
+        new InputStreamReader(getFileByAppProperties()))) {
+      try (Statement statement = con.createStatement()) {
+        Stream<String> lines = reader.lines();
+        executeSQLScripts(statement, lines);
+      } catch (SQLException e) {
+        throw new RuntimeException(e);
+      }
+    } catch (IOException e) {
+      log.error(e.getMessage());
+      throw new RuntimeException(e);
+    }
+  }
+
+  private static void executeSQLScripts(Statement statement, Stream<String> lines) {
+    String delimiter = PropertiesManager.getStringFromProperties("delimiter");
+    List<String> queriesList = Stream.of(lines.collect(Collectors.joining())
+        .split(delimiter)).toList();
+    queriesList.forEach(sqlQuery -> {
+      try {
+        sqlQuery.replaceAll(delimiter, "");
+        statement.execute(sqlQuery);
+      } catch (SQLException e) {
+        log.debug(sqlQuery + " -> " + e.getMessage());
+      }
+    });
   }
 
   private static InputStream getFileByAppProperties() {
     String fileName;
     switch (PropertiesManager.getStringFromProperties("contextInitializedScenario")) {
-      case "default":
-        fileName = PropertiesManager.getStringFromProperties("defaultScenario");
-        break;
-      case "rebase":
-        fileName = PropertiesManager.getStringFromProperties("rebaseScenario");
-        break;
-      default:
+      case "default" -> fileName = PropertiesManager.getStringFromProperties("defaultScenario");
+      case "rebase" -> fileName = PropertiesManager.getStringFromProperties("rebaseScenario");
+      default -> {
         log.error("DB initialization scenario hasn't been found!");
         throw new IllegalArgumentException("There is no such DB initialization scenario");
+      }
     }
     return FileReader.getFileFromResourceAsStream(WebAppInitializer.class, fileName);
   }

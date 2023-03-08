@@ -1,9 +1,4 @@
 --Focused on POSTGRE SQL
-
-DROP DATABASE IF EXISTS test_taxi;*!=
-
-DROP USER IF EXISTS test_admin;*!=
-
 DO
 $do$
     BEGIN
@@ -15,16 +10,16 @@ $do$
             GRANT ALL PRIVILEGES ON DATABASE "test_taxi" to "test_admin";
         END IF;
     END
-$do$*!=
+$do$`
 
 
-DROP TABLE IF EXISTS users;*!=
-DROP TABLE IF EXISTS cars;*!=
-DROP TABLE IF EXISTS orders;*!=
-DROP TABLE IF EXISTS ordered_cars;*!=
-DROP TABLE IF EXISTS discounts;*!=
-DROP TABLE IF EXISTS price;*!=
-DROP TABLE IF EXISTS discount_limits;*!=
+DROP TABLE IF EXISTS users;`
+DROP TABLE IF EXISTS cars;`
+DROP TABLE IF EXISTS orders;`
+DROP TABLE IF EXISTS ordered_cars;`
+DROP TABLE IF EXISTS discounts;`
+DROP TABLE IF EXISTS price;`
+DROP TABLE IF EXISTS discount_limits;`
 
 CREATE TABLE IF NOT EXISTS users
 (
@@ -36,7 +31,7 @@ CREATE TABLE IF NOT EXISTS users
     birthday   DATE,
     email      varchar(50) unique,
     user_role  varchar(15)
-);*!=
+);`
 
 CREATE TABLE IF NOT EXISTS cars
 (
@@ -45,7 +40,7 @@ CREATE TABLE IF NOT EXISTS cars
     car_name   varchar(100),
     category   varchar(15),
     capacity   int
-);*!=
+);`
 
 CREATE TABLE IF NOT EXISTS orders
 (
@@ -65,7 +60,7 @@ CREATE TABLE IF NOT EXISTS ordered_cars
     ordered_cars_id SERIAL  PRIMARY KEY,
     order_id                int references orders (order_id),
     car_id                  int references cars (car_id)
-);*!=
+);`
 
 CREATE TABLE  IF NOT EXISTS discounts
 (
@@ -73,7 +68,7 @@ CREATE TABLE  IF NOT EXISTS discounts
     owner_discount   int references users (user_id) UNIQUE,
     amount_spent     INTEGER,
     percent_discount INTEGER
-);*!=
+);`
 
 CREATE TABLE IF NOT EXISTS price
 (
@@ -81,7 +76,7 @@ CREATE TABLE IF NOT EXISTS price
     car_category  VARCHAR(15) unique,
     current_price INTEGER,
     date_update   TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
-);*!=
+);`
 
 CREATE TABLE IF NOT EXISTS discount_limits
 (
@@ -89,4 +84,4 @@ CREATE TABLE IF NOT EXISTS discount_limits
     bottom_limit       INTEGER NOT NULL,
     top_limit          INTEGER,
     percent            INT     NOT NULL
-);*!=
+);`
