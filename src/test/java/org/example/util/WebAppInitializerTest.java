@@ -1,10 +1,12 @@
 package org.example.util;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -65,12 +67,15 @@ class WebAppInitializerTest {
 
   @Test
   void isTableDiscount() {
-    assertTrue(rowsInPGTableWithName("discount"));
+    assertFalse(rowsInPGTableWithName("discount"));
+  }
+
+  void isTableDiscounts() {
+    assertFalse(rowsInPGTableWithName("discounts"));
   }
 
   @AfterAll
   void dropDatabase() {
-
     DataSource defaultPostgresDataSource = getDefaultPostgresDataSource();
     try (Statement state = defaultPostgresDataSource.getConnection().createStatement()) {
       state.execute("DROP TABLE IF EXISTS users");
@@ -97,20 +102,27 @@ class WebAppInitializerTest {
   }
 
   private Connection getConnection() {
-    return BasicConnectionPool.getInstance().getConnection();
+    Connection connection = BasicConnectionPool.getInstance().getConnection();
+    return connection;
   }
 
 
-  private String getTableByName(String name) {
-    return "SELECT 1 FROM information_schema.tables WHERE table_name = '" + name + "'";
+  private String getQueryTableByName(String name) {
+    return "SELECT EXISTS (SELECT 1 FROM pg_catalog.pg_class c "
+        + "JOIN   pg_catalog.pg_namespace n ON n.oid = c.relnamespace"
+        + " WHERE  n.nspname = 'public'"
+        + " AND    c.relname = '" + name + "'"
+        + " AND    c.relkind = 'r');";
   }
 
   private boolean rowsInPGTableWithName(String name) {
     Connection con = getConnection();
     try {
-      Statement statement = con.createStatement();
-      ResultSet result = statement.executeQuery(getTableByName(name));
-      return result.next();
+      PreparedStatement statement = con.prepareStatement(getQueryTableByName(name));
+      ResultSet result = statement.executeQuery();
+      if (result.next()) {
+        return result.getBoolean(1);
+      }
     } catch (SQLException e) {
       System.out.println(e.getMessage());
     }

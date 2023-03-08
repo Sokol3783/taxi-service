@@ -3,15 +3,11 @@ package org.example.models;
 import java.io.Serial;
 import java.io.Serializable;
 import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.ToString;
+import lombok.Value;
 import org.example.models.taxienum.CarCategory;
 
+@Value
 @Builder
-@Getter
-@EqualsAndHashCode
-@ToString
 public class Car implements Serializable, Container {
 
   @Serial
