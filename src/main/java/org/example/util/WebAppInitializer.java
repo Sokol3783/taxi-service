@@ -1,5 +1,7 @@
 package org.example.util;
 
+import static org.example.dao.daoutil.DAOUtil.executeSQLScript;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -7,7 +9,6 @@ import java.io.InputStreamReader;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import lombok.extern.slf4j.Slf4j;
@@ -55,7 +56,7 @@ public class WebAppInitializer {
         new InputStreamReader(getFileByAppProperties()))) {
       try (Statement statement = con.createStatement()) {
         Stream<String> lines = reader.lines();
-        executeSQLScripts(statement, lines);
+        executeSQLScript(statement, lines.collect(Collectors.joining()));
       } catch (SQLException e) {
         throw new RuntimeException(e);
       }
@@ -63,20 +64,6 @@ public class WebAppInitializer {
       log.error(e.getMessage());
       throw new RuntimeException(e);
     }
-  }
-
-  private static void executeSQLScripts(Statement statement, Stream<String> lines) {
-    String delimiter = PropertiesManager.getStringFromProperties("delimiter");
-    List<String> queriesList = Stream.of(lines.collect(Collectors.joining())
-        .split(delimiter)).toList();
-    queriesList.forEach(sqlQuery -> {
-      try {
-        sqlQuery.replaceAll(delimiter, "");
-        statement.execute(sqlQuery);
-      } catch (SQLException e) {
-        log.debug(sqlQuery + " -> " + e.getMessage());
-      }
-    });
   }
 
   private static InputStream getFileByAppProperties() {

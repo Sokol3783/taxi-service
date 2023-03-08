@@ -1,5 +1,6 @@
-package org.example.util;
+package org.example.dao;
 
+import static org.example.dao.TestUtils.getConnection;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
@@ -9,11 +10,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
-import org.apache.tomcat.jdbc.pool.DataSource;
-import org.apache.tomcat.jdbc.pool.PoolProperties;
 import org.example.controllers.services.PropertiesManager;
-import org.example.dao.connectionpool.BasicConnectionPool;
+import org.example.util.WebAppInitializer;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -27,6 +25,11 @@ class WebAppInitializerTest {
   @BeforeAll
   void initializeApp() {
     WebAppInitializer.initializeApp(WebAppInitializerTest.class);
+  }
+
+  @AfterAll
+  void dropDatabase() {
+    TestUtils.dropDatabase();
   }
 
   @Test
@@ -70,50 +73,11 @@ class WebAppInitializerTest {
     assertFalse(rowsInPGTableWithName("discount"));
   }
 
+  @Test
   void isTableDiscounts() {
-    assertFalse(rowsInPGTableWithName("discounts"));
+    assertTrue(rowsInPGTableWithName("discounts"));
   }
 
-  @AfterAll
-  void dropDatabase() {
-    DataSource defaultPostgresDataSource = getDefaultPostgresDataSource();
-    try (Statement state = defaultPostgresDataSource.getConnection().createStatement()) {
-      state.execute("DROP TABLE IF EXISTS users");
-      state.execute("DROP TABLE IF EXISTS cars");
-      state.execute("DROP TABLE IF EXISTS orders");
-      state.execute("DROP TABLE IF EXISTS ordered_cars");
-      state.execute("DROP TABLE IF EXISTS discounts");
-      state.execute("DROP TABLE IF EXISTS discount_limits");
-      state.execute("DROP DATABASE IF EXISTS TEST_TAXI");
-      state.execute("DROP USER IF EXISTS TEST_ADMIN");
-    } catch (SQLException e) {
-    }
-  }
-
-  private static DataSource getDefaultPostgresDataSource() {
-    DataSource data = new DataSource();
-    PoolProperties properties = new PoolProperties();
-    properties.setDriverClassName(PropertiesManager.getStringFromProperties("driver"));
-    properties.setUrl(PropertiesManager.getStringFromProperties("SA_DB_URL"));
-    properties.setUsername(PropertiesManager.getStringFromProperties("SA_login"));
-    properties.setPassword(PropertiesManager.getStringFromProperties("SA_password"));
-    data.setPoolProperties(properties);
-    return data;
-  }
-
-  private Connection getConnection() {
-    Connection connection = BasicConnectionPool.getInstance().getConnection();
-    return connection;
-  }
-
-
-  private String getQueryTableByName(String name) {
-    return "SELECT EXISTS (SELECT 1 FROM pg_catalog.pg_class c "
-        + "JOIN   pg_catalog.pg_namespace n ON n.oid = c.relnamespace"
-        + " WHERE  n.nspname = 'public'"
-        + " AND    c.relname = '" + name + "'"
-        + " AND    c.relkind = 'r');";
-  }
 
   private boolean rowsInPGTableWithName(String name) {
     Connection con = getConnection();
@@ -128,4 +92,13 @@ class WebAppInitializerTest {
     }
     return false;
   }
+
+  private String getQueryTableByName(String name) {
+    return "SELECT EXISTS (SELECT 1 FROM pg_catalog.pg_class c "
+        + "JOIN   pg_catalog.pg_namespace n ON n.oid = c.relnamespace"
+        + " WHERE  n.nspname = 'public'"
+        + " AND    c.relname = '" + name + "'"
+        + " AND    c.relkind = 'r');";
+  }
+
 }
