@@ -39,7 +39,7 @@ class UserDAOTest {
   }
 
   @BeforeEach
-  public void deleteAllUsers() {
+  public void setUp() {
     Connection connection = BasicConnectionPool.getInstance().getConnection();
     PreparedStatement statement = null;
     try {
@@ -52,17 +52,6 @@ class UserDAOTest {
 
   @Test
   void createUserAndGetUserById() {
-    UserDAOimpl userDAO = UserDAOimpl.getInstance();
-
-    User user = new User("", UserRole.USER, "John", "Doe", LocalDate.of(2000, 1, 1),
-        generatePhoneNumber(), generateEmail(), 0);
-    User createdUser = userDAO.create(user);
-    assertEquals(1, createdUser.getId());
-    assertEquals(createdUser, user);
-  }
-
-  @Test
-  void getUser() {
     UserDAOimpl userDAO = UserDAOimpl.getInstance();
     String phone = generatePhoneNumber();
     String email = generateEmail();

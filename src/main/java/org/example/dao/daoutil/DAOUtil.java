@@ -3,7 +3,6 @@ package org.example.dao.daoutil;
 import static org.example.exceptions.DAOException.CONNECTION_CLOSE_FAIL;
 import static org.example.exceptions.DAOException.ROLLBACK_FAIL;
 
-import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -53,13 +52,5 @@ public class DAOUtil {
     } catch (SQLException e) {
       log.debug(script + " -> " + e.getMessage());
     }
-  }
-
-  public static void insertDataFromCSV(InputStream inputStream, Connection connection) {
-
-  }
-
-  public static void insertDBTrigger(InputStream input, Connection connection) {
-
   }
 }
