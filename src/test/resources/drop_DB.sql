@@ -37,5 +37,7 @@ DO $do$
 
         PERFORM dblink_exec(' DROP DATABASE IF EXISTS test_taxi ');
         PERFORM dblink_exec(' DROP USER IF EXISTS testadmin ');
+
+        PERFORM dblink_disconnect();
     END;
 $do$;

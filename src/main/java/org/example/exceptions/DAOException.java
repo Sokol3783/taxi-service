@@ -11,6 +11,7 @@ public class DAOException extends RuntimeException {
   public static final String REPORT_BUILD_RESULT_ARRAY = "Report result hasn't been build";
   public static final String CONNECTION_CLOSE_FAIL = "Connection hasn't been shutdown!";
   public static final String CONNECTION_FAILED = "Connection didn't open";
+  public static final String PASSWORD_NOT_CHANGED = "Password hasn't been changed!";
   public static String USER_NOT_CREATE = "User hasn't been created.";
 
   public static String USER_NOT_DELETE = "User hasn't been deleted.";

@@ -23,6 +23,16 @@ public class UserMapper {
 
   public void mapUserToPreparedStatement(User model, PreparedStatement statement)
       throws SQLException {
+    fillPrepareStatement(model, statement);
+  }
+
+  public void mapUserToPreparedStatement(User model, PreparedStatement statement, String password)
+      throws SQLException {
+    fillPrepareStatement(model, statement);
+    statement.setString(7, password);
+  }
+
+  private void fillPrepareStatement(User model, PreparedStatement statement) throws SQLException {
     statement.setString(1, model.getFirstName());
     statement.setString(2, model.getSecondName());
     statement.setString(3, model.getPhone());

@@ -30,8 +30,6 @@ DO $do$
 
             PERFORM dblink_disconnect();
 
-            GRANT ALL PRIVILEGES ON DATABASE test_taxi to testadmin;
-
             PERFORM dblink_connect('host=localhost user=' || _user || ' password=' || _password ||
                                    ' dbname=' || _db);
 
@@ -55,6 +53,15 @@ DO $do$
                 (price_id SERIAL PRIMARY KEY, car_category VARCHAR(15) unique, current_price INTEGER, date_update TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP);');
             PERFORM dblink_exec('CREATE TABLE IF NOT EXISTS test_taxi.public.discount_limits
                 (discount_limits_id SERIAL PRIMARY KEY, bottom_limit INTEGER NOT NULL, top_limit INTEGER, percent INTEGER NOT NULL);');
+
+            PERFORM dblink_exec('GRANT ALL ON SCHEMA public TO testadmin');
+            PERFORM dblink_exec('GRANT ALL ON ALL TABLES IN SCHEMA public TO testadmin');
+            PERFORM dblink_exec('GRANT ALL ON ALL SEQUENCES IN SCHEMA public TO testadmin');
+            PERFORM dblink_exec('GRANT ALL ON ALL FUNCTIONS IN SCHEMA public TO testadmin');
+            /*
+            PERFORM dblink_exec('GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA public TO testadmin');
+            PERFORM dblink_exec('GRANT USAGE, SELECT, UPDATE ON ALL SEQUENCES IN SCHEMA public TO testadmin');
+             */
 
             PERFORM dblink_disconnect();
 

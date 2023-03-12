@@ -114,10 +114,10 @@ public class OrderDAOimpl extends AbstractDAO<Order> implements OrderDAO<Order> 
 
 
   @Override
-  public Order get(int id) {
+  public Order get(long id) {
     Connection con = pool.getConnection();
     try (PreparedStatement statement = con.prepareStatement(SELECT_BY_ID)) {
-      statement.setInt(1, id);
+      statement.setLong(1, id);
       ResultSet result = statement.executeQuery();
       if (result.next()) {
         return buildOrder(result);

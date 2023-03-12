@@ -3,16 +3,15 @@ package org.example.models;
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.Objects;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 import org.example.validation.Validate;
 
 @Builder
 @Getter
-@EqualsAndHashCode
 @AllArgsConstructor
 @ToString
 public class User implements Serializable, Container {
@@ -40,7 +39,6 @@ public class User implements Serializable, Container {
 
   @Validate(regExp = "^[A-Za-z0-9+_.-]+@(.+)$", message = "Wrong e-mail")
   private final String email;
-
   private long id;
 
   @Override
@@ -50,6 +48,10 @@ public class User implements Serializable, Container {
     }
     return firstName.isEmpty() && secondName.isEmpty()
         && phone.isEmpty() && email.isEmpty();
+  }
+
+  public void setId(long id) {
+    this.id = id;
   }
 
   public enum UserRole {
@@ -65,5 +67,25 @@ public class User implements Serializable, Container {
     }
   }
 
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    User user = (User) o;
+    return role == user.role &&
+        Objects.equals(firstName, user.firstName) &&
+        Objects.equals(secondName, user.secondName) &&
+        Objects.equals(birthDate, user.birthDate) &&
+        Objects.equals(phone, user.phone) &&
+        Objects.equals(email, user.email);
+  }
 
+  @Override
+  public int hashCode() {
+    return Objects.hash(role, firstName, secondName, birthDate, phone, email);
+  }
 }
