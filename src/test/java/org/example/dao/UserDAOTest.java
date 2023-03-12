@@ -21,12 +21,12 @@ import org.junit.jupiter.api.TestInstance.Lifecycle;
 class UserDAOTest {
 
   @BeforeAll
-  void initializeApp() {
+  static void initializeApp() {
     WebAppInitializer.initializeApp(WebAppInitializerTest.class);
   }
 
   @AfterAll
-  void dropDatabase() {
+  static void dropDatabase() {
     TestUtils.dropDatabase();
   }
 
@@ -37,6 +37,7 @@ class UserDAOTest {
     User user = new User("", UserRole.USER, "John", "Doe", LocalDate.of(2000, 1, 1),
         "380997825685", "john.doe@example.com", 0);
     User createdUser = userDAO.create(user);
+    assertEquals(1, createdUser.getId());
     assertEquals(createdUser, user);
   }
 
@@ -72,15 +73,15 @@ class UserDAOTest {
 
     User user2 = new User("", UserRole.USER, "John", "Doe", LocalDate.of(2000, 1, 1),
         "380998825685", "john.doe@example.com", 0);
-    users.add(userDAO.create(user));
+    users.add(userDAO.create(user2));
 
     User user3 = new User("", UserRole.USER, "John", "Doe", LocalDate.of(2000, 1, 1),
         "380997835685", "john.doe@example.com", 0);
-    users.add(userDAO.create(user));
+    users.add(userDAO.create(user3));
 
     User user4 = new User("", UserRole.USER, "John", "Doe", LocalDate.of(2000, 1, 1),
         "380997825785", "john.doe@example.com", 0);
-    users.add(userDAO.create(user));
+    users.add(userDAO.create(user4));
 
     List<User> all = userDAO.getAll();
     assertEquals(users, all);
