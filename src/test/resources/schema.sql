@@ -5,7 +5,7 @@ CREATE TABLE IF NOT EXISTS users
     first_name varchar(50),
     last_name  varchar(50),
     phone      varchar(13) unique,
-    birthday   DATE,
+    birthday   TIMESTAMP,
     email      varchar(50) unique,
     user_role  varchar(15)
 );

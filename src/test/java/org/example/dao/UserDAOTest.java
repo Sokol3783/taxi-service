@@ -3,7 +3,6 @@ package org.example.dao;
 import static org.example.dao.TestUtils.generateEmail;
 import static org.example.dao.TestUtils.generatePhoneNumber;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.sql.Connection;
@@ -62,15 +61,8 @@ class UserDAOTest {
     assertEquals(createdUser, user);
   }
 
-  //@Test
-  //TODO
-  void updateUser() {
-    assertFalse(true);
-  }
-
   @Test
   void getUser() {
-    System.out.println("get user method!");
     UserDAOimpl userDAO = UserDAOimpl.getInstance();
     String phone = generatePhoneNumber();
     String email = generateEmail();
@@ -108,11 +100,6 @@ class UserDAOTest {
     assertEquals(users, all);
   }
 
-  //@Test
-  void deleteUser() {
-    //TODO
-  }
-
   @Test
   void createUserWithPasswordAndGetUserByLogin() {
     UserDAOimpl userDAO = UserDAOimpl.getInstance();
@@ -126,11 +113,20 @@ class UserDAOTest {
     assertThrows(DAOException.class, () -> userDAO.getUserPhoneMailAndPassword("380997825686",
         passwordAuthentication.hash("0123456789".toCharArray())));
 
-    User userByPhone = userDAO.getUserPhoneMailAndPassword(phone, mail);
-    assertEquals(user, userByPhone);
+    String phone1 = generatePhoneNumber();
+    String mail1 = generateEmail();
+    User user1 = new User(password, UserRole.USER, "John", "Doe", LocalDate.of(2000, 1, 1),
+        phone1, mail1, 0);
 
-    User userByMail = userDAO.getUserPhoneMailAndPassword(mail, mail);
-    assertEquals(user, userByMail);
+    String hash = passwordAuthentication.hash(password.toCharArray());
+
+    userDAO.create(user1, hash);
+
+    User userByPhone = userDAO.getUserPhoneMailAndPassword(phone1, hash);
+    assertEquals(user1, userByPhone);
+
+    User userByMail = userDAO.getUserPhoneMailAndPassword(mail1, hash);
+    assertEquals(user1, userByMail);
 
   }
 
@@ -145,15 +141,13 @@ class UserDAOTest {
     User userPhone = userDAO.getUserPhoneMailAndPassword(user.getPhone(), password);
     assertEquals(userInDB, userPhone);
     String newPassword = "9876543210";
-    userDAO.updatePassword(userInDB, password);
-
+    PasswordAuthentication auth = new PasswordAuthentication();
+    String hash = auth.hash(newPassword.toCharArray());
+    userDAO.updatePassword(userInDB, hash);
     assertThrows(DAOException.class,
         () -> userDAO.getUserPhoneMailAndPassword(user.getPhone(), password));
-
     User userPhoneNewPassword = userDAO.getUserPhoneMailAndPassword(user.getPhone(),
-        newPassword);
-
+        hash);
     assertEquals(user, userPhoneNewPassword);
-
   }
 }

@@ -25,15 +25,13 @@ public class UserDAOimpl extends AbstractDAO<User> implements UserDAO<User> {
 
   private static final Logger log = LoggerFactory.getLogger(UserDAOimpl.class);
   private static final String CREATE = "INSERT INTO users(first_name,last_name,phone,user_role,email,birthday) VALUES(?, ?, ?, ?, ?, ?)";
-  private static final String CREATE_WITH_PASSWORD = "INSERT INTO users(first_name,last_name,phone,user_role,email,birthday) VALUES(?, ?, ?, ?, ?, ?)";
+  private static final String CREATE_WITH_PASSWORD = "INSERT INTO users(first_name,last_name,phone,user_role,email,birthday, password) VALUES(?, ?, ?, ?, ?,?,?)";
   private static final String UPDATE = "UPDATE users SET (first_name=?,last_name=?,phone=?,email=?,birthday=?) WHERE user_id=?";
   private static final String UPDATE_PASSWORD = "UPDATE users SET password=? WHERE phone=? AND email=?";
   private static final String DELETE = "DELETE FROM users WHERE id=?";
   private static final String SELECT_ALL = "SELECT first_name,last_name,phone,user_role,email,birthday,user_id FROM users";
   private static final String SELECT_BY_ID = SELECT_ALL + " WHERE user_id=?";
-  private static final String SELECT_BY_PHONEMAIL =
-      "SELECT first_name,last_name,phone,user_role,email,birthday,user_id,password FROM users WHERE (phone=? OR email=?)"
-          + "AND password <> ''";
+  private static final String SELECT_BY_PHONEMAIL = "SELECT first_name,last_name,phone,user_role,email,birthday,user_id FROM users WHERE (phone=? OR email=?) AND password =?";
 
   private static SimpleConnectionPool pool;
   private final UserMapper mapper;
@@ -94,7 +92,7 @@ public class UserDAOimpl extends AbstractDAO<User> implements UserDAO<User> {
     try (Connection con = pool.getConnection();
         PreparedStatement statement = con.prepareStatement(UPDATE)) {
       mapper.mapUserToPreparedStatement(model, statement);
-      if (statement.executeUpdate() < 0) {
+      if (statement.executeUpdate() < 1) {
         log.error(DAOException.USER_NOT_UPDATE);
       }
     } catch (SQLException e) {
@@ -150,6 +148,7 @@ public class UserDAOimpl extends AbstractDAO<User> implements UserDAO<User> {
         PreparedStatement statement = con.prepareStatement(SELECT_BY_PHONEMAIL)) {
       statement.setString(1, login);
       statement.setString(2, login);
+      statement.setString(3, password);
       ResultSet resultSet = statement.executeQuery();
       if (resultSet.next()) {
         return mapper.mapResultToUser((resultSet));
@@ -163,12 +162,13 @@ public class UserDAOimpl extends AbstractDAO<User> implements UserDAO<User> {
 
   @Override
   public void updatePassword(User model, String newPassword) {
-    Connection con = pool.getConnection();
-    try {
-      try (PreparedStatement statement = con.prepareStatement(UPDATE_PASSWORD)) {
-        statement.setString(2, model.getEmail());
-        statement.setString(3, model.getPhone());
-        throw new DAOException();
+    try (Connection con = pool.getConnection();
+        PreparedStatement statement = con.prepareStatement(UPDATE_PASSWORD)) {
+      statement.setString(1, newPassword);
+      statement.setString(3, model.getEmail());
+      statement.setString(2, model.getPhone());
+      if (statement.executeUpdate() < 1) {
+        throw new DAOException(DAOException.PASSWORD_NOT_CHANGED);
       }
     } catch (SQLException e) {
       log.error(e.getMessage(), e);
