@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.example.AppURL;
 import org.example.controllers.services.ReportManager;
 import org.example.models.User;
-import org.example.models.taxienum.UserRole;
+import org.example.models.User.UserRole;
 import org.json.JSONArray;
 
 @WebServlet(name = "admin", urlPatterns = AppURL.ADMIN_SERVLET)
