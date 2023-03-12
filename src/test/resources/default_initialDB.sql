@@ -9,11 +9,35 @@ DO $do$
         IF EXISTS(SELECT 1 FROM pg_database WHERE datname = _db) THEN
             RAISE NOTICE 'Database already exists';
         ELSE
+
+
             PERFORM dblink_connect('host=localhost user=' || _user || ' password=' || _password ||
                                    ' dbname=' || current_database());
-            PERFORM dblink_exec('CREATE DATABASE ' || _db);
+
+            PERFORM dblink_exec('DO $$
+            BEGIN
+            IF NOT EXISTS(
+                SELECT
+                FROM pg_catalog.pg_roles
+                WHERE rolname = ''testadmin''
+                ) THEN
+                CREATE USER testadmin WITH PASSWORD ''testadmin123'';
+                END IF;
+            END $$;');
+
+            PERFORM dblink_exec('CREATE DATABASE ' || _db || ' OWNER testadmin');
+
+
+            PERFORM dblink_disconnect();
+
+            GRANT ALL PRIVILEGES ON DATABASE test_taxi to testadmin;
+
             PERFORM dblink_connect('host=localhost user=' || _user || ' password=' || _password ||
                                    ' dbname=' || _db);
+
+            PERFORM dblink_exec('ALTER DEFAULT PRIVILEGES IN SCHEMA public
+                GRANT ALL ON TABLES TO testadmin');
+
             PERFORM dblink_exec('CREATE TABLE IF NOT EXISTS users
                 (user_id SERIAL PRIMARY KEY, password varchar(50), first_name varchar(50), last_name varchar(50), phone varchar(13) unique, birthday DATE, email varchar(50) unique, user_role varchar(15))');
 
@@ -32,14 +56,7 @@ DO $do$
             PERFORM dblink_exec('CREATE TABLE IF NOT EXISTS test_taxi.public.discount_limits
                 (discount_limits_id SERIAL PRIMARY KEY, bottom_limit INTEGER NOT NULL, top_limit INTEGER, percent INTEGER NOT NULL);');
 
-            IF EXISTS(
-                    SELECT
-                    FROM pg_catalog.pg_roles
-                    WHERE rolname = 'testadmin') THEN
-            ELSE
-                CREATE USER testadmin WITH PASSWORD 'testadmin123';
-                GRANT ALL PRIVILEGES ON DATABASE test_taxi to testadmin;
-            END IF;
             PERFORM dblink_disconnect();
+
         END IF;
     END $do$;
