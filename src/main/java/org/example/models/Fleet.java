@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CopyOnWriteArraySet;
 import org.example.controllers.services.CarServices;
-import org.example.models.taxienum.CarCategory;
+import org.example.models.Car.CarCategory;
 
 public class Fleet implements Container {
 
