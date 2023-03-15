@@ -13,6 +13,6 @@ public interface DAO<T extends Serializable> {
 
   List<T> getAll();
 
-  void delete(int id);
+  void delete(long id);
 
 }

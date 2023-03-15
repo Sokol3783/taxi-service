@@ -150,7 +150,7 @@ public class OrderDAOimpl extends AbstractDAO<Order> implements OrderDAO<Order> 
   }
 
   @Override
-  public void delete(int id) {
+  public void delete(long id) {
     super.delete(id);
   }
 

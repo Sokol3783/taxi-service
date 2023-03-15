@@ -138,7 +138,7 @@ public class UserDAOimpl extends AbstractDAO<User> implements UserDAO<User> {
   }
 
   @Override
-  public void delete(int id) {
+  public void delete(long id) {
     //OrderDAO.callQuery(id, con, DELETE, log);
   }
 

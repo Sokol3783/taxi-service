@@ -26,7 +26,7 @@ public abstract class AbstractDAO<T extends Serializable> implements DAO<T> {
   }
 
   @Override
-  public void delete(int id) {
+  public void delete(long id) {
     throw new UnsupportedOperationException("SAY NO TO DELETIONS!");
   }
 }
