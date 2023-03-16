@@ -1,25 +1,8 @@
 package org.example.controllers.servlets;
 
-import org.example.AppURL;
-import org.example.controllers.managers.OrderManager;
-import org.example.controllers.managers.SalesManagement;
-import org.example.controllers.managers.UserManager;
-import org.example.models.*;
-import org.example.models.taxienum.CarCategory;
-
-import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Map;
-
-import static java.util.Objects.nonNull;
-import static org.example.controllers.servlets.UtilServlet.forward;
-import static org.example.controllers.servlets.UtilServlet.sendRedirect;
+import org.example.AppURL;
 
 @WebServlet(name = "order", urlPatterns = AppURL.ORDER_SERVLET)
 public class OrderServlet extends HttpServlet {
@@ -87,5 +70,7 @@ public class OrderServlet extends HttpServlet {
         session.setAttribute("cost", cost);
         return cost;
     }
+
+ */
 
 }

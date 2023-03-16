@@ -1,76 +1,49 @@
 package org.example.dao.connectionpool;
 
+import java.sql.Connection;
+import java.sql.SQLException;
 import org.apache.tomcat.jdbc.pool.DataSource;
 import org.apache.tomcat.jdbc.pool.PoolProperties;
-import org.example.controllers.managers.PropertiesManager;
+import org.example.controllers.services.PropertiesManager;
 import org.example.dao.SimpleConnectionPool;
 import org.example.exceptions.DAOException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
 public class BasicConnectionPool implements SimpleConnectionPool {
 
-    private static final Logger log = LoggerFactory.getLogger(BasicConnectionPool.class);
+  private static final Logger log = LoggerFactory.getLogger(BasicConnectionPool.class);
 
-    private static SimpleConnectionPool instance;
+  private static final SimpleConnectionPool INSTANCE = new BasicConnectionPool();
 
-    private final static DataSource dataSource = new DataSource();
+  private final DataSource dataSource;
 
-    public static SimpleConnectionPool getInstance() {
-        synchronized (BasicConnectionPool.class) {
-            if (instance == null) {
-                PoolProperties properties = new PoolProperties();
-                properties.setDriverClassName(PropertiesManager.getStringFromProperties("Driver"));
-                properties.setUrl(PropertiesManager.getStringFromProperties("DB_URL"));
-                properties.setUsername(PropertiesManager.getStringFromProperties("USER"));
-                properties.setPassword(PropertiesManager.getStringFromProperties("PASSWORD"));
-                properties.setDefaultAutoCommit(PropertiesManager.getBooleanFromProperties("AUTO_COMMIT"));
-                dataSource.setPoolProperties(properties);
-                instance = new BasicConnectionPool();
-            }
-        }
-        return instance;
+  private BasicConnectionPool() {
+    PoolProperties properties = new PoolProperties();
+    properties.setDriverClassName(PropertiesManager.getStringFromProperties("driver"));
+    properties.setUrl(PropertiesManager.getStringFromProperties("DB_URL"));
+    properties.setUsername(PropertiesManager.getStringFromProperties("user"));
+    properties.setPassword(PropertiesManager.getStringFromProperties("password"));
+    dataSource = new DataSource();
+    dataSource.setPoolProperties(properties);
+  }
+
+
+  public static SimpleConnectionPool getInstance() {
+    return INSTANCE;
+  }
+
+  public Connection getConnection() {
+    try {
+      return dataSource.getConnection();
+    } catch (SQLException e) {
+      log.error("Connection error");
+      throw new DAOException();
     }
+  }
 
-    public Connection getConnection() {
-        try {
-            return dataSource.getConnection();
-        } catch (SQLException e) {
-            log.error("Connection error");
-            throw new DAOException();
-        }
-    }
+  public boolean isTestOnConnect() {
+    return dataSource != null && dataSource.isTestOnConnect();
+  }
 
-
-    public static void runSQLScript(InputStream input, String delimiter, Connection connection) {
-        if (input != null) {
-            BufferedReader reader = new BufferedReader(new InputStreamReader(input));
-            Stream<String> lines = reader.lines();
-            try (Statement statement = connection.createStatement()) {
-                List<String> queriesList = Stream
-                        .of(lines.collect(Collectors.joining()).split(delimiter))
-                        .collect(Collectors.toList());
-                queriesList.forEach(sqlQuery -> {
-                    try {
-                        statement.execute(sqlQuery);
-                    } catch (SQLException e) {
-                        log.debug(sqlQuery + " -> " + e.getMessage());
-                    }
-                });
-            } catch (SQLException e) {
-                log.error(e.getMessage());
-                throw new RuntimeException(e);
-            }
-        }
-    }
 }

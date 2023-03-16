@@ -5,14 +5,14 @@ import java.util.List;
 
 public interface DAO<T extends Serializable> {
 
-    T create(T model);
+  T create(T model);
 
-    void update(T model);
+  void update(T model);
 
-    T get(int id);
+  T get(long id);
 
-    List<T> getAll();
+  List<T> getAll();
 
-    void delete(int id);
+  void delete(long id);
 
 }

@@ -1,4 +1,4 @@
-package org.example.controllers.managers;
+package org.example.controllers.services;
 
 public class OrderManager {
 /*

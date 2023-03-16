@@ -1,25 +1,8 @@
 package org.example.controllers.servlets;
 
 
-import org.example.AppURL;
-import org.example.controllers.managers.UserManager;
-import org.example.exceptions.DAOException;
-import org.example.models.User;
-import org.example.models.taxienum.UserRole;
-import org.example.util.LocalDateConverter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.sql.SQLException;
-
-import static java.util.Objects.nonNull;
-import static org.example.controllers.servlets.UtilServlet.forward;
-import static org.example.controllers.servlets.UtilServlet.sendRedirect;
 
 @WebServlet(name = "registration", urlPatterns = "/registration")
 public class RegistrationServlet extends HttpServlet {
@@ -69,5 +52,7 @@ public class RegistrationServlet extends HttpServlet {
         String passwordRepeat = request.getParameter("password_check");
         return password.compareTo(passwordRepeat) == 0;
     }
+    
+ */
 
 }
