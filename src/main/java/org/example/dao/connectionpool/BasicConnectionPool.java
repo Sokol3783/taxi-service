@@ -14,23 +14,23 @@ public class BasicConnectionPool implements SimpleConnectionPool {
 
   private static final Logger log = LoggerFactory.getLogger(BasicConnectionPool.class);
 
-  private static SimpleConnectionPool instance;
+  private static final SimpleConnectionPool INSTANCE = new BasicConnectionPool();
 
-  private final static DataSource dataSource = new DataSource();
+  private final DataSource dataSource;
+
+  private BasicConnectionPool() {
+    PoolProperties properties = new PoolProperties();
+    properties.setDriverClassName(PropertiesManager.getStringFromProperties("driver"));
+    properties.setUrl(PropertiesManager.getStringFromProperties("DB_URL"));
+    properties.setUsername(PropertiesManager.getStringFromProperties("user"));
+    properties.setPassword(PropertiesManager.getStringFromProperties("password"));
+    dataSource = new DataSource();
+    dataSource.setPoolProperties(properties);
+  }
+
 
   public static SimpleConnectionPool getInstance() {
-    synchronized (BasicConnectionPool.class) {
-      if (instance == null) {
-        PoolProperties properties = new PoolProperties();
-        properties.setDriverClassName(PropertiesManager.getStringFromProperties("driver"));
-        properties.setUrl(PropertiesManager.getStringFromProperties("DB_URL"));
-        properties.setUsername(PropertiesManager.getStringFromProperties("user"));
-        properties.setPassword(PropertiesManager.getStringFromProperties("password"));
-        dataSource.setPoolProperties(properties);
-        instance = new BasicConnectionPool();
-      }
-    }
-    return instance;
+    return INSTANCE;
   }
 
   public Connection getConnection() {
@@ -43,10 +43,7 @@ public class BasicConnectionPool implements SimpleConnectionPool {
   }
 
   public boolean isTestOnConnect() {
-    if (dataSource != null) {
-      return dataSource.isTestOnConnect();
-    }
-    return false;
+    return dataSource != null && dataSource.isTestOnConnect();
   }
 
 }

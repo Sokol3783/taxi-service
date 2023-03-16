@@ -33,7 +33,7 @@ public class UserDAOimpl extends AbstractDAO<User> implements UserDAO<User> {
   private static final String SELECT_BY_ID = SELECT_ALL + " WHERE user_id=?";
   private static final String SELECT_BY_PHONEMAIL = "SELECT first_name,last_name,phone,user_role,email,birthday,user_id FROM users WHERE (phone=? OR email=?) AND password =?";
 
-  private static SimpleConnectionPool pool;
+  private static SimpleConnectionPool POOL;
   private final UserMapper mapper;
 
   private UserDAOimpl() {
@@ -41,9 +41,11 @@ public class UserDAOimpl extends AbstractDAO<User> implements UserDAO<User> {
   }
 
   public static UserDAOimpl getInstance() {
-    synchronized (UserDAOimpl.class) {
-      if (pool == null) {
-        pool = BasicConnectionPool.getInstance();
+    if (POOL == null) {
+      synchronized (UserDAOimpl.class) {
+        if (POOL == null) {
+          POOL = BasicConnectionPool.getInstance();
+        }
       }
     }
     return new UserDAOimpl();
@@ -51,7 +53,7 @@ public class UserDAOimpl extends AbstractDAO<User> implements UserDAO<User> {
 
   @Override
   public User create(User model) {
-    try (Connection con = pool.getConnection();
+    try (Connection con = POOL.getConnection();
         PreparedStatement statement = con.prepareStatement(CREATE,
             Statement.RETURN_GENERATED_KEYS)) {
       mapper.mapUserToPreparedStatement(model, statement);
@@ -63,7 +65,7 @@ public class UserDAOimpl extends AbstractDAO<User> implements UserDAO<User> {
 
   @Override
   public User create(User model, String password) {
-    try (Connection con = pool.getConnection();
+    try (Connection con = POOL.getConnection();
         PreparedStatement statement = con.prepareStatement(CREATE_WITH_PASSWORD,
             Statement.RETURN_GENERATED_KEYS)) {
       mapper.mapUserToPreparedStatement(model, statement, password);
@@ -89,7 +91,7 @@ public class UserDAOimpl extends AbstractDAO<User> implements UserDAO<User> {
 
   @Override
   public void update(User model) {
-    try (Connection con = pool.getConnection();
+    try (Connection con = POOL.getConnection();
         PreparedStatement statement = con.prepareStatement(UPDATE)) {
       mapper.mapUserToPreparedStatement(model, statement);
       if (statement.executeUpdate() < 1) {
@@ -103,7 +105,7 @@ public class UserDAOimpl extends AbstractDAO<User> implements UserDAO<User> {
 
   @Override
   public User get(long id) {
-    Connection con = pool.getConnection();
+    Connection con = POOL.getConnection();
     try (PreparedStatement statement = con.prepareStatement(SELECT_BY_ID)) {
       statement.setLong(1, id);
       ResultSet result = statement.executeQuery();
@@ -122,7 +124,7 @@ public class UserDAOimpl extends AbstractDAO<User> implements UserDAO<User> {
   @Override
   public List<User> getAll() {
     List<User> users = new ArrayList<>();
-    Connection con = pool.getConnection();
+    Connection con = POOL.getConnection();
     try (PreparedStatement statement = con.prepareStatement(SELECT_ALL)) {
       ResultSet result = statement.executeQuery();
       while (result.next()) {
@@ -144,7 +146,7 @@ public class UserDAOimpl extends AbstractDAO<User> implements UserDAO<User> {
 
   @Override
   public User getUserPhoneMailAndPassword(String login, String password) {
-    try (Connection con = pool.getConnection();
+    try (Connection con = POOL.getConnection();
         PreparedStatement statement = con.prepareStatement(SELECT_BY_PHONEMAIL)) {
       statement.setString(1, login);
       statement.setString(2, login);
@@ -162,7 +164,7 @@ public class UserDAOimpl extends AbstractDAO<User> implements UserDAO<User> {
 
   @Override
   public void updatePassword(User model, String newPassword) {
-    try (Connection con = pool.getConnection();
+    try (Connection con = POOL.getConnection();
         PreparedStatement statement = con.prepareStatement(UPDATE_PASSWORD)) {
       statement.setString(1, newPassword);
       statement.setString(3, model.getEmail());

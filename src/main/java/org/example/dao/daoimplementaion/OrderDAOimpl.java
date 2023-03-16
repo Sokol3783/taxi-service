@@ -16,7 +16,7 @@ import org.example.dao.CarDAO;
 import org.example.dao.OrderDAO;
 import org.example.dao.SimpleConnectionPool;
 import org.example.dao.UserDAO;
-import org.example.dao.connectionpool.BasicConnectionPool;
+import org.example.dao.connectionPOOL.BasicConnectionPool;
 import org.example.dao.daoutil.DAOUtil;
 import org.example.exceptions.DAOException;
 import org.example.models.Car;
@@ -38,15 +38,17 @@ public class OrderDAOimpl extends AbstractDAO<Order> implements OrderDAO<Order> 
   private static final String SELECT_BY_NUMBERS = SELECT_ALL + " WHERE number IN ?";
   private static final String SELECT_BY_ID = SELECT_ALL + " WHERE orders.order_id=?";
 
-  private static SimpleConnectionPool pool;
+  private static SimpleConnectionPool POOL;
 
   private OrderDAOimpl() {
   }
 
   public static OrderDAOimpl getInstance() {
-    synchronized (OrderDAOimpl.class) {
-      if (pool == null) {
-        pool = BasicConnectionPool.getInstance();
+    if (POOL == null) {
+      synchronized (OrderDAOimpl.class) {
+        if (POOL == null) {
+          POOL = BasicConnectionPool.getInstance();
+        }
       }
     }
     return new OrderDAOimpl();
@@ -55,7 +57,7 @@ public class OrderDAOimpl extends AbstractDAO<Order> implements OrderDAO<Order> 
   //TODO work with Car and User model, smth wrong but I don't what
   @Override
   public Order create(Order model) {
-    Connection con = pool.getConnection();
+    Connection con = POOL.getConnection();
     try {
       con.setAutoCommit(false);
       PreparedStatement statement = getPrepareStatementByQuery(model, CREATE, con);
@@ -115,7 +117,7 @@ public class OrderDAOimpl extends AbstractDAO<Order> implements OrderDAO<Order> 
 
   @Override
   public Order get(long id) {
-    Connection con = pool.getConnection();
+    Connection con = POOL.getConnection();
     try (PreparedStatement statement = con.prepareStatement(SELECT_BY_ID)) {
       statement.setLong(1, id);
       ResultSet result = statement.executeQuery();
@@ -134,7 +136,7 @@ public class OrderDAOimpl extends AbstractDAO<Order> implements OrderDAO<Order> 
   @Override
   public List<Order> getAll() {
     List<Order> models = new ArrayList<>();
-    Connection con = pool.getConnection();
+    Connection con = POOL.getConnection();
     try (PreparedStatement statement = con.prepareStatement(SELECT_ALL)) {
       ResultSet result = statement.executeQuery();
       while (result.next()) {
@@ -156,7 +158,7 @@ public class OrderDAOimpl extends AbstractDAO<Order> implements OrderDAO<Order> 
 
   @Override
   public Order getByNumber(String number) {
-    Connection con = pool.getConnection();
+    Connection con = POOL.getConnection();
     try (PreparedStatement statement = con.prepareStatement(SELECT_BY_NUMBER)) {
       statement.setString(1, number);
       ResultSet result = statement.executeQuery();
@@ -175,7 +177,7 @@ public class OrderDAOimpl extends AbstractDAO<Order> implements OrderDAO<Order> 
   @Override
   public List<Order> getByNumbers(List<String> numbers) {
     List<Order> models = new ArrayList<>();
-    Connection con = pool.getConnection();
+    Connection con = POOL.getConnection();
     try (PreparedStatement statement = con.prepareStatement(SELECT_ALL)) {
       statement.setArray(1, carNumbersToArray(numbers, con));
       ResultSet result = statement.executeQuery();
@@ -201,7 +203,7 @@ public class OrderDAOimpl extends AbstractDAO<Order> implements OrderDAO<Order> 
 
   @Override
   public Order swapCar(Order model, List<Car> cars) {
-        /*Connection con = pool.getConnection();
+        /*Connection con = POOL.getConnection();
         try {
             con.setAutoCommit(false);
             PreparedStatement statement = updateSwapCar(model, cars, con);
